@@ -187,7 +187,7 @@
 <li><a target="_blank" rel="noopener" href="https://nodejs.org/en/">node.js</a> </li>
 <li><a target="_blank" rel="noopener" href="https://git-scm.com/downloads">git</a><br>启动终端控制台 输入<br>node -v<br>npm -v<br>git -v</li>
 </ul>
-<p><img src="/../images/logo.jpg" alt="alt text"></p>
+<p><img src="/DummyV07/../images/logo.jpg" alt="alt text"></p>
 <h3 id="2-安装hexo"><a href="#2-安装hexo" class="headerlink" title="2.安装hexo"></a>2.安装hexo</h3><p>npm install hexo-cli -g<br>（如果安装失败可以以管理员模型启动cmd mac是在命令行前加上sudo）<br>然后输入你电脑的password 就会开始下载</p>
 <h3 id="3-构建github仓库"><a href="#3-构建github仓库" class="headerlink" title="3.构建github仓库"></a>3.构建github仓库</h3><p>在github中Create a new repository，也就是创建一个新的仓库，这里需要注意的是仓库名必须和用户名一致为:用户名.github.io 这也就是之后你hexo博客的网址。</p>
 <h3 id="4-生成ssh-keys"><a href="#4-生成ssh-keys" class="headerlink" title="4.生成ssh keys"></a>4.生成ssh keys</h3><p>同样是打开终端输入（如果不成功同样选择在前面加上sudo）<br>ssh-keygen -t rsa -C “邮件地址”</p>
@@ -196,11 +196,11 @@
 <p>然后打开github</p>
 <p>进入用户设置，找到SSH keys</p>
 <p>新建SSH keys，名称随意，在下面粘贴代码</p>
-<p>然后再在终端中输入：<br>ssh -T <a href="mailto:&#x67;&#105;&#x74;&#64;&#103;&#105;&#x74;&#104;&#117;&#98;&#46;&#99;&#111;&#x6d;">&#x67;&#105;&#x74;&#64;&#103;&#105;&#x74;&#104;&#117;&#98;&#46;&#99;&#111;&#x6d;</a><br>之后再输入yes</p>
+<p>然后再在终端中输入：<br>ssh -T <a href="mailto:&#x67;&#x69;&#x74;&#64;&#103;&#x69;&#116;&#104;&#x75;&#98;&#46;&#x63;&#x6f;&#x6d;">&#x67;&#x69;&#x74;&#64;&#103;&#x69;&#116;&#104;&#x75;&#98;&#46;&#x63;&#x6f;&#x6d;</a><br>之后再输入yes</p>
 <h3 id="5-创建bolgfile"><a href="#5-创建bolgfile" class="headerlink" title="5.创建bolgfile"></a>5.创建bolgfile</h3><p>这我们需要找一个文件夹来存储我们的博客文件，然后在对应文件夹目录启动终端，然后初始化hexo，输入 hexo init 然后hexo install<br>接下来输入 hexo g hexo s</p>
 <h3 id="6-上线博客"><a href="#6-上线博客" class="headerlink" title="6.上线博客"></a>6.上线博客</h3><p>打开 _config.yml<br>拉到最下面将deploy后面的全删掉，复制粘贴这段 （前面两个空格不要删除）</p>
 <p>  type: git<br>  repository:<br>  branch: main</p>
-<p>去github之前生成的仓库页面，点code，复制https链接<br>将其粘贴到我们记事本中的repository：后面<br><img src="/../images/image.png" alt="image"></p>
+<p>去github之前生成的仓库页面，点code，复制https链接<br>将其粘贴到我们记事本中的repository：后面<br><img src="/DummyV07/../images/image.png" alt="image"></p>
 <p>然后回到终端输入：<br>安装自动部署发布工具<br>npm install hexo-deployer-git –save</p>
 <p>然后在Blog文件夹右键打开git bash，依次输入</p>
 <p>hexo g（生成）<br>hexo d（上传）</p>
