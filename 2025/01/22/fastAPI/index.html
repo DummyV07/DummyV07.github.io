@@ -1,0 +1,315 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>FastApi | 廾匸</title><meta name="author" content="Dummy"><meta name="copyright" content="Dummy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="写的不全！参考视频 @fastapi框架FastApi: 一个用于构建API的现代、快速(高性能)的web框架 Starlette：一个用于构建ASGI(异步服务器网关接口)的web框架Pydantic：一个用于数据验证和序列化的库 1 预备知识点1.1 http协议1.1.1 简介HTTP协议是Hyper Text Transfer Protocol的缩写，它是一个用于在Internet上传输超">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FastApi">
+<meta property="og:url" content="https://dummyv07.github.io/2025/01/22/fastAPI/index.html">
+<meta property="og:site_name" content="廾匸">
+<meta property="og:description" content="写的不全！参考视频 @fastapi框架FastApi: 一个用于构建API的现代、快速(高性能)的web框架 Starlette：一个用于构建ASGI(异步服务器网关接口)的web框架Pydantic：一个用于数据验证和序列化的库 1 预备知识点1.1 http协议1.1.1 简介HTTP协议是Hyper Text Transfer Protocol的缩写，它是一个用于在Internet上传输超">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://a.520gexing.com/zb_users/upload/2024/01/202401111704950400367553.jpg">
+<meta property="article:published_time" content="2025-01-22T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-22T08:35:30.837Z">
+<meta property="article:author" content="Dummy">
+<meta property="article:tag" content="其他">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://a.520gexing.com/zb_users/upload/2024/01/202401111704950400367553.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://dummyv07.github.io/2025/01/22/fastAPI/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.14.0-b3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>(()=>{
+      const saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+      
+      window.btf = {
+        saveToLocal: saveToLocal,
+        getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = url
+          script.async = true
+          script.onerror = reject
+          script.onload = script.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            script.onload = script.onreadystatechange = null
+            resolve()
+          }
+
+          Object.keys(attr).forEach(key => {
+            script.setAttribute(key, attr[key])
+          })
+
+          document.head.appendChild(script)
+        }),
+
+        getCSS: (url, id = false) => new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = url
+          if (id) link.id = id
+          link.onerror = reject
+          link.onload = link.onreadystatechange = function() {
+            const loadState = this.readyState
+            if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+            link.onload = link.onreadystatechange = null
+            resolve()
+          }
+          document.head.appendChild(link)
+        }),
+
+        addGlobalFn: (key, fn, name = false, parent = window) => {
+          const pjaxEnable = false
+          if (!pjaxEnable && key.startsWith('pjax')) return
+
+          const globalFn = parent.globalFn || {}
+          const keyObj = globalFn[key] || {}
+    
+          if (name && keyObj[name]) return
+    
+          name = name || Object.keys(keyObj).length
+          keyObj[name] = fn
+          globalFn[key] = keyObj
+          parent.globalFn = globalFn
+        }
+      }
+    
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+      
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })()</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'FastApi',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-01-22 16:35:30'
+}</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://a.520gexing.com/zb_users/upload/2024/01/202401111704950400367553.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="廾匸"><span class="site-name">廾匸</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">FastApi</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-22T04:00:00.000Z" title="发表于 2025-01-22 12:00:00">2025-01-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-01-22T08:35:30.837Z" title="更新于 2025-01-22 16:35:30">2025-01-22</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="FastApi"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>写的不全！<br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1KN66YPE1s?spm_id_from=333.788.videopod.episodes&vd_source=554f08be3139a1c9764421855fa67012&p=5">参考视频</a></p>
+<h2 id="fastapi框架"><a href="#fastapi框架" class="headerlink" title="@fastapi框架"></a>@fastapi框架</h2><p>FastApi: 一个用于构建API的现代、快速(高性能)的web框架</p>
+<p>Starlette：一个用于构建ASGI(异步服务器网关接口)的web框架<br>Pydantic：一个用于数据验证和序列化的库</p>
+<h2 id="1-预备知识点"><a href="#1-预备知识点" class="headerlink" title="1 预备知识点"></a>1 预备知识点</h2><h3 id="1-1-http协议"><a href="#1-1-http协议" class="headerlink" title="1.1 http协议"></a>1.1 http协议</h3><h4 id="1-1-1-简介"><a href="#1-1-1-简介" class="headerlink" title="1.1.1 简介"></a>1.1.1 简介</h4><p>HTTP协议是Hyper Text Transfer Protocol的缩写，它是一个用于在Internet上传输超文本的协议。HTTP是一个属于应用层的面向对象的协议。由于其简捷、快速的方式，适用于分布式超媒体信息系统。它于1990年提出，经过几年的使用与发展，得到不断的完善和拓展。HTTP工作与客户段-服务端架构上。浏览器作为HTTP客户端通过URL向HTTP服务端即WEB服务器发送所有请求。Web服务器根据收到的请求后，向客户端发送响应信息。<br><img src="/../images/fastapi/image.png" alt="alt text"></p>
+<h4 id="1-1-2-http协议特性"><a href="#1-1-2-http协议特性" class="headerlink" title="1.1.2 http协议特性"></a>1.1.2 http协议特性</h4><ul>
+<li>基于TCP&#x2F;IP协议<ul>
+<li>http协议是基于TCP&#x2F;IP协议之上的应用层协议</li>
+</ul>
+</li>
+<li>基于请求、响应模式<ul>
+<li>HTTP协议规定规定，请求从客户端发出，最后服务器端响应应该请求并返回，换句话说肯定是从客户端开始建立通信的，服务器端在没有接收到请求之前不会发送响应。</li>
+</ul>
+</li>
+<li>无状态保存<ul>
+<li>HTTP是一种不草村状态，即无状态stateless协议。HTTP协议 自身不对请求和响应之间的同学状态进行保存。也就是说在HTTP这个级别，协议对于发送过的请求或响应都不会做持久化处理</li>
+<li>使用HTTP协议，每当有新的请求发送时，就会有对应的新响应产生。协议本身并不保留之前一切的请求或响应报文信息，这是为了更快地处理大量食物，确保协议的可伸缩性，而特意把HTTP协议设计成如此简单。</li>
+</ul>
+</li>
+<li>短连接<ul>
+<li>HTTP1.0默认使用的是短连接，浏览器和服务器每进行一次HTTP操作，就建立一次连接，任务结束就中断连接。</li>
+<li>HTTP1.1默认使用的是长连接，浏览器和服务器之间建立连接，并一直保持连接，直到客户端主动关闭连接。</li>
+<li>HTTP长连接，指的是复用TCP连接，多个HTTP请求可以复用同一个TCP连接，这就节省了TCP连接建立和断开的消耗</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-1-3-http请求协议与响应协议"><a href="#1-1-3-http请求协议与响应协议" class="headerlink" title="1.1.3 http请求协议与响应协议"></a>1.1.3 http请求协议与响应协议</h4><p><img src="/../images/fastapi/image-1.png" alt="alt text"></p>
+<p>http协议包含由浏览器发送数据到服务器需要遵循的请求协议与服务器发送数据到浏览器需要遵循的响应协议。用于HTTP协议交互的信息被称为HTTP报文。请求端(客户端)的HTTP报文做请求报文，响应端(服务器端)做响应报文。HTTP报文本身是由多行数据构成的字文本。</p>
+<p><img src="/../images/fastapi/image-2.png" alt="alt text"></p>
+<p>一个完整的URL包括：协议、ip、端口、路径、参数</p>
+<p>例如：<a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=python">https://www.baidu.com/s?wd=python</a> 其中https是协议，<a target="_blank" rel="noopener" href="http://www.baidu.com是ip/%E5%9F%9F%E5%90%8D%EF%BC%8C%E7%AB%AF%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%98%AF80%EF%BC%8C/s%E6%98%AF%E8%B7%AF%E5%BE%84%EF%BC%8Cwd=python%E6%98%AF%E5%8F%82%E6%95%B0">www.baidu.com是ip/域名，端口默认是80，/s是路径，wd=python是参数</a></p>
+<p>请求方式：get与post请求</p>
+<ul>
+<li>GET提交的数据会放在URL之后，以？分割URL和传输数据，参数之间以&amp;相连，如EditBook？name&#x3D;test 1&amp;id&#x3D;1。POST方法是把提交的数据放在请求体中，即POST方法提交的数据放在请求体中。</li>
+<li>GET提交的数据大小有限制(因为浏览器对URL的长度有限制)，而POST方法提交的数据没有限制</li>
+</ul>
+<p>响应状态码：状态码的职责是当客户端向服务端发送请求时，返回的请求结果。借助状态码，用户可以知道服务器端是正常处理了，还是出现了。状态码如200 ok，以三位数字和原因组成。</p>
+<h3 id="1-2-api接口"><a href="#1-2-api接口" class="headerlink" title="1.2 api接口"></a>1.2 api接口</h3><p>在开发Web应用中，有两种应用模式：</p>
+<p>1.前后端不分离【客户端看到的内容和所有见面效果都是由服务器端提供出来的】<br><img src="/../images/fastapi/image-3.png" alt="alt text"><br>2.前后段分离【把前端的界面效果html，css，js分离到另一个服务端，python服务端只需要返回数据即可】</p>
+<p>前端形成一个独立的网站，服务端构成一个独立网站</p>
+<p><img src="/../images/fastapi/image-4.png" alt="alt text"></p>
+<p>应用程序编程接口(API)，就是应用程序对外提供了一个操作数据的入口，这个入口可以是一个函数或类方法，也可以是一个url地址或者一个网络地址。当客户端调用这个入口，应用程序则会执行对应代码操作，给客户端完成对应的功能。</p>
+<p>当然，api接口在工作中是比较常见的开发内容，有时候，我们会调用其他人编写的api接口，有时候，我们也需要提供api接口给其他人操作，由此就会带来一个问题，api接口往往都是一个函数、类方法，或者url或其他网络地址，不管是哪一种，当api接口编写过程中，我们都要考虑一个问题是这个接口应该怎么编写？接口怎么写更加容易维护和清晰，者就需要大家在调用或者编写api接口的时候要有一个明确的编写规范！！！</p>
+<p>为了在团队内部形成共识，防止个人习惯差异引起的混乱，我们都需要找到一种大家都觉得很好的接口实现规范，而且这种规范能够让后端写的接口，用途一目了然，减少客户端和服务端双方之间的合作成本。</p>
+<p>目前市面上大部分公司开发人员使用的接口实现规范只要有restful，RPC</p>
+<p>REST全称是Representational State Transfer，中文翻译为表现层状态转化，是RESTful风格的一种实现方式。是一种专门为Web开发而定义的API接口的设计风格，尤其适用于前后端分离的应用模式中。</p>
+<p>关键：面向资源开发</p>
+<p>这种风格的理念认为后段开发任务就是提供数据的，对外提供的是数据资源的访问接口，所以在定义接口时，客户端访问的URL路径就表示这种药操作的数据资源。</p>
+<p>面对于数据资源分别使用POST、GET、PUT、DELETE等HTTP请求方法，分别对应增删改查操作。</p>
+<h2 id="2-quick-start"><a href="#2-quick-start" class="headerlink" title="2 quick start"></a>2 quick start</h2><p>简单案例</p>
+<p>安装pip install fastapi</p>
+<p>ASGI服务器，生产环境可以使用Uvicorn<br>pip install uvicorn</p>
+<p>code</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter</span><br><span class="line"></span><br><span class="line">app01 = APIRouter()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 路由匹配顺序，上面的路由会覆盖下面的路由</span></span><br><span class="line"><span class="meta">@app01.get(<span class="params"><span class="string">&#x27;/users/&#123;user_id&#125;&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_user</span>(<span class="params">user_id: <span class="built_in">int</span></span>):</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&#x27;user_id&#x27;</span>: user_id&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    uvicorn.run(<span class="string">&quot;main:app&quot;</span>,host=<span class="string">&quot;127.0.0.1&quot;</span>, port=<span class="number">8000</span>, reload=<span class="literal">True</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-路径操作"><a href="#3-路径操作" class="headerlink" title="3 路径操作"></a>3 路径操作</h2><p>对于我来说没啥实际用处的部分的就直接省了，有需要可以去看视频。</p>
+<p>include_router</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI</span><br><span class="line"><span class="keyword">import</span> uvicorn</span><br><span class="line"><span class="keyword">from</span> fastapi.staticfiles <span class="keyword">import</span> StaticFiles</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> apps.app01 <span class="keyword">import</span> app01</span><br><span class="line"><span class="keyword">from</span> apps.app02 <span class="keyword">import</span> app02</span><br><span class="line"><span class="keyword">from</span> apps.app03 <span class="keyword">import</span> app03</span><br><span class="line"><span class="keyword">from</span> apps.app04 <span class="keyword">import</span> app04</span><br><span class="line"><span class="keyword">from</span> apps.app05 <span class="keyword">import</span> app05</span><br><span class="line"><span class="keyword">from</span> apps.app06 <span class="keyword">import</span> app06</span><br><span class="line"><span class="keyword">from</span> apps.app07 <span class="keyword">import</span> app07</span><br><span class="line"></span><br><span class="line">app = FastAPI()</span><br><span class="line"></span><br><span class="line">app.mount(<span class="string">&quot;/static&quot;</span>,StaticFiles(directory=<span class="string">&quot;statics&quot;</span>),name=<span class="string">&quot;statics&quot;</span>) <span class="comment"># directory指定静态文件目录</span></span><br><span class="line"></span><br><span class="line">app.include_router(app01,prefix=<span class="string">&quot;/app01&quot;</span>,tags=[<span class="string">&quot;01 路径参数&quot;</span>])</span><br><span class="line">app.include_router(app02,prefix=<span class="string">&quot;/app02&quot;</span>,tags=[<span class="string">&quot;02 查询参数&quot;</span>])</span><br><span class="line">app.include_router(app03,prefix=<span class="string">&quot;/app03&quot;</span>,tags=[<span class="string">&quot;03 请求体数据&quot;</span>])</span><br><span class="line">app.include_router(app04,prefix=<span class="string">&quot;/app04&quot;</span>,tags=[<span class="string">&quot;04 form表单数据&quot;</span>])</span><br><span class="line">app.include_router(app05,prefix=<span class="string">&quot;/app05&quot;</span>,tags=[<span class="string">&quot;05 文件上传&quot;</span>])</span><br><span class="line">app.include_router(app06,prefix=<span class="string">&quot;/app06&quot;</span>,tags=[<span class="string">&quot;06 Request对象&quot;</span>])</span><br><span class="line">app.include_router(app07,prefix=<span class="string">&quot;/app07&quot;</span>,tags=[<span class="string">&quot;07 响应参数&quot;</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    uvicorn.run(<span class="string">&quot;main:app&quot;</span>,host=<span class="string">&quot;127.0.0.1&quot;</span>, port=<span class="number">8000</span>, reload=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="4-请求与响应"><a href="#4-请求与响应" class="headerlink" title="4 请求与响应"></a>4 请求与响应</h2><h3 id="4-1-路径参数"><a href="#4-1-路径参数" class="headerlink" title="4.1 路径参数"></a>4.1 路径参数</h3><ul>
+<li><p>基本用法</p>
+<p>以使用与python格式化字符串相同的语法声明路径“参数”或“变量”</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.get(<span class="params"><span class="string">&#x27;/items/&#123;item_id&#125;&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">read_item</span>(<span class="params">item_id: <span class="built_in">int</span></span>):</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&#x27;item_id&#x27;</span>: item_id&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="4-2-查询参数-请求参数"><a href="#4-2-查询参数-请求参数" class="headerlink" title="4.2 查询参数(请求参数)"></a>4.2 查询参数(请求参数)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Union</span>,<span class="type">Optional</span>  <span class="comment"># Union[str,None] Optional[str] 两个等效</span></span><br><span class="line">app02 = APIRouter()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app02.get(<span class="params"><span class="string">&#x27;jobs&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">get_jobs</span>(<span class="params">kd,xl:<span class="type">Union</span>[<span class="built_in">str</span>,<span class="literal">None</span>] = <span class="literal">None</span>,gj:<span class="type">Optional</span>[<span class="built_in">str</span>]=<span class="literal">None</span></span>): <span class="comment"># 查询参数 有默认参数即非必填</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&#x27;kd&#x27;</span>: <span class="string">&quot;kd&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@app02.get(<span class="params"><span class="string">&#x27;/users/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_user</span>(<span class="params">user_id: <span class="built_in">int</span></span>):</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&#x27;user_id&#x27;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-请求体数据"><a href="#4-3-请求体数据" class="headerlink" title="4.3 请求体数据"></a>4.3 请求体数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter</span><br><span class="line"><span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel,Field,validator <span class="comment"># 数据校验</span></span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> date</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span>,<span class="type">Optional</span>,<span class="type">Union</span></span><br><span class="line"></span><br><span class="line">app03 = APIRouter()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 嵌套类型</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Address</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    city: <span class="built_in">str</span></span><br><span class="line">    street: <span class="built_in">str</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>(<span class="title class_ inherited__">BaseModel</span>): <span class="comment"># 聚合类型</span></span><br><span class="line">    <span class="comment"># name: str = Field(regex=&quot;^a&quot;)   # 正则校验 以a开头</span></span><br><span class="line">    name: <span class="built_in">str</span> </span><br><span class="line">    age: <span class="built_in">int</span> = Field(default=<span class="number">18</span>,gt=<span class="number">0</span>,lt=<span class="number">100</span>)</span><br><span class="line">    birth: <span class="type">Union</span>[date,<span class="literal">None</span>] = <span class="literal">None</span></span><br><span class="line">    frind: <span class="type">List</span>[<span class="built_in">int</span>] = []</span><br><span class="line">    descreption: <span class="type">Optional</span>[<span class="built_in">str</span>] = <span class="literal">None</span></span><br><span class="line">    addr:Address</span><br><span class="line"></span><br><span class="line"><span class="meta">    @validator(<span class="params"><span class="string">&#x27;name&#x27;</span></span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">name_max_alpha</span>(<span class="params">cls,value</span>):</span><br><span class="line"></span><br><span class="line">        <span class="keyword">assert</span> value.isalpha(),<span class="string">&quot;name 必须是字母&quot;</span></span><br><span class="line">        <span class="keyword">return</span> value</span><br><span class="line">    </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Data</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    data: <span class="type">List</span>[User]</span><br><span class="line"><span class="meta">@app03.post(<span class="params"><span class="string">&#x27;/user&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">user</span>(<span class="params">user: User</span>): </span><br><span class="line">    <span class="built_in">print</span>(user.age)</span><br><span class="line">    <span class="keyword">return</span> user</span><br><span class="line"></span><br><span class="line"><span class="meta">@app03.post(<span class="params"><span class="string">&#x27;/data&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">data</span>(<span class="params">data: User</span>): </span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line">    </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-4-form表单数据"><a href="#4-4-form表单数据" class="headerlink" title="4.4 form表单数据"></a>4.4 form表单数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter</span><br><span class="line"><span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel,Field,validator <span class="comment"># 数据校验</span></span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> date</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span>,<span class="type">Optional</span>,<span class="type">Union</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> Form</span><br><span class="line"></span><br><span class="line">app04 = APIRouter()</span><br><span class="line"></span><br><span class="line"><span class="meta">@app04.post(<span class="params"><span class="string">&#x27;/regin&#x27;</span></span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">regin</span>(<span class="params">username: <span class="built_in">str</span> = Form(<span class="params"></span>), password=Form(<span class="params"></span>)</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;username:<span class="subst">&#123;username&#125;</span>,password:<span class="subst">&#123;password&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;username&quot;</span>:username</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-5-文件上传"><a href="#4-5-文件上传" class="headerlink" title="4.5 文件上传"></a>4.5 文件上传</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter</span><br><span class="line"><span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel,Field,validator <span class="comment"># 数据校验</span></span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> date</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span>,<span class="type">Optional</span>,<span class="type">Union</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> Form,File,UploadFile</span><br><span class="line"></span><br><span class="line">app05 = APIRouter()</span><br><span class="line"></span><br><span class="line"><span class="meta">@app05.post(<span class="params"><span class="string">&#x27;/file&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">get_file</span>(<span class="params">file: <span class="built_in">bytes</span> = File(<span class="params"></span>)</span>): <span class="comment"># 文件属于字节流数据</span></span><br><span class="line">    <span class="comment"># 适合小文件</span></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;file&quot;</span>:<span class="built_in">len</span>(file)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 多文件</span></span><br><span class="line"><span class="meta">@app05.post(<span class="params"><span class="string">&#x27;/files&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">get_files</span>(<span class="params">files: <span class="type">List</span>[<span class="built_in">bytes</span>] = File(<span class="params"></span>)</span>): <span class="comment"># 文件属于字节流数据</span></span><br><span class="line">    <span class="comment"># 适合小文件</span></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;file&quot;</span>:<span class="built_in">len</span>(files)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@app05.post(<span class="params"><span class="string">&#x27;/uploadFile&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">upload</span>(<span class="params">file: UploadFile = File(<span class="params"></span>)</span>): <span class="comment"># 文件属于字节流数据</span></span><br><span class="line">    <span class="comment"># 适合大文件</span></span><br><span class="line">    <span class="built_in">print</span>(file.filename)</span><br><span class="line"></span><br><span class="line">    path = os.path.join(<span class="string">&quot;../images/fastapi/images&quot;</span>,file.filename)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(path,<span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(file.file.read())</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;file&quot;</span>:file.filename</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-6-Request对象"><a href="#4-6-Request对象" class="headerlink" title="4.6 Request对象"></a>4.6 Request对象</h3><p>有些情况下我们希望能直接访问Request对象。例如我们在路径操作函数中想获取客户端的IP地址，需要在函数中什么Request类型的参数，FastAPI就会自动传递Request对象给这个参数，我们就可以获取到Request对象及其属性信息，例如header、url、cookie、session等</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> Request</span><br><span class="line"></span><br><span class="line">app06 = APIRouter()</span><br><span class="line"></span><br><span class="line"><span class="meta">@app06.post(<span class="params"><span class="string">&#x27;/items&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">items</span>(<span class="params">request:Request</span>): </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;URL&quot;</span>,request.url)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;客户端ip地址&quot;</span>,request.client.host)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;客户端宿主&quot;</span>,request.headers.get(<span class="string">&quot;user-agent&quot;</span>))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;cookies&quot;</span>,request.cookies)</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;items&quot;</span>:request.url,</span><br><span class="line">        <span class="string">&quot;client_ip&quot;</span>:request.client.host,</span><br><span class="line">        <span class="string">&quot;client_host&quot;</span>:request.headers.get(<span class="string">&quot;user-agent&quot;</span>),</span><br><span class="line">        <span class="string">&quot;cookies&quot;</span>:request.cookies</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-7-请求静态文件"><a href="#4-7-请求静态文件" class="headerlink" title="4.7 请求静态文件"></a>4.7 请求静态文件</h3><p>在web开发中，需要请求很多静态资源文件(不是由服务器生成的文件)，如css&#x2F;js和图片文件等。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">```</span><br><span class="line"></span><br><span class="line">静态文件和动态文件</span><br><span class="line"></span><br><span class="line">- 非web产生的文件为静态</span><br><span class="line"></span><br><span class="line">静态网站和动态网站</span><br><span class="line"></span><br><span class="line"><span class="comment">### 4.8 响应模式相关参数</span></span><br><span class="line"></span><br><span class="line"><span class="number">21</span></span><br><span class="line"></span><br><span class="line">（<span class="number">1</span>）response_model</span><br><span class="line"></span><br><span class="line">前面写的这么多路径函数最终<span class="keyword">return</span>的都是自定义结构的字典，FastAPI提供了response_model参数，声明<span class="keyword">return</span>响应体的模型</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">FastAPI将树勇response_model进行以下操作</span><br><span class="line"></span><br><span class="line">- 将输出数据转换成response_model中声明的数据类型。</span><br><span class="line">- 验证数据结构和类型</span><br><span class="line">- 将输出数据限制为改model定义的</span><br><span class="line">- 添加到OpenAPI中</span><br><span class="line">- 在自动文档系统中使用</span><br><span class="line"></span><br><span class="line">你可以在任意的路径操作中使用response_model参数来声明用于响应的模型</span><br><span class="line"></span><br><span class="line">案例：</span><br><span class="line"></span><br><span class="line">- 注册功能</span><br><span class="line"></span><br><span class="line">- 输入账号、密码、昵称、邮箱</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">（<span class="number">2</span>）response_model_ exclude_unset</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 5 jinja2模版</span></span><br><span class="line"></span><br><span class="line">要了解jinjia2，那么需要先俩节模版的概念。模版在python的web开发中广泛使用，它能够有效的将业务逻辑和页面逻辑分开，使代码可读性增强、并且更加容易理解和维护。</span><br><span class="line"></span><br><span class="line"> 模版简单来说解释一个其中包含占位变量表示动态的部分的文件，模版文件在经过动态赋值后，返回给用户。</span><br><span class="line"></span><br><span class="line">jinjia2是Flask作者开发的一个模版系统，起初是仿django模版的一个模版引擎，为Flask提供模版支持，由于其灵活，快速和安全等优点被广泛使用。</span><br><span class="line"></span><br><span class="line">在jinja2中，存在三种语法</span><br><span class="line"></span><br><span class="line"><span class="number">1.</span>变量取值&#123;&#123;&#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span>控制结构&#123;%%&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">### 5.1 jinjia2变量</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### 5.2 jinjia2到过滤器</span></span><br><span class="line"></span><br><span class="line">变量可以通过“过滤器”进行修改，过滤器可以理解为是jinjia2里面的内置函数合字符串处理函数。常用的过滤器有“</span><br><span class="line"></span><br><span class="line">| 过滤器名称  | 说明                                         |</span><br><span class="line">| ----------- | -------------------------------------------- |</span><br><span class="line">| capitialize | 把值的首字母转换成大写，其他字母转换成小写   |</span><br><span class="line">| lower       | 把值转换成小写形式                           |</span><br><span class="line">| title       | 把值中每个单词的首字母都转换成大写           |</span><br><span class="line">| trim        | 把值的首尾空格去掉                           |</span><br><span class="line">| striptags   | 渲染之前把值中所有的HTML标签都删掉           |</span><br><span class="line">| join        | 拼接多个值为字符串                           |</span><br><span class="line">| <span class="built_in">round</span>       | 默认对数字进行四舍五入，也可以用参数进行控制 |</span><br><span class="line">| safe        | 渲染时值不转义                               |</span><br><span class="line"></span><br><span class="line">那么如何使用这些过滤器呢？只需要在变量后面使用管道(<span class="number">1</span>)分割，多个过滤器可以链式调用，前一个过滤器的输出会作为后一个过滤器的输入</span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">&#123;&#123;<span class="string">&#x27;abc&#x27;</span>|captialize&#125;&#125; <span class="comment"># Abc</span></span><br><span class="line"></span><br><span class="line">&#123;&#123;<span class="string">&#x27;abc&#x27;</span>｜upper&#125;&#125; <span class="comment"># ABC</span></span><br><span class="line"></span><br><span class="line">&#123;&#123;<span class="string">&#x27;hello world&#x27;</span>|title&#125;&#125; <span class="comment"># Hello World</span></span><br><span class="line"></span><br><span class="line">&#123;&#123;<span class="string">&#x27;hello world&#x27;</span>|replace(<span class="string">&#x27;world&#x27;</span>,<span class="string">&#x27;yuan&#x27;</span>)|upper&#125;&#125; <span class="comment"># hello world</span></span><br><span class="line"></span><br><span class="line">&#123;&#123;<span class="number">18.18</span> |<span class="built_in">round</span>|<span class="built_in">int</span>&#125;&#125; <span class="comment"># 18</span></span><br></pre></td></tr></table></figure>
+
+<p>5.3 jinjia2的控制结构</p>
+<p>5.3.1、分支控制</p>
+<p>jinjia2中的if语句类似于python的if语句，它也具有单分支，多分支等多种结构，不同的是，条件语句不需要使用冒号结尾，而结束控制语句，需要使用endif关键字</p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://dummyv07.github.io">Dummy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://dummyv07.github.io/2025/01/22/fastAPI/">https://dummyv07.github.io/2025/01/22/fastAPI/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://dummyv07.github.io" target="_blank">廾匸</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%85%B6%E4%BB%96/">其他</a></div><div class="post_share"><div class="social-share" data-image="https://a.520gexing.com/zb_users/upload/2024/01/202401111704950400367553.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/12/12/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8B%E8%B5%84%E6%BA%90%E5%8D%A0%E7%94%A8/" title="大模型学习之资源占用"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">大模型学习之资源占用</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/10/01/Notion%E8%AE%B0%E8%B4%A6%E6%9C%AC/" title="Notion记账本"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-01</div><div class="title">Notion记账本</div></div></a></div><div><a href="/2024/10/03/Docker%E7%9A%84%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Docker的学习与使用"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-03</div><div class="title">Docker的学习与使用</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://a.520gexing.com/zb_users/upload/2024/01/202401111704950400367553.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Dummy</div><div class="author-info__description">山与山不见面 再见容易再见难</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/DummyV07"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/DummyV07" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:dummy.v07@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#fastapi%E6%A1%86%E6%9E%B6"><span class="toc-number">1.</span> <span class="toc-text">@fastapi框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">1 预备知识点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-http%E5%8D%8F%E8%AE%AE"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 http协议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-1-%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.1.</span> <span class="toc-text">1.1.1 简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-2-http%E5%8D%8F%E8%AE%AE%E7%89%B9%E6%80%A7"><span class="toc-number">2.1.2.</span> <span class="toc-text">1.1.2 http协议特性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-3-http%E8%AF%B7%E6%B1%82%E5%8D%8F%E8%AE%AE%E4%B8%8E%E5%93%8D%E5%BA%94%E5%8D%8F%E8%AE%AE"><span class="toc-number">2.1.3.</span> <span class="toc-text">1.1.3 http请求协议与响应协议</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-api%E6%8E%A5%E5%8F%A3"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 api接口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-quick-start"><span class="toc-number">3.</span> <span class="toc-text">2 quick start</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%B7%AF%E5%BE%84%E6%93%8D%E4%BD%9C"><span class="toc-number">4.</span> <span class="toc-text">3 路径操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E8%AF%B7%E6%B1%82%E4%B8%8E%E5%93%8D%E5%BA%94"><span class="toc-number">5.</span> <span class="toc-text">4 请求与响应</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E8%B7%AF%E5%BE%84%E5%8F%82%E6%95%B0"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 路径参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E6%9F%A5%E8%AF%A2%E5%8F%82%E6%95%B0-%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 查询参数(请求参数)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E8%AF%B7%E6%B1%82%E4%BD%93%E6%95%B0%E6%8D%AE"><span class="toc-number">5.3.</span> <span class="toc-text">4.3 请求体数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-form%E8%A1%A8%E5%8D%95%E6%95%B0%E6%8D%AE"><span class="toc-number">5.4.</span> <span class="toc-text">4.4 form表单数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">5.5.</span> <span class="toc-text">4.5 文件上传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-Request%E5%AF%B9%E8%B1%A1"><span class="toc-number">5.6.</span> <span class="toc-text">4.6 Request对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-7-%E8%AF%B7%E6%B1%82%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6"><span class="toc-number">5.7.</span> <span class="toc-text">4.7 请求静态文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">5.8.</span> <span class="toc-text"></span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/22/fastAPI/" title="FastApi">FastApi</a><time datetime="2025-01-22T04:00:00.000Z" title="发表于 2025-01-22 12:00:00">2025-01-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/12/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8B%E8%B5%84%E6%BA%90%E5%8D%A0%E7%94%A8/" title="大模型学习之资源占用">大模型学习之资源占用</a><time datetime="2024-12-12T08:20:00.000Z" title="发表于 2024-12-12 16:20:00">2024-12-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/10/LlamaFactory%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/" title="LlamaFactory参数详解">LlamaFactory参数详解</a><time datetime="2024-12-10T06:00:00.000Z" title="发表于 2024-12-10 14:00:00">2024-12-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/05/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" title="大模型学习之大模型文件结构">大模型学习之大模型文件结构</a><time datetime="2024-12-05T06:00:00.000Z" title="发表于 2024-12-05 14:00:00">2024-12-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/24/OpenAI/" title="OpenAI">OpenAI</a><time datetime="2024-11-23T16:00:00.000Z" title="发表于 2024-11-24 00:00:00">2024-11-24</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Dummy</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.14.0-b3"></script><script src="/js/main.js?v=4.14.0-b3"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.35/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const runMermaid = (ele) => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from(ele).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+    
+    codeMermaidEle.forEach(ele => {
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.innerHTML = `<pre class="mermaid-src" hidden>${ele.textContent}</pre>`
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js').then(runMermaidFn)
+  }
+  
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
