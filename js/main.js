@@ -1,9 +1,11 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
   let headerContentWidth, $nav
   let mobileSidebarOpen = false
 
   const adjustMenu = init => {
-    const getAllWidth = ele => Array.from(ele).reduce((width, i) => width + i.offsetWidth, 0)
+    const getAllWidth = ele => {
+      return Array.from(ele).reduce((width, i) => width + i.offsetWidth, 0)
+    }
 
     if (init) {
       const blogInfoWidth = getAllWidth(document.querySelector('#blog-info > a').children)
@@ -25,13 +27,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // sidebar menus
   const sidebarFn = {
     open: () => {
-      btf.overflowPaddingR.add()
+      btf.sidebarPaddingR()
+      document.body.style.overflow = 'hidden'
       btf.animateIn(document.getElementById('menu-mask'), 'to_show 0.5s')
       document.getElementById('sidebar-menus').classList.add('open')
       mobileSidebarOpen = true
     },
     close: () => {
-      btf.overflowPaddingR.remove()
+      const $body = document.body
+      $body.style.overflow = ''
+      $body.style.paddingRight = ''
       btf.animateOut(document.getElementById('menu-mask'), 'to_hide 0.5s')
       document.getElementById('sidebar-menus').classList.remove('open')
       mobileSidebarOpen = false
@@ -67,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const isPrismjs = plugin === 'prismjs'
     const highlightShrinkClass = isHighlightShrink === true ? 'closed' : ''
-    const highlightShrinkEle = isHighlightShrink !== undefined ? '<i class="fas fa-angle-down expand"></i>' : ''
+    const highlightShrinkEle = isHighlightShrink !== undefined ? '<div><i class="fas fa-angle-down expand"></i></div>' : ''
     const highlightCopyEle = highlightCopy ? '<div class="copy-notice"></div><i class="fas fa-paste copy-button"></i>' : ''
     const highlightMacStyleEle = '<div class="macStyle"><div class="mac-close"></div><div class="mac-minimize"></div><div class="mac-maximize"></div></div>'
     const highlightFullpageEle = highlightFullpage ? '<i class="fa-solid fa-up-right-and-down-left-from-center fullpage-button"></i>' : ''
@@ -82,12 +87,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    const copy = async (text, ctx) => {
-      try {
-        await navigator.clipboard.writeText(text)
+    const copy = ctx => {
+      if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
+        document.execCommand('copy')
         alertInfo(ctx, GLOBAL_CONFIG.copy.success)
-      } catch (err) {
-        console.error('Failed to copy: ', err)
+      } else {
         alertInfo(ctx, GLOBAL_CONFIG.copy.noSupport)
       }
     }
@@ -96,14 +100,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const highlightCopyFn = (ele, clickEle) => {
       const $buttonParent = ele.parentNode
       $buttonParent.classList.add('copy-true')
+      const selection = window.getSelection()
+      const range = document.createRange()
       const preCodeSelector = isPrismjs ? 'pre code' : 'table .code pre'
-      const codeElement = $buttonParent.querySelector(preCodeSelector)
-      if (!codeElement) return
-      copy(codeElement.innerText, clickEle.previousElementSibling)
+      range.selectNodeContents($buttonParent.querySelector(`${preCodeSelector}`))
+      selection.removeAllRanges()
+      selection.addRange(range)
+      copy(clickEle.previousElementSibling)
+      selection.removeAllRanges()
       $buttonParent.classList.remove('copy-true')
     }
 
-    const highlightShrinkFn = ele => ele.classList.toggle('closed')
+    const highlightShrinkFn = ele => {
+      ele.classList.toggle('closed')
+    }
 
     const codeFullpage = (item, clickEle) => {
       const wrapEle = item.closest('figure.highlight')
@@ -114,46 +124,15 @@ document.addEventListener('DOMContentLoaded', () => {
       clickEle.classList.toggle('fa-up-right-and-down-left-from-center', !isFullpage)
     }
 
-    const highlightToolsFn = e => {
+    const highlightToolsFn = function (e) {
       const $target = e.target.classList
-      const currentElement = e.currentTarget
-      if ($target.contains('expand')) highlightShrinkFn(currentElement)
-      else if ($target.contains('copy-button')) highlightCopyFn(currentElement, e.target)
-      else if ($target.contains('fullpage-button')) codeFullpage(currentElement, e.target)
+      if ($target.contains('expand')) highlightShrinkFn(this)
+      else if ($target.contains('copy-button')) highlightCopyFn(this, e.target)
+      else if ($target.contains('fullpage-button')) codeFullpage(this, e.target)
     }
 
-    const expandCode = e => e.currentTarget.classList.toggle('expand-done')
-
-    // 獲取隱藏狀態下元素的真實高度
-    const getActualHeight = item => {
-      const hiddenElements = new Map()
-
-      const fix = () => {
-        let current = item
-        while (current !== document.body && current != null) {
-          if (window.getComputedStyle(current).display === 'none') {
-            hiddenElements.set(current, current.getAttribute('style') || '')
-          }
-          current = current.parentNode
-        }
-
-        const style = 'visibility: hidden !important; display: block !important;'
-        hiddenElements.forEach((originalStyle, elem) => {
-          elem.setAttribute('style', originalStyle ? originalStyle + ';' + style : style)
-        })
-      }
-
-      const restore = () => {
-        hiddenElements.forEach((originalStyle, elem) => {
-          if (originalStyle === '') elem.removeAttribute('style')
-          else elem.setAttribute('style', originalStyle)
-        })
-      }
-
-      fix()
-      const height = item.offsetHeight
-      restore()
-      return height
+    const expandCode = function () {
+      this.classList.toggle('expand-done')
     }
 
     const createEle = (lang, item) => {
@@ -167,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fragment.appendChild(hlTools)
       }
 
-      if (highlightHeightLimit && getActualHeight(item) > highlightHeightLimit + 30) {
+      if (highlightHeightLimit && item.offsetHeight > highlightHeightLimit + 30) {
         const ele = document.createElement('div')
         ele.className = 'code-expand-btn'
         ele.innerHTML = '<i class="fas fa-angle-double-down"></i>'
@@ -206,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const altValue = item.title || item.alt
       if (!altValue) return
       const ele = document.createElement('div')
-      ele.className = 'img-alt text-center'
+      ele.className = 'img-alt is-center'
       ele.textContent = altValue
       item.insertAdjacentElement('afterend', ele)
     })
@@ -223,155 +202,140 @@ document.addEventListener('DOMContentLoaded', () => {
    * justified-gallery 圖庫排版
    */
 
-  const fetchUrl = async url => {
-    try {
-      const response = await fetch(url)
-      return await response.json()
-    } catch (error) {
-      console.error('Failed to fetch URL:', error)
-      return []
-    }
+  const fetchUrl = async (url) => {
+    const response = await fetch(url)
+    return await response.json()
   }
 
-  const runJustifiedGallery = (container, data, config) => {
-    const { isButton, limit, firstLimit, tabs } = config
-
+  const runJustifiedGallery = (item, data, isButton = false, tabs) => {
     const dataLength = data.length
-    const maxGroupKey = Math.ceil((dataLength - firstLimit) / limit + 1)
 
-    // Gallery configuration
-    const igConfig = {
+    const ig = new InfiniteGrid.JustifiedInfiniteGrid(item, {
       gap: 5,
       isConstantSize: true,
       sizeRange: [150, 600],
-      // useResizeObserver: true,
-      // observeChildren: true,
+      useResizeObserver: true,
+      observeChildren: true,
       useTransform: true
       // useRecycle: false
+    })
+
+    if (tabs) {
+      btf.addGlobalFn('igOfTabs', () => { ig.destroy() }, false, tabs)
     }
 
-    const ig = new InfiniteGrid.JustifiedInfiniteGrid(container, igConfig)
-    let isLayoutHidden = false
+    const replaceDq = str => str.replace(/"/g, '&quot;') // replace double quotes to &quot;
 
-    // Utility functions
-    const sanitizeString = str => (str && str.replace(/"/g, '&quot;')) || ''
+    const getItems = (nextGroupKey, count) => {
+      const nextItems = []
+      const startCount = (nextGroupKey - 1) * count
 
-    const createImageItem = item => {
-      const alt = item.alt ? `alt="${sanitizeString(item.alt)}"` : ''
-      const title = item.title ? `title="${sanitizeString(item.title)}"` : ''
-      return `<div class="item">
-        <img src="${item.url}" data-grid-maintained-target="true" ${alt} ${title} />
-      </div>`
+      for (let i = 0; i < count; ++i) {
+        const num = startCount + i
+        if (num >= dataLength) {
+          break
+        }
+
+        const item = data[num]
+        const alt = item.alt ? `alt="${replaceDq(item.alt)}"` : ''
+        const title = item.title ? `title="${replaceDq(item.title)}"` : ''
+
+        nextItems.push(`<div class="item ">
+            <img src="${item.url}" data-grid-maintained-target="true" ${alt + title} />
+          </div>`)
+      }
+      return nextItems
     }
 
-    const getItems = (nextGroupKey, count, isFirst = false) => {
-      const startIndex = isFirst ? (nextGroupKey - 1) * count : (nextGroupKey - 2) * count + firstLimit
-      return data.slice(startIndex, startIndex + count).map(createImageItem)
-    }
-
-    // Load more button
-    const addLoadMoreButton = container => {
+    const buttonText = GLOBAL_CONFIG.infinitegrid.buttonText
+    const addButton = item => {
       const button = document.createElement('button')
-      button.innerHTML = `${GLOBAL_CONFIG.infinitegrid.buttonText}<i class="fa-solid fa-arrow-down"></i>`
+      button.textContent = buttonText
 
-      button.addEventListener('click', () => {
-        button.remove()
-        btf.setLoading.add(container)
-        appendItems(ig.getGroups().length + 1, limit)
-      }, { once: true })
-
-      container.insertAdjacentElement('afterend', button)
-    }
-
-    const appendItems = (nextGroupKey, count, isFirst) => {
-      ig.append(getItems(nextGroupKey, count, isFirst), nextGroupKey)
-    }
-
-    // Event handlers
-    const handleRenderComplete = e => {
-      if (tabs) {
-        const parentNode = container.parentNode
-        if (isLayoutHidden) {
-          parentNode.style.visibility = 'visible'
-        }
-        if (container.offsetHeight === 0) {
-          parentNode.style.visibility = 'hidden'
-          isLayoutHidden = true
-        }
+      const buttonFn = e => {
+        e.target.removeEventListener('click', buttonFn)
+        e.target.remove()
+        btf.setLoading.add(item)
+        appendItem(ig.getGroups().length + 1, 10)
       }
 
-      const { updated, isResize, mounted } = e
-      if (!updated.length || !mounted.length || isResize) return
+      button.addEventListener('click', buttonFn)
+      item.insertAdjacentElement('afterend', button)
+    }
 
-      btf.loadLightbox(container.querySelectorAll('img:not(.medium-zoom-image)'))
+    const appendItem = (nextGroupKey, count) => {
+      ig.append(getItems(nextGroupKey, count), nextGroupKey)
+    }
+
+    const maxGroupKey = Math.ceil(dataLength / 10)
+
+    const completeFn = e => {
+      const { updated, isResize, mounted } = e
+      if (!updated.length || !mounted.length || isResize) {
+        return
+      }
+
+      btf.loadLightbox(item.querySelectorAll('img:not(.medium-zoom-image)'))
 
       if (ig.getGroups().length === maxGroupKey) {
-        btf.setLoading.remove(container)
-        !tabs && ig.off('renderComplete', handleRenderComplete)
+        btf.setLoading.remove(item)
+        ig.off('renderComplete', completeFn)
         return
       }
 
       if (isButton) {
-        btf.setLoading.remove(container)
-        addLoadMoreButton(container)
+        btf.setLoading.remove(item)
+        addButton(item)
       }
     }
 
-    const handleRequestAppend = btf.debounce(e => {
+    const requestAppendFn = btf.debounce(e => {
       const nextGroupKey = (+e.groupKey || 0) + 1
+      appendItem(nextGroupKey, 10)
 
-      if (nextGroupKey === 1) appendItems(nextGroupKey, firstLimit, true)
-      else appendItems(nextGroupKey, limit)
-
-      if (nextGroupKey === maxGroupKey) ig.off('requestAppend', handleRequestAppend)
+      if (nextGroupKey === maxGroupKey) {
+        ig.off('requestAppend', requestAppendFn)
+      }
     }, 300)
 
-    btf.setLoading.add(container)
-    ig.on('renderComplete', handleRenderComplete)
+    btf.setLoading.add(item)
+    ig.on('renderComplete', completeFn)
 
     if (isButton) {
-      appendItems(1, firstLimit, true)
+      appendItem(1, 10)
     } else {
-      ig.on('requestAppend', handleRequestAppend)
+      ig.on('requestAppend', requestAppendFn)
       ig.renderItems()
     }
 
-    btf.addGlobalFn('pjaxSendOnce', () => ig.destroy())
+    btf.addGlobalFn('justifiedGallery', () => { ig.destroy() })
   }
 
-  const addJustifiedGallery = async (elements, tabs = false) => {
-    if (!elements.length) return
-
-    const initGallery = async () => {
-      for (const element of elements) {
-        if (btf.isHidden(element) || element.classList.contains('loaded')) continue
-
-        const config = {
-          isButton: element.getAttribute('data-button') === 'true',
-          limit: parseInt(element.getAttribute('data-limit'), 10),
-          firstLimit: parseInt(element.getAttribute('data-first'), 10),
-          tabs
+  const addJustifiedGallery = async (ele, tabs = false) => {
+    const init = async () => {
+      for (const item of ele) {
+        if (btf.isHidden(item)) continue
+        if (tabs && item.classList.contains('loaded')) {
+          item.querySelector('.gallery-items').innerHTML = ''
+          const button = item.querySelector(':scope > button')
+          const loadingContainer = item.querySelector(':scope > .loading-container')
+          button && button.remove()
+          loadingContainer && loadingContainer.remove()
         }
 
-        const container = element.firstElementChild
-        const content = container.textContent
-        container.textContent = ''
-        element.classList.add('loaded')
-
-        try {
-          const data = element.getAttribute('data-type') === 'url' ? await fetchUrl(content) : JSON.parse(content)
-          runJustifiedGallery(container, data, config)
-        } catch (error) {
-          console.error('Gallery data parsing failed:', error)
-        }
+        const isButton = item.getAttribute('data-button') === 'true'
+        const text = item.firstElementChild.textContent
+        item.classList.add('loaded')
+        const content = item.getAttribute('data-type') === 'url' ? await fetchUrl(text) : JSON.parse(text)
+        runJustifiedGallery(item.lastElementChild, content, isButton, tabs)
       }
     }
 
     if (typeof InfiniteGrid === 'function') {
-      await initGallery()
+      init()
     } else {
-      await btf.getScript(GLOBAL_CONFIG.infinitegrid.js)
-      await initGallery()
+      await btf.getScript(`${GLOBAL_CONFIG.infinitegrid.js}`)
+      init()
     }
   }
 
@@ -401,17 +365,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const isChatBtn = typeof chatBtn !== 'undefined'
     const isShowPercent = GLOBAL_CONFIG.percent.rightside
 
-    // 檢查文檔高度是否小於視窗高度
-    const checkDocumentHeight = () => {
-      if (document.body.scrollHeight <= innerHeight) {
-        $rightside.classList.add('rightside-show')
-        return true
-      }
-      return false
+    // 當滾動條小于 56 的時候
+    if (document.body.scrollHeight <= innerHeight) {
+      $rightside.classList.add('rightside-show')
+      return
     }
-
-    // 如果文檔高度小於視窗高度,直接返回
-    if (checkDocumentHeight()) return
 
     // find the scroll direction
     const scrollDirection = currentTop => {
@@ -452,7 +410,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       isShowPercent && rightsideScrollPercent(currentTop)
-      checkDocumentHeight()
+
+      if (document.body.scrollHeight <= innerHeight) {
+        $rightside.classList.add('rightside-show')
+      }
     }, 300)
 
     btf.addEventListenerPjax(window, 'scroll', scrollTask, { passive: true })
@@ -492,15 +453,13 @@ document.addEventListener('DOMContentLoaded', () => {
       btf.addEventListenerPjax($cardToc, 'click', tocItemClickFn)
 
       autoScrollToc = item => {
-        const sidebarHeight = $cardToc.clientHeight
-        const itemOffsetTop = item.offsetTop
-        const itemHeight = item.clientHeight
-        const scrollTop = $cardToc.scrollTop
-        const offset = itemOffsetTop - scrollTop
-        const middlePosition = (sidebarHeight - itemHeight) / 2
-
-        if (offset !== middlePosition) {
-          $cardToc.scrollTop = scrollTop + (offset - middlePosition)
+        const activePosition = item.getBoundingClientRect().top
+        const sidebarScrollTop = $cardToc.scrollTop
+        if (activePosition > (document.documentElement.clientHeight - 100)) {
+          $cardToc.scrollTop = sidebarScrollTop + 150
+        }
+        if (activePosition < 100) {
+          $cardToc.scrollTop = sidebarScrollTop - 150
         }
       }
 
@@ -511,23 +470,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // find head position & add active class
     const $articleList = $article.querySelectorAll('h1,h2,h3,h4,h5,h6')
     let detectItem = ''
-
     const findHeadPosition = top => {
-      if (top === 0) return false
+      if (top === 0) {
+        return false
+      }
 
       let currentId = ''
       let currentIndex = ''
 
-      for (let i = 0; i < $articleList.length; i++) {
-        const ele = $articleList[i]
+      $articleList.forEach((ele, index) => {
         if (top > btf.getEleTop(ele) - 80) {
           const id = ele.id
           currentId = id ? '#' + encodeURI(id) : ''
-          currentIndex = i
-        } else {
-          break
+          currentIndex = index
         }
-      }
+      })
 
       if (detectItem === currentIndex) return
 
@@ -536,21 +493,24 @@ document.addEventListener('DOMContentLoaded', () => {
       detectItem = currentIndex
 
       if (isToc) {
-        $cardToc.querySelectorAll('.active').forEach(i => i.classList.remove('active'))
+        $cardToc.querySelectorAll('.active').forEach(i => { i.classList.remove('active') })
 
-        if (currentId) {
-          const currentActive = $tocLink[currentIndex]
-          currentActive.classList.add('active')
+        if (currentId === '') {
+          return
+        }
 
-          setTimeout(() => autoScrollToc(currentActive), 0)
+        const currentActive = $tocLink[currentIndex]
+        currentActive.classList.add('active')
 
-          if (!isExpand) {
-            let parent = currentActive.parentNode
-            while (!parent.matches('.toc')) {
-              if (parent.matches('li')) parent.classList.add('active')
-              parent = parent.parentNode
-            }
-          }
+        setTimeout(() => {
+          autoScrollToc(currentActive)
+        }, 0)
+
+        if (isExpand) return
+        let parent = currentActive.parentNode
+
+        for (; !parent.matches('.toc'); parent = parent.parentNode) {
+          if (parent.matches('li')) parent.classList.add('active')
         }
       }
     }
@@ -590,19 +550,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const rightSideFn = {
     readmode: () => { // read mode
       const $body = document.body
-      const newEle = document.createElement('button')
-
-      const exitReadMode = () => {
-        $body.classList.remove('read-mode')
-        newEle.remove()
-        newEle.removeEventListener('click', exitReadMode)
-      }
-
       $body.classList.add('read-mode')
+      const newEle = document.createElement('button')
       newEle.type = 'button'
       newEle.className = 'fas fa-sign-out-alt exit-readmode'
-      newEle.addEventListener('click', exitReadMode)
       $body.appendChild(newEle)
+
+      const clickFn = () => {
+        $body.classList.remove('read-mode')
+        newEle.remove()
+        newEle.removeEventListener('click', clickFn)
+      }
+
+      newEle.addEventListener('click', clickFn)
     },
     darkmode: () => { // switch between light and dark mode
       const willChangeMode = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
@@ -636,7 +596,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btf.saveToLocal.set('aside-status', saveStatus, 2)
       $htmlDom.toggle('hide-aside')
     },
-    'mobile-toc-button': (p, item) => { // Show mobile toc
+    'mobile-toc-button': function (p, item) { // Show mobile toc
       const tocEle = document.getElementById('card-toc')
       tocEle.style.transition = 'transform 0.3s ease-in-out'
 
@@ -661,10 +621,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  document.getElementById('rightside').addEventListener('click', e => {
+  document.getElementById('rightside').addEventListener('click', function (e) {
     const $target = e.target.closest('[id]')
     if ($target && rightSideFn[$target.id]) {
-      rightSideFn[$target.id](e.currentTarget, $target)
+      rightSideFn[$target.id](this, $target)
     }
   })
 
@@ -679,17 +639,15 @@ document.addEventListener('DOMContentLoaded', () => {
       target.classList.toggle('hide')
     }
 
-    const menusItems = document.querySelector('#sidebar-menus .menus_items')
-    menusItems && menusItems.addEventListener('click', handleClickOfSubMenu)
+    document.querySelector('#sidebar-menus .menus_items').addEventListener('click', handleClickOfSubMenu)
   }
 
   /**
    * 手机端目录点击
    */
   const openMobileMenu = () => {
-    const toggleMenu = document.getElementById('toggle-menu')
-    if (!toggleMenu) return
-    btf.addEventListenerPjax(toggleMenu, 'click', () => { sidebarFn.open() })
+    const handleClick = () => { sidebarFn.open() }
+    btf.addEventListenerPjax(document.getElementById('toggle-menu'), 'click', handleClick)
   }
 
   /**
@@ -757,45 +715,62 @@ document.addEventListener('DOMContentLoaded', () => {
   const clickFnOfTagHide = () => {
     const hideButtons = document.querySelectorAll('#article-container .hide-button')
     if (!hideButtons.length) return
-    hideButtons.forEach(item => item.addEventListener('click', e => {
-      const currentTarget = e.currentTarget
-      currentTarget.classList.add('open')
-      addJustifiedGallery(currentTarget.nextElementSibling.querySelectorAll('.gallery-container'))
-    }, { once: true }))
+    const handleClick = function (e) {
+      const $this = this
+      $this.classList.add('open')
+      const $fjGallery = $this.nextElementSibling.querySelectorAll('.gallery-container')
+      $fjGallery.length && addJustifiedGallery($fjGallery)
+    }
+
+    hideButtons.forEach(item => {
+      item.addEventListener('click', handleClick, { once: true })
+    })
   }
 
   const tabsFn = () => {
-    const navTabsElements = document.querySelectorAll('#article-container .tabs')
-    if (!navTabsElements.length) return
+    const navTabsElement = document.querySelectorAll('#article-container .tabs')
+    if (!navTabsElement.length) return
 
-    const setActiveClass = (elements, activeIndex) => {
-      elements.forEach((el, index) => {
-        el.classList.toggle('active', index === activeIndex)
+    const removeAndAddActiveClass = (elements, detect) => {
+      Array.from(elements).forEach(element => {
+        element.classList.remove('active')
+        if (element === detect || element.id === detect) {
+          element.classList.add('active')
+        }
       })
     }
 
-    const handleNavClick = e => {
-      const target = e.target.closest('button')
-      if (!target || target.classList.contains('active')) return
-
-      const navItems = [...e.currentTarget.children]
-      const tabContents = [...e.currentTarget.nextElementSibling.children]
-      const indexOfButton = navItems.indexOf(target)
-      setActiveClass(navItems, indexOfButton)
-      e.currentTarget.classList.remove('no-default')
-      setActiveClass(tabContents, indexOfButton)
-      addJustifiedGallery(tabContents[indexOfButton].querySelectorAll('.gallery-container'), true)
-    }
-
-    const handleToTopClick = tabElement => e => {
-      if (e.target.closest('button')) {
-        btf.scrollToDest(btf.getEleTop(tabElement), 300)
+    const addTabNavEventListener = (item, isJustifiedGallery) => {
+      const navClickHandler = function (e) {
+        const target = e.target.closest('button')
+        if (target.classList.contains('active')) return
+        removeAndAddActiveClass(this.children, target)
+        this.classList.remove('no-default')
+        const tabId = target.getAttribute('data-href')
+        const tabContent = this.nextElementSibling
+        removeAndAddActiveClass(tabContent.children, tabId)
+        if (isJustifiedGallery) {
+          btf.removeGlobalFnEvent('igOfTabs', this)
+          const justifiedGalleryItems = tabContent.querySelectorAll(`:scope > #${tabId} .gallery-container`)
+          justifiedGalleryItems.length && addJustifiedGallery(justifiedGalleryItems, this)
+        }
       }
+      btf.addEventListenerPjax(item.firstElementChild, 'click', navClickHandler)
     }
 
-    navTabsElements.forEach(tabElement => {
-      btf.addEventListenerPjax(tabElement.firstElementChild, 'click', handleNavClick)
-      btf.addEventListenerPjax(tabElement.lastElementChild, 'click', handleToTopClick(tabElement))
+    const addTabToTopEventListener = item => {
+      const btnClickHandler = (e) => {
+        const target = e.target.closest('button')
+        if (!target) return
+        btf.scrollToDest(btf.getEleTop(item), 300)
+      }
+      btf.addEventListenerPjax(item.lastElementChild, 'click', btnClickHandler)
+    }
+
+    navTabsElement.forEach(item => {
+      const isJustifiedGallery = !!item.querySelectorAll('.gallery-container')
+      addTabNavEventListener(item, isJustifiedGallery)
+      addTabToTopEventListener(item)
     })
   }
 
@@ -803,7 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardCategory = document.querySelector('#aside-cat-list.expandBtn')
     if (!cardCategory) return
 
-    const handleToggleBtn = e => {
+    const handleToggleBtn = (e) => {
       const target = e.target
       if (target.nodeName === 'I') {
         e.preventDefault()
@@ -813,15 +788,34 @@ document.addEventListener('DOMContentLoaded', () => {
     btf.addEventListenerPjax(cardCategory, 'click', handleToggleBtn, true)
   }
 
-  const addPostOutdateNotice = () => {
-    const ele = document.getElementById('post-outdate-notice')
-    if (!ele) return
+  const switchComments = () => {
+    const switchBtn = document.getElementById('switch-btn')
+    if (!switchBtn) return
+    let switchDone = false
+    const commentContainer = document.getElementById('post-comment')
+    const handleSwitchBtn = () => {
+      commentContainer.classList.toggle('move')
+      if (!switchDone && typeof loadOtherComment === 'function') {
+        switchDone = true
+        loadOtherComment()
+      }
+    }
+    btf.addEventListenerPjax(switchBtn, 'click', handleSwitchBtn)
+  }
 
-    const { limitDay, messagePrev, messageNext, postUpdate } = JSON.parse(ele.getAttribute('data'))
-    const diffDay = btf.diffDate(postUpdate)
+  const addPostOutdateNotice = () => {
+    const { limitDay, messagePrev, messageNext, position } = GLOBAL_CONFIG.noticeOutdate
+    const diffDay = btf.diffDate(GLOBAL_CONFIG_SITE.postUpdate)
     if (diffDay >= limitDay) {
+      const ele = document.createElement('div')
+      ele.className = 'post-outdate-notice'
       ele.textContent = `${messagePrev} ${diffDay} ${messageNext}`
-      ele.hidden = false
+      const $targetEle = document.getElementById('article-container')
+      if (position === 'top') {
+        $targetEle.insertBefore(ele, $targetEle.firstChild)
+      } else {
+        $targetEle.appendChild(ele)
+      }
     }
   }
 
@@ -837,45 +831,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 'lazyload')
   }
 
-  const relativeDate = selector => {
+  const relativeDate = function (selector) {
     selector.forEach(item => {
-      item.textContent = btf.diffDate(item.getAttribute('datetime'), true)
+      const timeVal = item.getAttribute('datetime')
+      item.textContent = btf.diffDate(timeVal, true)
       item.style.display = 'inline'
     })
   }
 
-  const justifiedIndexPostUI = () => {
-    const recentPostsElement = document.getElementById('recent-posts')
-    if (!(recentPostsElement && recentPostsElement.classList.contains('masonry'))) return
-
-    const init = () => {
-      const masonryItem = new InfiniteGrid.MasonryInfiniteGrid('.recent-post-items', {
-        gap: { horizontal: 10, vertical: 20 },
-        useTransform: true,
-        useResizeObserver: true
-      })
-      masonryItem.renderItems()
-      btf.addGlobalFn('pjaxCompleteOnce', () => { masonryItem.destroy() }, 'removeJustifiedIndexPostUI')
-    }
-
-    typeof InfiniteGrid === 'function' ? init() : btf.getScript(`${GLOBAL_CONFIG.infinitegrid.js}`).then(init)
-  }
-
-  const unRefreshFn = () => {
+  const unRefreshFn = function () {
     window.addEventListener('resize', () => {
       adjustMenu(false)
       mobileSidebarOpen && btf.isHidden(document.getElementById('toggle-menu')) && sidebarFn.close()
     })
 
-    const menuMask = document.getElementById('menu-mask')
-    menuMask && menuMask.addEventListener('click', () => { sidebarFn.close() })
+    document.getElementById('menu-mask').addEventListener('click', e => { sidebarFn.close() })
 
     clickFnOfSubMenu()
-    GLOBAL_CONFIG.islazyloadPlugin && lazyloadImg()
+    GLOBAL_CONFIG.islazyload && lazyloadImg()
     GLOBAL_CONFIG.copyright !== undefined && addCopyright()
 
     if (GLOBAL_CONFIG.autoDarkmode) {
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
         if (btf.saveToLocal.get('theme') !== undefined) return
         e.matches ? handleThemeChange('dark') : handleThemeChange('light')
       })
@@ -885,7 +862,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const forPostFn = () => {
     addHighlightTool()
     addPhotoFigcaption()
-    addJustifiedGallery(document.querySelectorAll('#article-container .gallery-container'))
+
+    btf.removeGlobalFnEvent('justifiedGallery')
+    const galleryContainer = document.querySelectorAll('#article-container .gallery-container')
+    galleryContainer.length && addJustifiedGallery(galleryContainer)
+
     runLightbox()
     scrollFnToDo()
     addTableWrap()
@@ -895,10 +876,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const refreshFn = () => {
     initAdjust()
-    justifiedIndexPostUI()
 
-    if (GLOBAL_CONFIG_SITE.pageType === 'post') {
-      addPostOutdateNotice()
+    if (GLOBAL_CONFIG_SITE.isPost) {
+      GLOBAL_CONFIG.noticeOutdate !== undefined && addPostOutdateNotice()
       GLOBAL_CONFIG.relativeDate.post && relativeDate(document.querySelectorAll('#post-meta time'))
     } else {
       GLOBAL_CONFIG.relativeDate.homepage && relativeDate(document.querySelectorAll('#recent-posts time'))
@@ -907,11 +887,11 @@ document.addEventListener('DOMContentLoaded', () => {
       toggleCardCategory()
     }
 
-    GLOBAL_CONFIG_SITE.pageType === 'home' && scrollDownInIndex()
+    GLOBAL_CONFIG_SITE.isHome && scrollDownInIndex()
     scrollFn()
 
     forPostFn()
-    GLOBAL_CONFIG_SITE.pageType !== 'shuoshuo' && btf.switchComments(document)
+    switchComments()
     openMobileMenu()
   }
 

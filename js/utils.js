@@ -47,26 +47,12 @@
       return throttled
     },
 
-    overflowPaddingR: {
-      add: () => {
-        const paddingRight = window.innerWidth - document.body.clientWidth
-
-        if (paddingRight > 0) {
-          document.body.style.paddingRight = `${paddingRight}px`
-          document.body.style.overflow = 'hidden'
-          const menuElement = document.querySelector('#page-header.nav-fixed #menus')
-          if (menuElement) {
-            menuElement.style.paddingRight = `${paddingRight}px`
-          }
-        }
-      },
-      remove: () => {
-        document.body.style.paddingRight = ''
-        document.body.style.overflow = ''
-        const menuElement = document.querySelector('#page-header.nav-fixed #menus')
-        if (menuElement) {
-          menuElement.style.paddingRight = ''
-        }
+    sidebarPaddingR: () => {
+      const innerWidth = window.innerWidth
+      const clientWidth = document.body.clientWidth
+      const paddingRight = innerWidth - clientWidth
+      if (innerWidth !== clientWidth) {
+        document.body.style.paddingRight = paddingRight + 'px'
       }
     },
 
@@ -83,24 +69,28 @@
       })
     },
 
-    diffDate: (inputDate, more = false) => {
+    diffDate: (d, more = false) => {
       const dateNow = new Date()
-      const datePost = new Date(inputDate)
-      const diffMs = dateNow - datePost
-      const diffSec = diffMs / 1000
-      const diffMin = diffSec / 60
-      const diffHour = diffMin / 60
-      const diffDay = diffHour / 24
-      const diffMonth = diffDay / 30
+      const datePost = new Date(d)
+      const dateDiff = dateNow.getTime() - datePost.getTime()
+      const minute = 1000 * 60
+      const hour = minute * 60
+      const day = hour * 24
+      const month = day * 30
       const { dateSuffix } = GLOBAL_CONFIG
 
-      if (!more) return Math.floor(diffDay)
+      if (!more) return parseInt(dateDiff / day)
 
-      if (diffMonth > 12) return datePost.toISOString().slice(0, 10)
-      if (diffMonth >= 1) return `${Math.floor(diffMonth)} ${dateSuffix.month}`
-      if (diffDay >= 1) return `${Math.floor(diffDay)} ${dateSuffix.day}`
-      if (diffHour >= 1) return `${Math.floor(diffHour)} ${dateSuffix.hour}`
-      if (diffMin >= 1) return `${Math.floor(diffMin)} ${dateSuffix.min}`
+      const monthCount = dateDiff / month
+      const dayCount = dateDiff / day
+      const hourCount = dateDiff / hour
+      const minuteCount = dateDiff / minute
+
+      if (monthCount > 12) return datePost.toISOString().slice(0, 10)
+      if (monthCount >= 1) return `${parseInt(monthCount)} ${dateSuffix.month}`
+      if (dayCount >= 1) return `${parseInt(dayCount)} ${dateSuffix.day}`
+      if (hourCount >= 1) return `${parseInt(hourCount)} ${dateSuffix.hour}`
+      if (minuteCount >= 1) return `${parseInt(minuteCount)} ${dateSuffix.min}`
       return dateSuffix.just
     },
 
@@ -119,7 +109,7 @@
     },
 
     scrollToDest: (pos, time = 500) => {
-      const currentPos = window.scrollY
+      const currentPos = window.pageYOffset
       const isNavFixed = document.getElementById('page-header').classList.contains('fixed')
       if (currentPos > pos || isNavFixed) pos = pos - 70
 
@@ -131,31 +121,36 @@
         return
       }
 
-      const startTime = performance.now()
-      const animate = currentTime => {
-        const timeElapsed = currentTime - startTime
-        const progress = Math.min(timeElapsed / time, 1)
-        window.scrollTo(0, currentPos + (pos - currentPos) * progress)
-        if (progress < 1) {
-          requestAnimationFrame(animate)
+      let start = null
+      pos = +pos
+      window.requestAnimationFrame(function step (currentTime) {
+        start = !start ? currentTime : start
+        const progress = currentTime - start
+        if (currentPos < pos) {
+          window.scrollTo(0, ((pos - currentPos) * progress / time) + currentPos)
+        } else {
+          window.scrollTo(0, currentPos - ((currentPos - pos) * progress / time))
         }
-      }
-      requestAnimationFrame(animate)
+        if (progress < time) {
+          window.requestAnimationFrame(step)
+        } else {
+          window.scrollTo(0, pos)
+        }
+      })
     },
 
-    animateIn: (ele, animation) => {
+    animateIn: (ele, text) => {
       ele.style.display = 'block'
-      ele.style.animation = animation
+      ele.style.animation = text
     },
 
-    animateOut: (ele, animation) => {
-      const handleAnimationEnd = () => {
+    animateOut: (ele, text) => {
+      ele.addEventListener('animationend', function f () {
         ele.style.display = ''
         ele.style.animation = ''
-        ele.removeEventListener('animationend', handleAnimationEnd)
-      }
-      ele.addEventListener('animationend', handleAnimationEnd)
-      ele.style.animation = animation
+        ele.removeEventListener('animationend', f)
+      })
+      ele.style.animation = text
     },
 
     wrap: (selector, eleType, options) => {
@@ -184,7 +179,7 @@
     loadLightbox: ele => {
       const service = GLOBAL_CONFIG.lightbox
 
-      if (service === 'medium_zoom') {
+      if (service === 'mediumZoom') {
         mediumZoom(ele, { background: 'var(--zoom-bg)' })
       }
 
@@ -248,7 +243,7 @@
       }
     },
 
-    updateAnchor: anchor => {
+    updateAnchor: (anchor) => {
       if (anchor !== window.location.hash) {
         if (!anchor) anchor = location.pathname
         const title = GLOBAL_CONFIG_SITE.title
@@ -259,53 +254,33 @@
       }
     },
 
-    getScrollPercent: (() => {
-      let docHeight, winHeight, headerHeight, contentMath
-
-      return (currentTop, ele) => {
-        if (!docHeight || ele.clientHeight !== docHeight) {
-          docHeight = ele.clientHeight
-          winHeight = window.innerHeight
-          headerHeight = ele.offsetTop
-          contentMath = Math.max(docHeight - winHeight, document.documentElement.scrollHeight - winHeight)
-        }
-
-        const scrollPercent = (currentTop - headerHeight) / contentMath
-        return Math.max(0, Math.min(100, Math.round(scrollPercent * 100)))
-      }
-    })(),
+    getScrollPercent: (currentTop, ele) => {
+      const docHeight = ele.clientHeight
+      const winHeight = document.documentElement.clientHeight
+      const headerHeight = ele.offsetTop
+      const contentMath = (docHeight > winHeight) ? (docHeight - winHeight) : (document.documentElement.scrollHeight - winHeight)
+      const scrollPercent = (currentTop - headerHeight) / (contentMath)
+      const scrollPercentRounded = Math.round(scrollPercent * 100)
+      const percentage = (scrollPercentRounded > 100) ? 100 : (scrollPercentRounded <= 0) ? 0 : scrollPercentRounded
+      return percentage
+    },
 
     addEventListenerPjax: (ele, event, fn, option = false) => {
       ele.addEventListener(event, fn, option)
-      btf.addGlobalFn('pjaxSendOnce', () => {
+      btf.addGlobalFn('pjax', () => {
         ele.removeEventListener(event, fn, option)
       })
     },
 
     removeGlobalFnEvent: (key, parent = window) => {
-      const globalFn = parent.globalFn || {}
-      const keyObj = globalFn[key]
-      if (!keyObj) return
-
-      Object.keys(keyObj).forEach(i => keyObj[i]())
-
-      delete globalFn[key]
-    },
-
-    switchComments: (el = document, path) => {
-      const switchBtn = el.querySelector('#switch-btn')
-      if (!switchBtn) return
-
-      let switchDone = false
-      const postComment = el.querySelector('#post-comment')
-      const handleSwitchBtn = () => {
-        postComment.classList.toggle('move')
-        if (!switchDone && typeof loadOtherComment === 'function') {
-          switchDone = true
-          loadOtherComment(el, path)
-        }
-      }
-      btf.addEventListenerPjax(switchBtn, 'click', handleSwitchBtn)
+      const { globalFn = {} } = parent
+      const keyObj = globalFn[key] || {}
+      const keyArr = Object.keys(keyObj)
+      if (!keyArr.length) return
+      keyArr.forEach(i => {
+        keyObj[i]()
+      })
+      delete parent.globalFn[key]
     }
   }
 
