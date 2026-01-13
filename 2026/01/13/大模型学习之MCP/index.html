@@ -1,0 +1,470 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>大模型学习之MCP | 廾匸</title><meta name="author" content="Dummy"><meta name="copyright" content="Dummy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="MCP视频链接 RAG 技术的局限性RAG（检索增强生成，Retrieval-Augmented Generation）是当前大模型领域的热门方向。它结合了信息检索与生成式模型，旨在提升知识准确性、上下文理解和对最新信息的利用能力。  RAG 的主要缺点：  检索精度有限，可能无法获取最相关的信息 生成内容可能不完整或片面 缺乏全局视角 检索能力受限时效果下降  理论基础Function Call">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大模型学习之MCP">
+<meta property="og:url" content="https://dummyv07.github.io/2026/01/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BMCP/index.html">
+<meta property="og:site_name" content="廾匸">
+<meta property="og:description" content="MCP视频链接 RAG 技术的局限性RAG（检索增强生成，Retrieval-Augmented Generation）是当前大模型领域的热门方向。它结合了信息检索与生成式模型，旨在提升知识准确性、上下文理解和对最新信息的利用能力。  RAG 的主要缺点：  检索精度有限，可能无法获取最相关的信息 生成内容可能不完整或片面 缺乏全局视角 检索能力受限时效果下降  理论基础Function Call">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dummyv07.github.io/img/mcp.png">
+<meta property="article:published_time" content="2026-01-13T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-13T09:48:12.797Z">
+<meta property="article:author" content="Dummy">
+<meta property="article:tag" content="LLN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dummyv07.github.io/img/mcp.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "大模型学习之MCP",
+  "url": "https://dummyv07.github.io/2026/01/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BMCP/",
+  "image": "https://dummyv07.github.io/img/mcp.png",
+  "datePublished": "2026-01-13T04:00:00.000Z",
+  "dateModified": "2026-01-13T09:48:12.797Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Dummy",
+      "url": "https://dummyv07.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://dummyv07.github.io/2026/01/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BMCP/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '大模型学习之MCP',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/eyes.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">48</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/mcp.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">廾匸</span></a><a class="nav-page-title" href="/"><span class="site-name">大模型学习之MCP</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">大模型学习之MCP</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-01-13T04:00:00.000Z" title="发表于 2026-01-13 12:00:00">2026-01-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-13T09:48:12.797Z" title="更新于 2026-01-13 17:48:12">2026-01-13</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="MCP"><a href="#MCP" class="headerlink" title="MCP"></a>MCP</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1SHuyzEERZ/?spm_id_from=333.1007.tianma.1-3-3.click&vd_source=554f08be3139a1c9764421855fa67012">视频链接</a></p>
+<h2 id="RAG-技术的局限性"><a href="#RAG-技术的局限性" class="headerlink" title="RAG 技术的局限性"></a>RAG 技术的局限性</h2><p>RAG（检索增强生成，Retrieval-Augmented Generation）是当前大模型领域的热门方向。它结合了信息检索与生成式模型，旨在提升知识准确性、上下文理解和对最新信息的利用能力。</p>
+<p><img src="/../images/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BMCP/image.png" alt="RAG示意图"></p>
+<p><strong>RAG 的主要缺点：</strong></p>
+<ul>
+<li>检索精度有限，可能无法获取最相关的信息</li>
+<li>生成内容可能不完整或片面</li>
+<li>缺乏全局视角</li>
+<li>检索能力受限时效果下降</li>
+</ul>
+<h2 id="理论基础"><a href="#理论基础" class="headerlink" title="理论基础"></a>理论基础</h2><h3 id="Function-Call"><a href="#Function-Call" class="headerlink" title="Function Call"></a>Function Call</h3><p>Function Call 是 OpenAI 于 2023 年提出的重要概念，本质上为大模型提供了与外部系统交互的能力，相当于为模型配备“外挂工具箱”。当模型无法直接回答问题时，可主动调用预设函数（如查询天气、计算数据、访问数据库等），获取实时且精准的信息后再生成回答。</p>
+<h3 id="Model-Context-Protocol（MCP）"><a href="#Model-Context-Protocol（MCP）" class="headerlink" title="Model Context Protocol（MCP）"></a>Model Context Protocol（MCP）</h3><p>MCP（模型上下文协议）由 Anthropic 公司提出，是一个开放标准协议，旨在解决 AI 模型与外部数据源、工具的交互难题。</p>
+<ul>
+<li><img src="/../images/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BMCP/image-1.png" alt="MCP架构图"></li>
+</ul>
+<p>开发者按照 MCP 协议开发，无需为每个模型与不同资源重复编写适配代码，大幅节省开发工作量。MCP Server 作为通用协议实现，可直接开放给开发者使用，进一步减少重复劳动。</p>
+<p><strong>核心特点：</strong></p>
+<ul>
+<li>协议标准化：统一工具调用格式（请求&#x2F;响应&#x2F;错误处理）</li>
+<li>生态兼容性：一次开发对接所有兼容 MCP 的模型</li>
+<li>动态扩展：新增工具无需修改模型代码，即插即用</li>
+</ul>
+<p><strong>核心价值：</strong></p>
+<ul>
+<li>数据孤岛 → 打通本地&#x2F;云端数据源</li>
+<li>重复开发 → 工具开发者只需适配 MCP 协议</li>
+<li>生态割裂 → 形成统一工具市场</li>
+</ul>
+<h3 id="MCP-与-Function-Call-对比"><a href="#MCP-与-Function-Call-对比" class="headerlink" title="MCP 与 Function Call 对比"></a>MCP 与 Function Call 对比</h3><table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>Function Call (OpenAI)</th>
+<th>MCP (Anthropic)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标准化</td>
+<td>仅适用于 OpenAI 生态</td>
+<td>开放标准，兼容多模型</td>
+</tr>
+<tr>
+<td>工具接入</td>
+<td>需为每个模型单独适配</td>
+<td>一次开发，多模型复用</td>
+</tr>
+<tr>
+<td>扩展性</td>
+<td>新增工具需适配各模型</td>
+<td>工具即插即用，无需修改模型代码</td>
+</tr>
+<tr>
+<td>生态兼容性</td>
+<td>主要服务于 OpenAI 平台</td>
+<td>支持多家模型厂商</td>
+</tr>
+<tr>
+<td>典型应用场景</td>
+<td>聊天机器人、自动化助手</td>
+<td>跨平台工具市场、企业级数据集成</td>
+</tr>
+</tbody></table>
+<p>简而言之，Function Call 更偏向于单一平台的工具调用，而 MCP 致力于打造跨平台、跨模型的统一工具生态。</p>
+<h2 id="MCP-的基本使用"><a href="#MCP-的基本使用" class="headerlink" title="MCP 的基本使用"></a>MCP 的基本使用</h2><h3 id="MCP-客户端（Host）"><a href="#MCP-客户端（Host）" class="headerlink" title="MCP 客户端（Host）"></a>MCP 客户端（Host）</h3><p>MCP 客户端（Host）负责与 MCP Server 通信，发起请求并处理响应。开发者可通过 Host 集成 MCP 协议，实现模型与外部工具的数据交互。</p>
+<h3 id="MCP-Client"><a href="#MCP-Client" class="headerlink" title="MCP Client"></a>MCP Client</h3><p>MCP Client 是具体实现 MCP 协议的客户端库，支持多种编程语言。开发者可根据需求选择合适的 Client，快速集成 MCP 能力。</p>
+<h3 id="MCP-Server"><a href="#MCP-Server" class="headerlink" title="MCP Server"></a>MCP Server</h3><p>MCP Server 官方描述：一个轻量级程序，通过标准化模型上下文协议公开特定功能。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mcp.so/">mcp.so</a></li>
+<li><a target="_blank" rel="noopener" href="https://mcpmarket.com/zh">mcpmarket</a></li>
+</ul>
+<h3 id="目前的局限性"><a href="#目前的局限性" class="headerlink" title="目前的局限性"></a>目前的局限性</h3><ul>
+<li>避免让 AI 检索过大数据量。与 RAG 不同，MCP 每次会检索所需全部数据，若一次查询数据量过大，会消耗大量 Token，甚至导致客户端卡死。</li>
+<li>许多 MCP 客户端依赖大量系统提示词与 MCP 工具通讯，因此使用 MCP 时 Token 消耗会显著增加。</li>
+<li>MCP 生态尚处于早期阶段，工具和资源数量有限，部分场景下可用性有待提升。</li>
+<li>不同模型对 MCP 协议的支持程度不一，实际集成时需关注兼容性问题。</li>
+</ul>
+<h2 id="MCP开发步骤"><a href="#MCP开发步骤" class="headerlink" title="MCP开发步骤"></a>MCP开发步骤</h2><p>推荐使用uv进行python管理</p>
+<p>然后是<a target="_blank" rel="noopener" href="https://gofastmcp.com/getting-started/welcome">fastmcp</a></p>
+<p>uv add “mcp[cli]” httpx openai</p>
+<p>以下基本 服务端格式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># server.py</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> fastmcp <span class="keyword">import</span> FastMCP</span><br><span class="line"><span class="comment"># create an MCP server</span></span><br><span class="line">mcp = FastMCP(<span class="string">&quot;Demo&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add an addition tool</span></span><br><span class="line"><span class="meta">@mcp.tool() </span><span class="comment"># 声明函数功能</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">a: <span class="built_in">int</span>, b: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>: <span class="comment"># 类型修饰符也是很有必要的 他能有效让大模型理解工具传参类型</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Add two numbers together&quot;&quot;&quot;</span> <span class="comment"># 这个声明是必须写的</span></span><br><span class="line">    <span class="keyword">return</span> a + b</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add a dynamic greeting resource</span></span><br><span class="line"><span class="meta">@mcp.resource(<span class="params"><span class="string">&quot;greeting://&#123;name&#125;&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_greeting</span>(<span class="params">name: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Get a greeting for a given name&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">f&quot;Hello, <span class="subst">&#123;name&#125;</span>!&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># tool 类似 post请求</span></span><br><span class="line"><span class="comment"># resource 类似 get 请求 只是请求数据</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="comment"># mcp.settings.host = &quot;0.0.0.0&quot; # 允许远程访问服务</span></span><br><span class="line">    <span class="comment"># mcp.settings.port = 8029</span></span><br><span class="line">    mcp.run(transport=<span class="string">&#x27;sse&#x27;</span>,port=<span class="number">8029</span>) <span class="comment"># 括号里面是协议 stdio协议和 sse协议有什么区别呢 同时还支持 streamable-http协议</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>关于客户端调试可以用Inspector</p>
+<p>也可以直接使用postman</p>
+<p>然后我们在使用的时候一般是需要一个客户端的</p>
+<p>自建客户端代码</p>
+<pre><code class="python">import asyncio
+import json
+import logging
+from typing import Dict, List, Any, Optional
+from mcp import ClientSession
+from mcp.client.sse import sse_client
+from openai import OpenAI
+
+# 屏蔽干扰日志
+logging.getLogger(&quot;httpx&quot;).setLevel(logging.WARNING)
+
+class MCPGatewayClient:
+    def __init__(self, config: Dict):
+        self.server_configs = config.get(&quot;mcpServers&quot;, &#123;&#125;)
+        self.sessions: Dict[str, ClientSession] = &#123;&#125;
+        self.contexts = []
+        self.tool_to_server = &#123;&#125;
+        self.resource_to_server = &#123;&#125;
+        self.prompt_to_server = &#123;&#125;
+        self.prompts_metadata: List[Dict] = []
+
+    async def start(self):
+        print(f&quot;\n&#123;&#39;=&#39;*70&#125;&quot;)
+        print(f&quot;🚀 MCP 智能网关启动中... (正在连接 &#123;len(self.server_configs)&#125; 个节点)&quot;)
+        print(f&quot;&#123;&#39;=&#39;*70&#125;&quot;)
+        
+        for name, cfg in self.server_configs.items():
+            try:
+                ctx = sse_client(cfg[&quot;url&quot;])
+                read, write = await ctx.__aenter__()
+                self.contexts.append(ctx)
+                
+                session = ClientSession(read, write)
+                await session.__aenter__()
+                await session.initialize()
+                self.sessions[name] = session
+                
+                print(f&quot;\n📂 服务器: 【&#123;name&#125;】&quot;)
+                
+                tools_res = await session.list_tools()
+                for t in tools_res.tools: self.tool_to_server[str(t.name)] = name
+                print(f&quot;  ├─ 🛠️  Tools: &#123;&#39;, &#39;.join([str(t.name) for t in tools_res.tools]) or &#39;None&#39;&#125;&quot;)
+                
+                res_res = await session.list_resources()
+                for r in res_res.resources: self.resource_to_server[str(r.uri)] = name
+                print(f&quot;  ├─ 📖 Resources: &#123;&#39;, &#39;.join([str(r.uri) for r in res_res.resources]) or &#39;None&#39;&#125;&quot;)
+                
+                prompts_res = await session.list_prompts()
+                for p in prompts_res.prompts:
+                    p_name = str(p.name)
+                    self.prompt_to_server[p_name] = name
+                    self.prompts_metadata.append(&#123;
+                        &quot;name&quot;: p_name,
+                        &quot;description&quot;: getattr(p, &#39;description&#39;, &#39;专业领域指令&#39;),
+                        &quot;server&quot;: name
+                    &#125;)
+                print(f&quot;  └─ 💡 Prompts: &#123;&#39;, &#39;.join([str(p.name) for p in prompts_res.prompts]) or &#39;None&#39;&#125;&quot;)
+                    
+            except Exception as e:
+                print(f&quot;❌ 服务器 [&#123;name&#125;] 失败: &#123;str(e)&#125;&quot;)
+        print(f&quot;\n&#123;&#39;=&#39;*70&#125;\n✅ 网关就绪。\n&quot;)
+    async def get_combined_tools(self) -&gt; List[Dict]:
+        all_tools = []
+        for name, session in self.sessions.items():
+            mcp_tools = await session.list_tools()
+            for t in mcp_tools.tools:
+                all_tools.append(&#123;
+                    &quot;type&quot;: &quot;function&quot;,
+                    &quot;function&quot;: &#123;
+                        &quot;name&quot;: str(t.name),
+                        &quot;description&quot;: t.description or &quot;&quot;,
+                        &quot;parameters&quot;: t.inputSchema
+                    &#125;
+                &#125;)
+        if self.resource_to_server:
+            all_tools.append(&#123;
+                &quot;type&quot;: &quot;function&quot;,
+                &quot;function&quot;: &#123;
+                    &quot;name&quot;: &quot;read_mcp_resource&quot;,
+                    &quot;description&quot;: f&quot;读取内部资料。路径: &#123;list(self.resource_to_server.keys())&#125;&quot;,
+                    &quot;parameters&quot;: &#123;
+                        &quot;type&quot;: &quot;object&quot;,
+                        &quot;properties&quot;: &#123;&quot;uri&quot;: &#123;&quot;type&quot;: &quot;string&quot;&#125;&#125;,
+                        &quot;required&quot;: [&quot;uri&quot;]
+                    &#125;
+                &#125;
+            &#125;)
+        return all_tools
+    def robust_parse_args(self, args: Any) -&gt; Dict:
+        &quot;&quot;&quot;解决模型可能产生的双重 JSON 编码问题&quot;&quot;&quot;
+        if isinstance(args, dict):
+            return args
+        if isinstance(args, str):
+            try:
+                parsed = json.loads(args)
+                # 如果解析后还是字符串，说明是双重编码，再解一次
+                if isinstance(parsed, str):
+                    return json.loads(parsed)
+                return parsed
+            except Exception:
+                return &#123;&quot;raw_input&quot;: args&#125;
+        return &#123;&#125;
+
+    async def call_action(self, name: str, args: Any):
+        # 统一在入口处进行鲁棒性解析
+        parsed_args = self.robust_parse_args(args)
+        
+        try:
+            if name == &quot;read_mcp_resource&quot;:
+                uri = parsed_args.get(&quot;uri&quot;, &quot;&quot;).strip()
+                srv = self.resource_to_server.get(uri)
+                if not srv: return f&quot;Error: 找不到资源 &#123;uri&#125;&quot;
+                res = await self.sessions[srv].read_resource(uri)
+                return res.contents[0].text
+            else:
+                srv = self.tool_to_server.get(name)
+                if not srv: return f&quot;Error: 找不到工具 &#123;name&#125;&quot;
+                # 确保传入的是 dict，否则 Pydantic 会抛出你遇到的错误
+                res = await self.sessions[srv].call_tool(name, parsed_args)
+                return res.content[0].text if hasattr(res, &#39;content&#39;) else str(res)
+        except Exception as e:
+            return f&quot;执行失败: &#123;str(e)&#125;&quot;
+
+    async def get_prompt_template(self, prompt_name: str, arguments: Dict[str, str] = None) -&gt; Optional[str]:
+        srv_name = self.prompt_to_server.get(prompt_name)
+        if not srv_name: return None
+        
+        try:
+            session = self.sessions[srv_name]
+            # 将参数传递给 get_prompt 接口
+            result = await session.get_prompt(prompt_name, arguments=arguments or &#123;&#125;)
+            
+            if result.messages:
+                # 提取渲染后的文本内容
+                return result.messages[0].content.text
+            return None
+        except Exception as e:
+            print(f&quot;⚠️ 获取 Prompt 【&#123;prompt_name&#125;】 失败: &#123;str(e)&#125;&quot;)
+            return None
+
+    async def stop(self):
+        print(&quot;\n正在释放 MCP 资源...&quot;)
+        # 显式关闭 Session 再关闭 Context，防止 SSE 异常抛出
+        for s in self.sessions.values():
+            try: await s.__aexit__(None, None, None)
+            except: pass
+        for c in reversed(self.contexts):
+            try: await c.__aexit__(None, None, None)
+            except: pass
+        print(&quot;✅ 连接已安全关闭。&quot;)
+
+async def run_task(user_input: str):
+    config = &#123;&quot;mcpServers&quot;: &#123;
+        &quot;math_server&quot;: &#123;&quot;url&quot;: &quot;http://127.0.0.1:8029/sse&quot;&#125;,
+        &quot;ticket_server&quot;: &#123;&quot;url&quot;: &quot;http://127.0.0.1:8030/sse&quot;&#125;,
+        &quot;data_server&quot;: &#123;&quot;url&quot;: &quot;http://127.0.0.1:8031/sse&quot;&#125;,
+    &#125;&#125;
+
+    client = MCPGatewayClient(config)
+    await client.start()
+    
+    try:
+        from config import OPENAI_BASE_URL, OPENAI_API_KEY, LLM_MODEL
+        oai = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL)
+
+        # --- 🧠 语义路由 (强化对复合任务的识别) ---
+        system_instruction = &quot;你是一个全能助手。&quot;
+        if client.prompts_metadata:
+            router_prompt = f&quot;我有以下专家角色库：&#123;json.dumps(client.prompts_metadata, ensure_ascii=False)&#125;。用户的问题涉及文档审阅、逻辑判断或数据分析吗？如果是，请返回对应的模板名称(name)，否则返回 NONE。用户问题：&#123;user_input&#125;&quot;
+            resp = oai.chat.completions.create(model=LLM_MODEL, messages=[&#123;&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: router_prompt&#125;])
+            decision = resp.choices[0].message.content.strip()
+            if &quot;NONE&quot; not in decision:
+                # 提取 prompt 名称（可能包含额外文本）
+                prompt_name = decision.split()[0] if decision.split() else decision
+                # 传递必需的参数：data_analyst_expert 需要 topic 参数
+                p_content = await client.get_prompt_template(prompt_name, arguments=&#123;&quot;topic&quot;: user_input&#125;)
+                if p_content: 
+                    system_instruction = p_content
+                    print(f&quot;🎯 路由命中: 加载【&#123;prompt_name&#125;】模板&quot;)
+
+        # --- 🏗️ ReAct 循环 ---
+        messages = [&#123;&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: system_instruction&#125;, &#123;&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: user_input&#125;]
+        print(f&quot;🚀 任务开始 (system_instruction: &#123;system_instruction&#125;)&quot;)
+
+        for i in range(5):
+            tools = await client.get_combined_tools()
+            response = oai.chat.completions.create(model=LLM_MODEL, messages=messages, tools=tools)
+            msg = response.choices[0].message
+            messages.append(msg)
+
+            if not msg.tool_calls:
+                print(f&quot;\n🏁 最终回答:\n&#123;msg.content&#125;&quot;)
+                break
+
+            print(f&quot;\n🔄 第 &#123;i+1&#125; 轮：模型请求 &#123;len(msg.tool_calls)&#125; 个并发操作&quot;)
+            
+            # 记录并发任务
+            call_tasks = []
+            tool_call_info = []
+            for tc in msg.tool_calls:
+                call_tasks.append(client.call_action(tc.function.name, tc.function.arguments))
+                tool_call_info.append(tc)
+
+            results = await asyncio.gather(*call_tasks)
+
+            # 执行完所有任务后统一打印结果，分割线加长
+            for tc, res_text in zip(tool_call_info, results):
+                print(f&quot;&#123;&#39;-&#39;*40&#125;\n▶️ &#123;tc.function.name&#125;\n参数: &#123;tc.function.arguments[:100]&#125;...\n◀️ 结果: &#123;str(res_text)[:120].replace(chr(10),&#39; &#39;)&#125;\n&#123;&#39;-&#39;*40&#125;&quot;)
+                messages.append(&#123;&quot;role&quot;: &quot;tool&quot;, &quot;tool_call_id&quot;: tc.id, &quot;content&quot;: res_text&#125;)
+
+    except Exception as e:
+        print(f&quot;\n❌ 运行中发生错误: &#123;str(e)&#125;&quot;)
+    finally:
+        await client.stop()
+
+
+if __name__ == &quot;__main__&quot;:
+    query = &quot;帮我审阅一下 IT 手册里的安全准则，并帮我查一下成都的天气，如果成都的天气晴朗，就帮小王订一张从今天晚上12点北京飞往成都的机票，如果北京的天气不晴朗，就算了。&quot;
+    # query = &quot;帮我审阅一下 IT 手册里的安全准则，并帮我查一下北京的天气，如果北京的天气晴朗，就帮小王订一张从今天晚上12点成都飞往北京的机票，如果北京的天气不晴朗，就算了。&quot;
+    # query = &quot;我们来讨论下大数定律&quot;
+    
+    asyncio.run(run_task(query))
+</code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://dummyv07.github.io">Dummy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://dummyv07.github.io/2026/01/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BMCP/">https://dummyv07.github.io/2026/01/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BMCP/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://dummyv07.github.io" target="_blank">廾匸</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/LLN/">LLN</a></div><div class="post-share"><div class="social-share" data-image="/img/mcp.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/01/04/%E5%85%A8%E6%A0%88%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/" title="全栈开发笔记"><img class="cover" src="/img/qzkf.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">全栈开发笔记</div></div><div class="info-2"><div class="info-item-1">未完待更新 个人全栈项目开发之路https://github.com/DummyV07/Boilerplate.git技术栈 FASTAPI + VUE3 + Nginx + Gunicorn 🏗️ 第一部分：系统架构 前后端分离原则：前端（Vue）仅负责 UI 渲染与交互逻辑，后端（Python）仅负责数据处理与业务逻辑。两者通过 RESTful API 进行 JSON 交互。 **Schema 为先 (Schema-First)**：在写具体的业务逻辑前，先定义好后端的数据结构（Pydantic Models），确保前端联调时有明确的数据契约。 单一职责原则：一个接口只做一件事。复杂的长耗时操作必须与即时响应接口分离。  项目结构123456789101112131415161718192021222324252627my-awesome-project/├── backend/                # Python 后端代码 (FastAPI)│   ├── app/│   │   ├── api/            # 接口路由层│   │   ├──...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/eyes.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Dummy</div><div class="author-info-description">山与山不见面 再见容易再见难</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">48</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/DummyV07" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:dummy.v07@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Wechat:---NoOneIsComing （注明来意）</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MCP"><span class="toc-number">1.</span> <span class="toc-text">MCP</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RAG-%E6%8A%80%E6%9C%AF%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-number">1.1.</span> <span class="toc-text">RAG 技术的局限性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80"><span class="toc-number">1.2.</span> <span class="toc-text">理论基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Function-Call"><span class="toc-number">1.2.1.</span> <span class="toc-text">Function Call</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Model-Context-Protocol%EF%BC%88MCP%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">Model Context Protocol（MCP）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MCP-%E4%B8%8E-Function-Call-%E5%AF%B9%E6%AF%94"><span class="toc-number">1.2.3.</span> <span class="toc-text">MCP 与 Function Call 对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MCP-%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-number">1.3.</span> <span class="toc-text">MCP 的基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MCP-%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%88Host%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">MCP 客户端（Host）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MCP-Client"><span class="toc-number">1.3.2.</span> <span class="toc-text">MCP Client</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MCP-Server"><span class="toc-number">1.3.3.</span> <span class="toc-text">MCP Server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%89%8D%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-number">1.3.4.</span> <span class="toc-text">目前的局限性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MCP%E5%BC%80%E5%8F%91%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.4.</span> <span class="toc-text">MCP开发步骤</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BMCP/" title="大模型学习之MCP"><img src="/img/mcp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大模型学习之MCP"/></a><div class="content"><a class="title" href="/2026/01/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BMCP/" title="大模型学习之MCP">大模型学习之MCP</a><time datetime="2026-01-13T04:00:00.000Z" title="发表于 2026-01-13 12:00:00">2026-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/04/%E5%85%A8%E6%A0%88%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/" title="全栈开发笔记"><img src="/img/qzkf.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="全栈开发笔记"/></a><div class="content"><a class="title" href="/2026/01/04/%E5%85%A8%E6%A0%88%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/" title="全栈开发笔记">全栈开发笔记</a><time datetime="2026-01-04T06:00:00.000Z" title="发表于 2026-01-04 14:00:00">2026-01-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/23/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96/" title="无标题">无标题</a><time datetime="2025-12-23T01:14:06.167Z" title="发表于 2025-12-23 09:14:06">2025-12-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/10/%E5%93%88%E5%B8%8C/" title="哈希"><img src="/img/hash.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈希"/></a><div class="content"><a class="title" href="/2025/12/10/%E5%93%88%E5%B8%8C/" title="哈希">哈希</a><time datetime="2025-12-10T08:00:00.000Z" title="发表于 2025-12-10 16:00:00">2025-12-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/08/07/Nginx/" title="Nginx详解"><img src="/img/nginx.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Nginx详解"/></a><div class="content"><a class="title" href="/2025/08/07/Nginx/" title="Nginx详解">Nginx详解</a><time datetime="2025-08-07T10:00:00.000Z" title="发表于 2025-08-07 18:00:00">2025-08-07</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By Dummy</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.2.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
