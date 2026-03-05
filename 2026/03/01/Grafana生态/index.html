@@ -1,0 +1,332 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Grafana生态 | 廾匸</title><meta name="author" content="Dummy"><meta name="copyright" content="Dummy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="可观测性可观测性(Observability) 指通过系统外部输出推断其内部状态的能力。维度(Dimension) 是用来描述和分类数据的标签属性，比如用户ID、应用ID、模型名称等，关注“是什么”指标(Metric) 是用来量化的数值数据，比如请求次数、响应时间、Token消耗量等，关注“有多少” 监控等数据分类 系统指标：包括cpu使用率、内存占用、磁盘I&#x2F;O、网络流量等基础设施层面">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Grafana生态">
+<meta property="og:url" content="https://dummyv07.github.io/2026/03/01/Grafana%E7%94%9F%E6%80%81/index.html">
+<meta property="og:site_name" content="廾匸">
+<meta property="og:description" content="可观测性可观测性(Observability) 指通过系统外部输出推断其内部状态的能力。维度(Dimension) 是用来描述和分类数据的标签属性，比如用户ID、应用ID、模型名称等，关注“是什么”指标(Metric) 是用来量化的数值数据，比如请求次数、响应时间、Token消耗量等，关注“有多少” 监控等数据分类 系统指标：包括cpu使用率、内存占用、磁盘I&#x2F;O、网络流量等基础设施层面">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dummyv07.github.io/img/eyes.jpg">
+<meta property="article:published_time" content="2026-03-01T06:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-05T08:39:33.220Z">
+<meta property="article:author" content="Dummy">
+<meta property="article:tag" content="LLM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dummyv07.github.io/img/eyes.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Grafana生态",
+  "url": "https://dummyv07.github.io/2026/03/01/Grafana%E7%94%9F%E6%80%81/",
+  "image": "https://dummyv07.github.io/img/eyes.jpg",
+  "datePublished": "2026-03-01T06:00:00.000Z",
+  "dateModified": "2026-03-05T08:39:33.220Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Dummy",
+      "url": "https://dummyv07.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://dummyv07.github.io/2026/03/01/Grafana%E7%94%9F%E6%80%81/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Grafana生态',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/eyes.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">49</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/bg2.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">廾匸</span></a><a class="nav-page-title" href="/"><span class="site-name">Grafana生态</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Grafana生态</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-03-01T06:00:00.000Z" title="发表于 2026-03-01 14:00:00">2026-03-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-05T08:39:33.220Z" title="更新于 2026-03-05 16:39:33">2026-03-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="可观测性"><a href="#可观测性" class="headerlink" title="可观测性"></a>可观测性</h2><p>可观测性(Observability) 指通过系统外部输出推断其内部状态的能力。<br>维度(Dimension) 是用来描述和分类数据的标签属性，比如用户ID、应用ID、模型名称等，关注“是什么”<br>指标(Metric) 是用来量化的数值数据，比如请求次数、响应时间、Token消耗量等，关注“有多少”</p>
+<p>监控等数据分类</p>
+<p>系统指标：包括cpu使用率、内存占用、磁盘I&#x2F;O、网络流量等基础设施层面的监控数据。<br>应用指标：涵盖接口响应时间、QPS（每秒查询率）、错误率】jvm状态等应用层面的性能数据。<br>业务指标：针对我们平台的特定业务逻辑，比如AI模型调用次数、token消耗量、用户活跃度等<br>调用链：在一个分布式系统中，一个请求可能经过多个服务组件。<br>百分位数：P99：99%的请求响应时间都在这个值以下。 </p>
+<p>怎么实现</p>
+<p>1.统计什么<br>需要根据业务特点确定关键指标，既要覆盖系统层面的通用指标，也要包含业务特有的监控维度<br>2.如何收集<br>数据收集是可观测性的基础，可以通过代码埋点、探针技术、日志分析等多种方式实现<br>3.如何存储<br>监控数据通常量大且连续，需要选择合适的存储方案，比如时序数据库或专门的监控系统<br>4.如何展示<br>数据面板，实时监控</p>
+<p>ARMS系统监控</p>
+<p>阿里云提供的应用实时监控服务，采用了探针技术，能够在不修改应用代码的情况下，自动收集和分析应用性能数据，快速构建实时的监控能力。</p>
+<p>监控指标设计<br>首先我们需要明确监控哪些维度和业务指标<br>维度：<br>用户ID 应用ID 模型名称 最大输出Token数 AI回复消息内容 模型生成停止原因 调用状态 请求时间 调用失败的错误信息</p>
+<p>指标：<br>token 消耗 响应时长<br>分析能力<br>有了基础数据我们可以进行很多分析<br>模型调用分析：统计不同时间窗口(分钟&#x2F;小时&#x2F;天)内，每个模型、用户、应用的调用次数趋势<br>模型性能分析：分析各模型的平均响应时间，以及响应时间分布的P50&#x2F;P90百分位数<br>、、、<br>数据收集方式<br>在业务监控中，数据收集需要开发者手动埋点，因为只有开发者才知道要收集什么信息、从哪里收集、什么时候收集。外面的策略是在业务层收集最原始、最细粒度的数据。</p>
+<p>数据存储方案-prometheus<br>prometheus是一个开源的监控系统，专门为时序数据的收集、存储和查询而设计</p>
+<p>我们通过jobs和instances配置需要拉取的数据任务和服务实例</p>
+<ul>
+<li>job（任务）：代表「一类被采集的服务」，通常对应一个应用或组件，比如 kiosk-backend、chat-backend、mysql。在 Prometheus 配置里每写一条 job_name: xxx，就是告诉它「这一类目标是一组服务，逻辑上算一类」。</li>
+<li>instance（实例）：代表「这个 job 下面的某一台&#x2F;某个端口的具体实例」，由 targets 决定，比如 10.0.0.1:8000、10.0.0.2:8000，Prometheus 会自动给每条时间序列打上 instance&#x3D;”10.0.0.1:8000” 这样的标签。<br>组合关系：同一个 job 下可以有很多 instance，用 job 看“这是什么服务&#x2F;应用”，用 instance 看“这个服务的每个副本&#x2F;节点各自怎么样”（整体 vs. 单机对比）。</li>
+</ul>
+<p>指标类型<br>counter：累积计数器，只能增加或者重置为零，适合统计请求总数、错误次数等单调递增的指标。<br>gauge：仪表盘类型，数值可以任意上下波动，适合记录当前状态值，比如内存使用量、当前在线用户数、队列长度等。<br>histogram：直方图类型，用于观察数据分布情况，比如请求响应时间等分布。<br>summary：和Histogram类似，但它在客户端预先计算百分位数，沭河需要精确百分位数计算但对网络传输有要求的场景。</p>
+<p>存储机制<br>为了更快查询</p>
+<!-- 使用 Mermaid 流程图描述 Prometheus 存储生命周期 -->
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">flowchart TD</span><br><span class="line">  A([数据采集 Scrape]) --&gt; B&#123;写入层&#125;</span><br><span class="line">  </span><br><span class="line">  subgraph In_Memory [内存缓冲区]</span><br><span class="line">    B --&gt; C[Memory Block]</span><br><span class="line">    B --&gt; D[WAL 预写日志]</span><br><span class="line">  end</span><br><span class="line"></span><br><span class="line">  D -- 故障恢复 --&gt; C</span><br><span class="line">  C -- 每2小时周期 --&gt; E[2h Block 持久化]</span><br><span class="line">  </span><br><span class="line">  subgraph Disk_Storage [磁盘持久化层]</span><br><span class="line">    E --&gt; F[Index / Chunks / Meta]</span><br><span class="line">    F --&gt; G[Background Compaction]</span><br><span class="line">    G --&gt; H[(长期存储块)]</span><br><span class="line">  end</span><br><span class="line"></span><br><span class="line">  style D fill:#fff2cc,stroke:#d6b656</span><br><span class="line">  style H fill:#dae8fc,stroke:#6c8ebf</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>说明：  </p>
+<ul>
+<li>数据采集先写入当前活动内存块（Memory Block）和 WAL 日志  </li>
+<li>内存块每 2 小时通过 Block Compaction 转为磁盘持久化块  </li>
+<li>持久化块后台压缩，部分数据进入长期存储  </li>
+<li>如系统崩溃，WAL Replay 可恢复数据</li>
+</ul>
+</blockquote>
+<hr>
+<hr>
+<p>名词解释： </p>
+<p>redis&#x2F;jvm&#x2F;full gc&#x2F;连接池&#x2F;探针技术&#x2F;TSDB&#x2F;k8s</p>
+<h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h2><p><strong>Redis</strong>（Remote Dictionary Server）是一种<strong>内存型键值数据库</strong>，常用于缓存、会话存储、消息队列等。数据主要在内存中，读写很快，支持多种数据结构（字符串、哈希、列表、集合、有序集合等）。在监控场景里常用来做指标缓存、限流、分布式锁等。</p>
+<hr>
+<h2 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h2><p><strong>JVM</strong>（Java Virtual Machine，Java 虚拟机）是运行 Java 字节码的<strong>运行时环境</strong>。Java 程序编译成 <code>.class</code> 字节码后，由 JVM 解释或即时编译（JIT）成机器码执行。JVM 负责内存管理（堆、栈、方法区等）和垃圾回收（GC），所以谈 Java 性能、GC、内存问题时都会涉及 JVM。</p>
+<hr>
+<h2 id="Full-GC"><a href="#Full-GC" class="headerlink" title="Full GC"></a>Full GC</h2><p><strong>Full GC</strong>（Full Garbage Collection，完全垃圾回收）是 JVM 对<strong>整个堆</strong>做的一次垃圾回收，包括年轻代（Young Generation）和老年代（Old Generation）。Full GC 会暂停应用线程（Stop-The-World），耗时相对较长，频繁 Full GC 会导致延迟抖动和吞吐下降，是性能调优时重点关注的指标。</p>
+<hr>
+<h2 id="连接池（Connection-Pool）"><a href="#连接池（Connection-Pool）" class="headerlink" title="连接池（Connection Pool）"></a>连接池（Connection Pool）</h2><p><strong>连接池</strong>是一组预先创建并复用的<strong>网络&#x2F;数据库连接</strong>。应用从池中取连接用完后归还，而不是每次请求都新建、关闭连接，从而减少建连&#x2F;断连的开销和资源占用。常见于数据库（如 JDBC 连接池）、Redis、HTTP 客户端等。监控里常会看连接池使用率、等待数、超时等。</p>
+<hr>
+<h2 id="探针技术（Probe-Agent）"><a href="#探针技术（Probe-Agent）" class="headerlink" title="探针技术（Probe &#x2F; Agent）"></a>探针技术（Probe &#x2F; Agent）</h2><p><strong>探针</strong>（或 Agent）是在应用进程内或主机上部署的<strong>采集程序</strong>，用来无侵入或低侵入地采集指标、日志、链路等数据。例如：  </p>
+<ul>
+<li><strong>JVMTI &#x2F; Java Agent</strong>：注入 JVM，采集方法耗时、GC、线程等；  </li>
+<li><strong>eBPF &#x2F; 系统探针</strong>：在内核层采集网络、系统调用等；  </li>
+<li><strong>Sidecar</strong>：在 Pod 旁挂一个容器做流量劫持与可观测性采集。<br>常与 APM、监控、链路追踪（如 SkyWalking、Pinpoint）一起使用。</li>
+</ul>
+<hr>
+<h2 id="TSDB"><a href="#TSDB" class="headerlink" title="TSDB"></a>TSDB</h2><p><strong>TSDB</strong>（Time Series Database，时序数据库）是专门存储<strong>按时间排序的指标数据</strong>的数据库。数据点通常是「时间戳 + 指标名&#x2F;标签 + 数值」。针对写多读少、按时间范围查询、降采样、保留策略等做了优化。Prometheus、InfluxDB、VictoriaMetrics、TimescaleDB 等都属于 TSDB，是监控、IoT 场景的常用存储。</p>
+<hr>
+<h2 id="k8s"><a href="#k8s" class="headerlink" title="k8s"></a>k8s</h2><p><strong>k8s</strong> 是 <strong>Kubernetes</strong> 的缩写（K 和 s 之间有 8 个字母）。Kubernetes 是<strong>容器编排平台</strong>，用来部署、扩缩容、调度和管理容器化应用（如 Docker 容器），提供服务发现、负载均衡、自愈、配置与密钥管理、存储编排等。监控中常需要采集 k8s 的 Pod、Node、Service、Deployment 等资源指标和事件。</p>
+<hr>
+<pre><code>      ┌───────────────────────┐
+      │   Alerting / 告警系统  │
+      │  (Alertmanager /      │
+      │   Grafana Alert 等)   │
+      └─────────▲─▲─▲────────┘
+                │ │ │
+      ┌─────────┘ │ └─────────┐
+      │           │           │
+  Metrics       Logs       Traces
+(Prometheus)   (Loki)     (Tempo)
+      ▲           ▲           ▲
+      │           │           │
+  ┌───────────────────────────────┐
+  │        你的 AI 系统服务        │
+  └───────────────────────────────┘
+</code></pre>
+<h2 id="Metrics（指标）指标：Prometheus、Mimir-等Logs（日志）日志：LokiTraces（链路追踪）追踪：Tempo"><a href="#Metrics（指标）指标：Prometheus、Mimir-等Logs（日志）日志：LokiTraces（链路追踪）追踪：Tempo" class="headerlink" title="Metrics（指标）指标：Prometheus、Mimir 等Logs（日志）日志：LokiTraces（链路追踪）追踪：Tempo"></a>Metrics（指标）指标：Prometheus、Mimir 等<br>Logs（日志）日志：Loki<br>Traces（链路追踪）追踪：Tempo</h2><p>observability 可观测性</p>
+<p>Metrics&#x2F;Logs&#x2F;Traces 是「可观测性（Observability）」的三大类数据</p>
+<p>Metrics（指标监控）：http_requests_total、http_request_duration_seconds 这种只是「入门级」的技术指标。实际项目里通常会拆成几类：<br>基础资源：CPU、内存、磁盘、带宽、连接数。<br>服务层：QPS、P95&#x2F;P99 延迟、错误率、队列长度、线程池&#x2F;协程池利用率。<br>依赖组件：数据库（QPS&#x2F;慢查询&#x2F;连接池）、缓存命中率、消息队列堆积、外部 API 调用耗时与错误。<br>业务指标（business metrics）：下单数、支付成功率、TTS 调用次数、首包延迟、ASR 成功率等。<br>Tracing（分布式追踪）：比如 OpenTelemetry + Tempo&#x2F;Jaeger，主要是按「一次请求&#x2F;一次会话」看整条调用链，包含 span、上下游服务、耗时拆分，并不只是一个“trace_count 指标”那么简单。<br>Alert（告警）：本质是基于 metrics&#x2F;logs&#x2F;traces 写的规则，比如：<br>5 分钟内 P95 latency &gt; 1s 持续 3 次；<br>5xx rate &gt; 1% 持续 10 分钟；<br>success_rate(ASR) 低于某个阈值；<br>单个租户&#x2F;门店的 QPS 异常暴涨等。</p>
+<hr>
+<p>Metrics</p>
+<p>第 1 步：丰富 Metrics（从“技术指标”扩展到“业务指标”）<br>目标：从「只有 HTTP QPS&#x2F;延迟」升级到「能反映 AI 业务健康的指标」。<br>1.梳理你关心的业务指标（business metrics），例如：</p>
+<ul>
+<li>每分钟 TTS 调用次数、成功率、首包延迟 P95；</li>
+<li>每个会话的轮次、平均对话时长；</li>
+<li>识别成功率、NLP 调用错误率等。<br>2.在关键代码路径里打点（仍然用 prometheus_client）：</li>
+<li>业务计数用 Counter；</li>
+<li>业务耗时&#x2F;延迟用 Histogram；</li>
+<li>少量状态值用 Gauge（例如当前活动会话数）。<br>3.在 Grafana 新增 Panel：</li>
+<li>使用这些新 metrics 写简单 PromQL，比如 rate(ai_tts_requests_total[5m])、histogram_quantile(0.95, …)。</li>
+</ul>
+<h2 id="首先需要在原有的FastAPI中暴露Metrics目标：让服务在“http-localhost-8000-metrics”暴露Prometheus文本格式指标-包括请求总数、请求耗时-1-定义指标-我需要回答什么问题-当前接口的qps-p95延迟-错误率？-每次对话的平均轮次-这个问题更像“次数-速率”还是“耗时-分布”-次数-速率-counter-耗时-延迟分布-histogram-当前值（队列长度、连接数）-Gauge-我需要按哪些维度区分（labels）-比如：按method、path、status区分http请求-或按model-name、tenant、scene区分AI请求"><a href="#首先需要在原有的FastAPI中暴露Metrics目标：让服务在“http-localhost-8000-metrics”暴露Prometheus文本格式指标-包括请求总数、请求耗时-1-定义指标-我需要回答什么问题-当前接口的qps-p95延迟-错误率？-每次对话的平均轮次-这个问题更像“次数-速率”还是“耗时-分布”-次数-速率-counter-耗时-延迟分布-histogram-当前值（队列长度、连接数）-Gauge-我需要按哪些维度区分（labels）-比如：按method、path、status区分http请求-或按model-name、tenant、scene区分AI请求" class="headerlink" title="首先需要在原有的FastAPI中暴露Metrics目标：让服务在“http://localhost:8000/metrics”暴露Prometheus文本格式指标(包括请求总数、请求耗时)1.定义指标- 我需要回答什么问题  - 当前接口的qps  - p95延迟  - 错误率？  - 每次对话的平均轮次- 这个问题更像“次数&#x2F;速率”还是“耗时&#x2F;分布”  - 次数&#x2F;速率 -&gt; counter  - 耗时&#x2F;延迟分布 -&gt; histogram  - 当前值（队列长度、连接数）-&gt; Gauge- 我需要按哪些维度区分（labels）  - 比如：按method、path、status区分http请求  - 或按model_name、tenant、scene区分AI请求"></a>首先需要在原有的FastAPI中暴露Metrics<br>目标：让服务在“<a target="_blank" rel="noopener" href="http://localhost:8000/metrics%E2%80%9D%E6%9A%B4%E9%9C%B2Prometheus%E6%96%87%E6%9C%AC%E6%A0%BC%E5%BC%8F%E6%8C%87%E6%A0%87(%E5%8C%85%E6%8B%AC%E8%AF%B7%E6%B1%82%E6%80%BB%E6%95%B0%E3%80%81%E8%AF%B7%E6%B1%82%E8%80%97%E6%97%B6)">http://localhost:8000/metrics”暴露Prometheus文本格式指标(包括请求总数、请求耗时)</a><br>1.定义指标<br>- 我需要回答什么问题<br>  - 当前接口的qps<br>  - p95延迟<br>  - 错误率？<br>  - 每次对话的平均轮次<br>- 这个问题更像“次数&#x2F;速率”还是“耗时&#x2F;分布”<br>  - 次数&#x2F;速率 -&gt; counter<br>  - 耗时&#x2F;延迟分布 -&gt; histogram<br>  - 当前值（队列长度、连接数）-&gt; Gauge<br>- 我需要按哪些维度区分（labels）<br>  - 比如：按method、path、status区分http请求<br>  - 或按model_name、tenant、scene区分AI请求</h2><p>2.路径归一化</p>
+<ol start="3">
+<li></li>
+</ol>
+<hr>
+<p>Logs</p>
+<p>第 2 步：规范 Logs，并接入 Loki（日志）<br>目标：从「FastAPI 在控制台随便打日志」升级到「结构化日志 + 集中检索」。<br>1.应用内统一日志格式（FastAPI &#x2F; Python logging）：</p>
+<ul>
+<li>设置统一 logger，带上 level、timestamp、request_id&#x2F;session_id、path 等；</li>
+<li>优先使用 JSON 格式，方便 Loki&#x2F;ELK 解析。<br>2.选择日志管道到 Loki：</li>
+<li>最常见：用 Promtail 作为 agent，去读容器 stdout 或日志文件，然后推送到 Loki。</li>
+<li>配置 Promtail：指定 scrape_configs（采集路径、标签，如 job, service）。<br>3.Grafana 里配置 Loki 数据源：</li>
+<li>在 Grafana Data source 里新增 Loki；</li>
+<li>用 Explore 做 logQL 查询（比如 {app&#x3D;”kiosk-backend”} |&#x3D; “ERROR”）。</li>
+</ul>
+<p>Traces</p>
+<p>第 3 步：接入 Traces（分布式追踪 &#x2F; OpenTelemetry + Tempo）<br>目标：从「只能看单点日志」升级到「一条请求在各个组件之间的完整链路」。<br>1.选一个追踪后端：</p>
+<ul>
+<li>在 Grafana 生态里，通常选 Tempo（Tracing），也可以先用 Jaeger 简单上手。<br>2.在 FastAPI 里接入 OpenTelemetry SDK：</li>
+<li>安装 opentelemetry-sdk、opentelemetry-instrumentation-fastapi、opentelemetry-exporter-otlp 等；</li>
+<li>在应用启动时初始化 TracerProvider，配置 OTLP 导出到 Tempo&#x2F;Jaeger；</li>
+<li>可选：给关键函数&#x2F;远程调用（比如调大模型、调 TTS）手动加 span。<br>3.在 Grafana 中添加 Tempo 数据源：</li>
+<li>然后可以在 Explore 的 Traces 视图中按 service &#x2F; span name &#x2F; duration 搜索；</li>
+<li>也可以在面板中做「metrics drill-down 到具体 trace」的联动。</li>
+</ul>
+<p>Alert</p>
+<p>第 4 步：基于 Metrics&#x2F;Logs&#x2F;Traces 建 Alert（告警）<br>目标：从「人肉看大盘」升级到「出了问题自动通知」。<br>1.基于 Metrics 的告警（最重要）：</p>
+<ul>
+<li>在 Prometheus 中写告警规则（alerting rules），例如：</li>
+<li>P95 latency &gt; 1s 持续 5 分钟；</li>
+<li>5xx rate &gt; 1% 持续 10 分钟；</li>
+<li>ai_tts_success_rate &lt; 0.9。</li>
+<li>把这些规则推给 Alertmanager，再由 Alertmanager 发到飞书&#x2F;钉钉&#x2F;Slack&#x2F;邮箱。</li>
+<li>或者在 Grafana Alerting 中直接基于 PromQL 创建告警。<br>2.基于 Logs 的告警（补充）：</li>
+<li>在 Loki 上做查询（例如 count 5 分钟内 ERROR），用 Grafana Alert 触发；</li>
+<li>适合 catch 特殊错误文案、异常堆栈。<br>3.基于 Traces 的告警（更进阶）：</li>
+<li>一般较少直接对 traces 告警，而是对传统 metrics 告警后再用 trace 排查；</li>
+<li>但也可以在某些系统中对「长尾 span」做统计派生出 metrics，再告警。</li>
+</ul>
+<hr>
+<p>压测工具：hey wrk<br>$$</p>
+<p>Grafana生态实现不是一个单一工具，而是一整套围绕Grafana作为可观测性可视化与运维入口的技术栈</p>
+<p>简单说：</p>
+<p>你所有的metrics&#x2F;logs&#x2F;tracing&#x2F;alert最终都在Grafana里统一查看和管理</p>
+<p>Grafana是一个可视化与统一看板</p>
+<ul>
+<li>角色：可视化与仪表盘平台</li>
+<li>主要做：<ul>
+<li>连接多种数据源(Prometheus、Loki、Tempo、MySQL、Elasticsearch等)</li>
+<li>用图标、表格、单值等组件做Dashboard；</li>
+<li>配置告警(如阈值、通知渠道等)</li>
+<li>变量、时间范围、链接等</li>
+</ul>
+</li>
+</ul>
+<p>Prometheus 指标存储与查询</p>
+<ul>
+<li>角色：时序数据库+抓取（scrape）引擎+查询引擎。</li>
+<li>主要做：<ul>
+<li>按配置定位拉取各服务的&#x2F;metrics（或exporter），把指标存成时序数据；</li>
+<li>用PromQL做聚合、算rate、分位数等；</li>
+<li>可配置告警规则，把告警发给Alertmanager等。</li>
+</ul>
+</li>
+<li>特点：专注[采集 存储 查询]</li>
+</ul>
+<h2 id="一、整体架构"><a href="#一、整体架构" class="headerlink" title="一、整体架构"></a>一、整体架构</h2><p>监控链路可以概括为三条腿：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────┐      scrape       ┌─────────────┐      query      ┌─────────────┐</span><br><span class="line">│  Backend (FastAPI) │  ──────────────►  │ Prometheus  │  ◄────────────  │   Grafana   │</span><br><span class="line">│  GET /metrics     │  每 15s 拉取     │  :9090      │  作图与告警     │   :3000     │</span><br><span class="line">└─────────────────┘                   └─────────────┘                   └─────────────┘</span><br></pre></td></tr></table></figure>
+
+<p>实现原理是在具体的Http服务上注册一个GET &#x2F;metrics路由，每次被访问时返回<br>单机部署架构<br>服务拆分<br>Docker设计<br>Metrics &#x2F; Tracing &#x2F; Alert<br>日志体系<br>运行拓扑<br>真实工程描述</p>
+<p>metrics  指标  系统的体征监控</p>
+<ul>
+<li>当前gpu使用率 当前延迟 当前并发数</li>
+<li>AI特有监控</li>
+</ul>
+<p>推理时延<br>token&#x2F;s<br>队列长度<br>会话并发数</p>
+<p>tracing  链路追踪 一次请求的全过程录像<br>在你系统里的tracing<br>Audio Input<br> ↓<br>ASR<br> ↓<br>LLM<br> ↓<br>TTS<br> ↓<br>Websocket Streaming</p>
+<p>Tracing 会记录：</p>
+<p>ASR: 480ms<br>LLM: 3200ms<br>TTS: 900ms<br>Network: 120ms</p>
+<p>alert 告警 系统出事自动通知</p>
+<p>系统级</p>
+<p>GPU &gt; 95% 持续5分钟<br>websocket断开率 &gt; 20%<br>CPU &gt; 90%</p>
+<p>AI</p>
+<p>LLM延迟 &gt; 5秒<br>token&#x2F;s &lt; 5<br>ASR失败率 &gt; 10%<br>session异常率 &gt; 3%</p>
+<p>告警形式</p>
+<p>飞书<br>企业微信<br>Slack<br>邮件</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://dummyv07.github.io">Dummy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://dummyv07.github.io/2026/03/01/Grafana%E7%94%9F%E6%80%81/">https://dummyv07.github.io/2026/03/01/Grafana%E7%94%9F%E6%80%81/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://dummyv07.github.io" target="_blank">廾匸</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/LLM/">LLM</a></div><div class="post-share"><div class="social-share" data-image="/img/eyes.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/01/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BMCP/" title="大模型学习之MCP"><img class="cover" src="/img/mcp.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">大模型学习之MCP</div></div><div class="info-2"><div class="info-item-1">MCP视频链接 RAG 技术的局限性RAG（检索增强生成，Retrieval-Augmented Generation）是当前大模型领域的热门方向。它结合了信息检索与生成式模型，旨在提升知识准确性、上下文理解和对最新信息的利用能力。  RAG 的主要缺点：  检索精度有限，可能无法获取最相关的信息 生成内容可能不完整或片面 缺乏全局视角 检索能力受限时效果下降  理论基础Function CallFunction Call 是 OpenAI 于 2023 年提出的重要概念，本质上为大模型提供了与外部系统交互的能力，相当于为模型配备“外挂工具箱”。当模型无法直接回答问题时，可主动调用预设函数（如查询天气、计算数据、访问数据库等），获取实时且精准的信息后再生成回答。 Model Context Protocol（MCP）MCP（模型上下文协议）由 Anthropic 公司提出，是一个开放标准协议，旨在解决 AI 模型与外部数据源、工具的交互难题。    开发者按照 MCP 协议开发，无需为每个模型与不同资源重复编写适配代码，大幅节省开发工作量。MCP Server...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2024/12/10/LlamaFactory%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/" title="LlamaFactory参数详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-10</div><div class="info-item-2">LlamaFactory参数详解</div></div><div class="info-2"><div class="info-item-1">LlamaFactory参数详解Link LlamaFactory是一个简单易上手的大模型训练工具 微调的概念微调是指在一个已经预训练的模型基础上进行进一步的训练。预训练模型通常是在大规模数据集(如imageNet或大型文本语料库)上训练的，因此已经捕获了丰富的特征和知识。微调的目标是利用预训练模型的知识，在较小的数据集砂锅进行特定任务的优化。 主要特点1.预训练模型：基于已经训练好的模型进行 2.较少数据：通常只需要较小的数据集 3.较短时间：训练时间相对较短，因为模型已经有了良好的初始化 4.目标：适应特定任务或领域，优化模型性能 1.微调方法LORALoRA(低秩微调，Low-Rank Adaption)是一种通过低秩近似方法来减少模型参数数量和计算量的技术。它的主要目标是通过将原始的高纬参数矩阵分解成两个低秩矩阵的乘积(W ≈ A · B)，从而实现模型的参数压缩和计算加速。 其中：  W 是原始的高维参数矩阵。 A 和 B 是低秩矩阵，其秩（rank）远小于 W 的维度。 A的维度为 m x r 。 B的维度为 r x n 。 通过这种分解，我们可以将参数数量从 m...</div></div></div></a><a class="pagination-related" href="/2024/11/24/OpenAI/" title="OpenAI"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-24</div><div class="info-item-2">OpenAI</div></div><div class="info-2"><div class="info-item-1">OpenAILink OpenAI最核心的功能，就是它所提供的文本生成模型。模型经过训练可以理解自然语言、代码和图像。模型可以接受任意类型的输入，最终输出文本。 使用模型，你可以构建任意你所需要的AI应用程序，比如： 1.编写文案 2.编写编程代码 3.回答知识库问题 4.分析文本 5.日常助手 6.语言翻译 01第一个聊天程序ChatCompletion的输入是一个message list，返回是一个chatCompletion对象，示例代码如下： 123456789101112131415161718192021222324#openai默认的声明方式，注册openai后在对应的控制台获取api_keyfrom openai import OpenAIclient = OpenAI(api_key=&quot;sk-&quot;)# 通常我会把自己的API-KEY放在.env文件里，然后gitignore掉。# .env文件可以通过 dotenv库来读取，然后放进系统变量里，这样OpenAI就可以直接识别from dotenv import load_dotenv,...</div></div></div></a><a class="pagination-related" href="/2024/09/22/Tokenizer/" title="Tokenizer"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-22</div><div class="info-item-2">Tokenizer</div></div><div class="info-2"><div class="info-item-1">Tokenizer 作用：将文本序列转化为数字(token)序列，作为transformer的输入 分词粒度：word；character；subword  Word Tokenizer按照词进行分词，如：”I love you” -&gt; [“I”, “love”, “you”]优点：简单，容易理解，便于理解模型输出结果缺点：每个word分配一个id，所需的vocabulary根据语料大小而不同，会将意思一致的词分成两个不同的id Character Tokenizer按照字符进行分词，如：”I love you” -&gt; [“I”, “ “, “l”, “o”, “v”, “e”, “ “, “y”, “o”, “u”]优点：vocabulary相对小的多，适合中文缺点：对于英语来说，分词后的每个字符是毫无意义的，且输入的长度会变长 Subword Tokenizer按照词的子词进行分词，常用于英语，如‘today is...</div></div></div></a><a class="pagination-related" href="/2025/02/09/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BDeepSeek/" title="大模型学习之DeepSeek"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-09</div><div class="info-item-2">大模型学习之DeepSeek</div></div><div class="info-2"><div class="info-item-1">个人学习笔记，如有错误欢迎指正 参考链接🔗： B站视频 DeepSeek LLM: Scaling Open-Source Language Models with Longtermism DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model DeepSeekMoE: Towards Ultimate Expert Specialization in Mixture-of-Experts Language Models DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning 引言因为要看DeepSeek的优化的部分，绕不开的就是MoE 再然后就是COT  MoE 混合专家模型混合专家模型详解 MoE发展历史Jacobs et al 1991 每个专家都是独立的FFN，Gating是FFN，由Gating来决定输出那一个专家的结果   2017...</div></div></div></a><a class="pagination-related" href="/2024/10/04/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%A4%9A%E6%A8%A1%E6%80%81/" title="大模型学习之多模态"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-04</div><div class="info-item-2">大模型学习之多模态</div></div><div class="info-2"><div class="info-item-1">参考 多模态简述1. 多模态学习的概念 模态(Modality)：食物表达或感知的方式 多模态(multimodal)：研究异构(heterogeneous)和相互链接数据(interconnected data)的科学 多模态的行为和信号：   2.多模态学习六大挑战及经典工作 挑战一：Representation Learning 表式学习  学习不同模态之间交叉交互，包括融合，协调和分裂等子挑战。   挑战二：Aligment 对齐  连接，对齐表示，分割，将不同模态之间的信息进行关联对齐   挑战三：Reasoning 推理  结构 中间概念，外部范式，知识建模，不仅要求理解单个模态的信息，还要要求理解不同模态之间的信息如何进行交互，影响最终推理决策   挑战四：Generation 生成  摘要，翻译和生成，创造性的理解和生成信息一致的信息   挑战五：Transference 迁移  在模态之间转换知识，通过用一个模态的知识来提高另一个模态的能力   挑战六：Quantification 量化  更好的理解异构性，交叉模态交互，以及多模态学习的过程    </div></div></div></a><a class="pagination-related" href="/2024/12/05/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" title="大模型学习之大模型文件结构"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-05</div><div class="info-item-2">大模型学习之大模型文件结构</div></div><div class="info-2"><div class="info-item-1">下载途径不一样是否文件构成也不一样？ 以下内容以Xinference加载的Qwen2_5-InstructionAWQ-14B模型为例。  config.json configuration.json generation_config.json LIENSE merges.txt model.safetensors.index.json .safeatensors README.md tokenizer.json tokenizer_config.json vocab.json  1. config.json 配置文件 描述模型的架构、超参数和训练时的设置。包括模型的层数、隐藏单元数、激活函数等信息。 {“architectures”: [  “Qwen2ForCausalLM”],“attention_dropout”: 0.0,“bos_token_id”: 151643,“eos_token_id”: 151645,“hidden_act”: “silu”,“hidden_size”: 5120,“initializer_range”:...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/eyes.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Dummy</div><div class="author-info-description">山与山不见面 再见容易再见难</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">49</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/DummyV07" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:dummy.v07@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Wechat:---NoOneIsComing （注明来意）</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7"><span class="toc-number">1.</span> <span class="toc-text">可观测性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis"><span class="toc-number">2.</span> <span class="toc-text">Redis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM"><span class="toc-number">3.</span> <span class="toc-text">JVM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Full-GC"><span class="toc-number">4.</span> <span class="toc-text">Full GC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E6%B1%A0%EF%BC%88Connection-Pool%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">连接池（Connection Pool）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A2%E9%92%88%E6%8A%80%E6%9C%AF%EF%BC%88Probe-Agent%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">探针技术（Probe &#x2F; Agent）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TSDB"><span class="toc-number">7.</span> <span class="toc-text">TSDB</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#k8s"><span class="toc-number">8.</span> <span class="toc-text">k8s</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Metrics%EF%BC%88%E6%8C%87%E6%A0%87%EF%BC%89%E6%8C%87%E6%A0%87%EF%BC%9APrometheus%E3%80%81Mimir-%E7%AD%89Logs%EF%BC%88%E6%97%A5%E5%BF%97%EF%BC%89%E6%97%A5%E5%BF%97%EF%BC%9ALokiTraces%EF%BC%88%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA%EF%BC%89%E8%BF%BD%E8%B8%AA%EF%BC%9ATempo"><span class="toc-number">9.</span> <span class="toc-text">Metrics（指标）指标：Prometheus、Mimir 等Logs（日志）日志：LokiTraces（链路追踪）追踪：Tempo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A6%96%E5%85%88%E9%9C%80%E8%A6%81%E5%9C%A8%E5%8E%9F%E6%9C%89%E7%9A%84FastAPI%E4%B8%AD%E6%9A%B4%E9%9C%B2Metrics%E7%9B%AE%E6%A0%87%EF%BC%9A%E8%AE%A9%E6%9C%8D%E5%8A%A1%E5%9C%A8%E2%80%9Chttp-localhost-8000-metrics%E2%80%9D%E6%9A%B4%E9%9C%B2Prometheus%E6%96%87%E6%9C%AC%E6%A0%BC%E5%BC%8F%E6%8C%87%E6%A0%87-%E5%8C%85%E6%8B%AC%E8%AF%B7%E6%B1%82%E6%80%BB%E6%95%B0%E3%80%81%E8%AF%B7%E6%B1%82%E8%80%97%E6%97%B6-1-%E5%AE%9A%E4%B9%89%E6%8C%87%E6%A0%87-%E6%88%91%E9%9C%80%E8%A6%81%E5%9B%9E%E7%AD%94%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98-%E5%BD%93%E5%89%8D%E6%8E%A5%E5%8F%A3%E7%9A%84qps-p95%E5%BB%B6%E8%BF%9F-%E9%94%99%E8%AF%AF%E7%8E%87%EF%BC%9F-%E6%AF%8F%E6%AC%A1%E5%AF%B9%E8%AF%9D%E7%9A%84%E5%B9%B3%E5%9D%87%E8%BD%AE%E6%AC%A1-%E8%BF%99%E4%B8%AA%E9%97%AE%E9%A2%98%E6%9B%B4%E5%83%8F%E2%80%9C%E6%AC%A1%E6%95%B0-%E9%80%9F%E7%8E%87%E2%80%9D%E8%BF%98%E6%98%AF%E2%80%9C%E8%80%97%E6%97%B6-%E5%88%86%E5%B8%83%E2%80%9D-%E6%AC%A1%E6%95%B0-%E9%80%9F%E7%8E%87-counter-%E8%80%97%E6%97%B6-%E5%BB%B6%E8%BF%9F%E5%88%86%E5%B8%83-histogram-%E5%BD%93%E5%89%8D%E5%80%BC%EF%BC%88%E9%98%9F%E5%88%97%E9%95%BF%E5%BA%A6%E3%80%81%E8%BF%9E%E6%8E%A5%E6%95%B0%EF%BC%89-Gauge-%E6%88%91%E9%9C%80%E8%A6%81%E6%8C%89%E5%93%AA%E4%BA%9B%E7%BB%B4%E5%BA%A6%E5%8C%BA%E5%88%86%EF%BC%88labels%EF%BC%89-%E6%AF%94%E5%A6%82%EF%BC%9A%E6%8C%89method%E3%80%81path%E3%80%81status%E5%8C%BA%E5%88%86http%E8%AF%B7%E6%B1%82-%E6%88%96%E6%8C%89model-name%E3%80%81tenant%E3%80%81scene%E5%8C%BA%E5%88%86AI%E8%AF%B7%E6%B1%82"><span class="toc-number">10.</span> <span class="toc-text">首先需要在原有的FastAPI中暴露Metrics目标：让服务在“http:&#x2F;&#x2F;localhost:8000&#x2F;metrics”暴露Prometheus文本格式指标(包括请求总数、请求耗时)1.定义指标- 我需要回答什么问题  - 当前接口的qps  - p95延迟  - 错误率？  - 每次对话的平均轮次- 这个问题更像“次数&#x2F;速率”还是“耗时&#x2F;分布”  - 次数&#x2F;速率 -&gt; counter  - 耗时&#x2F;延迟分布 -&gt; histogram  - 当前值（队列长度、连接数）-&gt; Gauge- 我需要按哪些维度区分（labels）  - 比如：按method、path、status区分http请求  - 或按model_name、tenant、scene区分AI请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="toc-number">11.</span> <span class="toc-text">一、整体架构</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/01/Grafana%E7%94%9F%E6%80%81/" title="Grafana生态">Grafana生态</a><time datetime="2026-03-01T06:00:00.000Z" title="发表于 2026-03-01 14:00:00">2026-03-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BMCP/" title="大模型学习之MCP"><img src="/img/mcp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大模型学习之MCP"/></a><div class="content"><a class="title" href="/2026/01/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BMCP/" title="大模型学习之MCP">大模型学习之MCP</a><time datetime="2026-01-13T04:00:00.000Z" title="发表于 2026-01-13 12:00:00">2026-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/04/%E5%85%A8%E6%A0%88%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/" title="全栈开发笔记"><img src="/img/qzkf.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="全栈开发笔记"/></a><div class="content"><a class="title" href="/2026/01/04/%E5%85%A8%E6%A0%88%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/" title="全栈开发笔记">全栈开发笔记</a><time datetime="2026-01-04T06:00:00.000Z" title="发表于 2026-01-04 14:00:00">2026-01-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/23/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96/" title="无标题">无标题</a><time datetime="2025-12-23T01:14:06.167Z" title="发表于 2025-12-23 09:14:06">2025-12-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/10/%E5%93%88%E5%B8%8C/" title="哈希"><img src="/img/hash.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="哈希"/></a><div class="content"><a class="title" href="/2025/12/10/%E5%93%88%E5%B8%8C/" title="哈希">哈希</a><time datetime="2025-12-10T08:00:00.000Z" title="发表于 2025-12-10 16:00:00">2025-12-10</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By Dummy</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.2.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
