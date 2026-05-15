@@ -1,0 +1,393 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>大模型学习之SKILL | 廾匸</title><meta name="author" content="Dummy"><meta name="copyright" content="Dummy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文是对吴恩达 Skills 教程的个人整理与笔记，结合了官方示例和自己的理解，方便以后给大模型（LLM，大语言模型）设计和编写 SKILL。   第一节：Introduction（介绍）Agent Skills 可以简单理解为：“让智能体反复使用的一套模块化指令与脚本集合，是解决某一类实际问题的完整方案。” 和一次性写在 prompt 里的说明不同，一个 Skill（技能）是可以：  被多次复">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大模型学习之SKILL">
+<meta property="og:url" content="https://dummyv07.github.io/2026/04/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BSKILL/index.html">
+<meta property="og:site_name" content="廾匸">
+<meta property="og:description" content="本文是对吴恩达 Skills 教程的个人整理与笔记，结合了官方示例和自己的理解，方便以后给大模型（LLM，大语言模型）设计和编写 SKILL。   第一节：Introduction（介绍）Agent Skills 可以简单理解为：“让智能体反复使用的一套模块化指令与脚本集合，是解决某一类实际问题的完整方案。” 和一次性写在 prompt 里的说明不同，一个 Skill（技能）是可以：  被多次复">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dummyv07.github.io/img/eyes.jpg">
+<meta property="article:published_time" content="2026-04-13T06:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-13T08:00:19.233Z">
+<meta property="article:author" content="Dummy">
+<meta property="article:tag" content="LLM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dummyv07.github.io/img/eyes.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "大模型学习之SKILL",
+  "url": "https://dummyv07.github.io/2026/04/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BSKILL/",
+  "image": "https://dummyv07.github.io/img/eyes.jpg",
+  "datePublished": "2026-04-13T06:00:00.000Z",
+  "dateModified": "2026-05-13T08:00:19.233Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Dummy",
+      "url": "https://dummyv07.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://dummyv07.github.io/2026/04/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BSKILL/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '大模型学习之SKILL',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/eyes.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/bg2.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">廾匸</span></a><a class="nav-page-title" href="/"><span class="site-name">大模型学习之SKILL</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">大模型学习之SKILL</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-13T06:00:00.000Z" title="发表于 2026-04-13 14:00:00">2026-04-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-13T08:00:19.233Z" title="更新于 2026-05-13 16:00:19">2026-05-13</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p>本文是对吴恩达 Skills 教程的个人整理与笔记，结合了官方示例和自己的理解，方便以后给大模型（LLM，大语言模型）设计和编写 <code>SKILL</code>。</p>
+</blockquote>
+<hr>
+<h2 id="第一节：Introduction（介绍）"><a href="#第一节：Introduction（介绍）" class="headerlink" title="第一节：Introduction（介绍）"></a>第一节：Introduction（介绍）</h2><p><strong>Agent Skills</strong> 可以简单理解为：<br><strong>“让智能体反复使用的一套模块化指令与脚本集合，是解决某一类实际问题的完整方案。”</strong></p>
+<p>和一次性写在 <code>prompt</code> 里的说明不同，一个 <code>Skill</code>（技能）是可以：</p>
+<ul>
+<li>被多次复用；</li>
+<li>独立存放在文件系统中；</li>
+<li>搭配工具（tools）、MCP（Model Context Protocol，模型上下文协议）以及子智能体（subagents，子智能体）一起工作。</li>
+</ul>
+<p>从实现角度看，一个成熟的 Skill 通常需要：</p>
+<ul>
+<li>代码执行能力（如 Bash 命令行、Python 脚本等）；</li>
+<li>文件系统读写权限（filesystem 文件系统）；</li>
+<li>清晰的输入 &#x2F; 输出格式和操作流程说明。</li>
+</ul>
+<hr>
+<h2 id="第二节：Why-Use-Skills（为什么要用-Skills）"><a href="#第二节：Why-Use-Skills（为什么要用-Skills）" class="headerlink" title="第二节：Why Use Skills（为什么要用 Skills）"></a>第二节：Why Use Skills（为什么要用 Skills）</h2><p>为什么不直接把所有说明都写进一次对话里，而要额外搞一套 <code>Skill</code>？</p>
+<ul>
+<li><strong>突破上下文限制</strong>：<br>复杂流程、业务规则、长篇模版，如果每次都塞进对话，会严重占用上下文窗口。Skill 可以单独存放，需要时再“渐进式加载”。</li>
+<li><strong>保证结果一致性</strong>：<br>把一套成熟的流程写进 <code>SKILL.md</code> 和脚本里，每次调用 Skill 都走同样的标准化流程，输出质量更稳定。</li>
+<li><strong>减少重复沟通</strong>：<br>复盘报表、法务审核、数据分析这类“重复套路”的工作，通过 Skill 固化下来，Agent 只需简单调用即可。</li>
+<li><strong>便于协作与维护</strong>：<br>Skill 以文件夹形式组织，适合在团队中共享与版本管理，改规则只需改文档或脚本，而不是改一堆提示词。</li>
+</ul>
+<p>一句话：<strong>Skill 是把“经验 + 流程 + 代码”封装成一个可反复调用的能力包。</strong></p>
+<hr>
+<h2 id="第三节：Skills-的结构与文件组织"><a href="#第三节：Skills-的结构与文件组织" class="headerlink" title="第三节：Skills 的结构与文件组织"></a>第三节：Skills 的结构与文件组织</h2><p>Skill 采用一种轻量、开放的格式来扩展 AI Agent（智能体）的能力。一个典型的 Skill 目录大致如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">skills/</span><br><span class="line">└─ feedback-analysis-skill/</span><br><span class="line">   ├─ SKILL.md          # 主说明文档：用途、输入输出、核心流程</span><br><span class="line">   ├─ scripts/          # 具体脚本：如数据处理、调用 API、重算公式等</span><br><span class="line">   │  ├─ process_data.py</span><br><span class="line">   │  └─ recalc.py</span><br><span class="line">   └─ references/       # 参考资料与模版：规则说明、示例输入输出等</span><br><span class="line">      ├─ rules.md</span><br><span class="line">      ├─ example_input.xlsx</span><br><span class="line">      └─ output_template.xlsx</span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<ul>
+<li><code>SKILL.md</code>：Skill 的“说明书”，描述用途、输入输出、步骤、注意事项。</li>
+<li><code>scripts/</code>：真正执行任务的脚本（Python、Bash 等）。</li>
+<li><code>references/</code>：参考规则、模版、示例文件等辅助资料。</li>
+</ul>
+<p><code>SKILL.md</code> 通常包含：</p>
+<ul>
+<li>YAML frontmatter 元数据（如 <code>name</code>、<code>description</code>、版本等）；  </li>
+<li>详细的任务描述；</li>
+<li>输入 &#x2F; 输出格式定义；</li>
+<li>关键步骤（workflow）；</li>
+<li>评估指标或质量标准。</li>
+</ul>
+<p>举个极简的 frontmatter 样例（伪代码）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name: analyzing-marketing-campaign</span><br><span class="line">description: 分析多渠道数字营销数据，计算转化漏斗与效率指标，并给出预算调整建议。</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="第四节：Skills-vs-Tools-vs-MCP-vs-Subagents（概念对比）"><a href="#第四节：Skills-vs-Tools-vs-MCP-vs-Subagents（概念对比）" class="headerlink" title="第四节：Skills vs Tools vs MCP vs Subagents（概念对比）"></a>第四节：Skills vs Tools vs MCP vs Subagents（概念对比）</h2><p>这一节主要搞清楚四个概念的边界：</p>
+<ul>
+<li><p><strong>Tools（工具）</strong>：<br>更像“锤子、螺丝刀和钉子”，提供底层能力，比如：</p>
+<ul>
+<li>访问文件系统；</li>
+<li>运行 Bash &#x2F; Python；</li>
+<li>读写某个数据库；</li>
+<li>调用某个外部 API。</li>
+</ul>
+</li>
+<li><p><strong>Skills（技能）</strong>：<br>相当于“如何用这些工具建一个书架”的整套步骤。它：</p>
+<ul>
+<li>把专业知识和操作流程组合起来；</li>
+<li>可以引用多个 tools、脚本和参考文件；</li>
+<li>强调“可预测、可复用的工作流”。</li>
+</ul>
+</li>
+<li><p><strong>MCP（Model Context Protocol，模型上下文协议）</strong>：<br>更偏“连接器”，负责把各种外部系统、底层资源（如内部服务、知识库、数据库）统一接入到 Agent 的工具体系中。</p>
+</li>
+<li><p><strong>Subagents（子智能体）</strong>：<br>为执行某个<strong>单一、明确定义的任务</strong>而专门构建的 AI Agent，具有独立上下文，可并行运行，通常由上层 Orchestrator（编排器）协调多个 subagent 协同完成复杂请求。</p>
+</li>
+</ul>
+<p>一个简单的总结表：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>类比</th>
+<th>主要作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>tools</td>
+<td>锤子、螺丝刀、钉子</td>
+<td>提供访问文件系统等底层能力</td>
+</tr>
+<tr>
+<td>skills</td>
+<td>“如何建书架”的完整教程</td>
+<td>封装专业知识和流程，形成可复用工作流</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>各种工具的万能转接头</td>
+<td>连接外部数据源与服务</td>
+</tr>
+<tr>
+<td>subagent</td>
+<td>专业小团队成员</td>
+<td>独立承担子任务，可并行协作</td>
+</tr>
+</tbody></table>
+<p>另外两个关键特性：</p>
+<ul>
+<li>工具定义（名称、描述、参数）往往常驻在上下文中；</li>
+<li>Skills 则是<strong>按需加载</strong>，只有用到某个 Skill 时才被拉入上下文，可以显著节省 Token。</li>
+</ul>
+<hr>
+<h2 id="第五节：Exploring-Pre-built-Skills（探索预置-Skills）"><a href="#第五节：Exploring-Pre-built-Skills（探索预置-Skills）" class="headerlink" title="第五节：Exploring Pre-built Skills（探索预置 Skills）"></a>第五节：Exploring Pre-built Skills（探索预置 Skills）</h2><p>在实际使用中，我们往往先“逛一圈”已有的 Skills，再决定是否要自己写。</p>
+<p>常见的预置 Skill 使用场景包括：</p>
+<ul>
+<li><p><strong>领域专业知识（Domain Expertise，领域专业知识）</strong></p>
+<ul>
+<li>品牌规范与模版（Brand guidelines and templates）</li>
+<li>法务审核流程（Legal review processes）</li>
+<li>数据分析方法论（Data analysis methodologies）</li>
+</ul>
+</li>
+<li><p><strong>可重复的工作流程（Repeatable Workflow，可重复工作流）</strong></p>
+<ul>
+<li>每周营销活动复盘（Weekly marketing campaign review）</li>
+<li>客户电话准备流程（Customer call prep workflow）</li>
+<li>季度业务复盘（Quarterly business review）</li>
+</ul>
+</li>
+<li><p><strong>新能力（New Capabilities，新能力拓展）</strong></p>
+<ul>
+<li>制作演示文稿（Creating presentations）</li>
+<li>生成 Excel 表或 PDF 报告（Generating Excel sheets or PDF reports）</li>
+<li>搭建 MCP 服务器（Building MCP servers）</li>
+</ul>
+</li>
+</ul>
+<p>当你遇到一个需求时，可以优先思考：<strong>是否已有类似的 Skill 可以复用或改造？</strong><br>很多时候只需要改一改 <code>references/rules.md</code> 或模版文件，就能快速适配自己的业务场景。</p>
+<hr>
+<h2 id="第六节：Creating-Custom-Skills（如何创建自己的-Skill）"><a href="#第六节：Creating-Custom-Skills（如何创建自己的-Skill）" class="headerlink" title="第六节：Creating Custom Skills（如何创建自己的 Skill）"></a>第六节：Creating Custom Skills（如何创建自己的 Skill）</h2><p>创建自定义 Skill 的常见步骤：</p>
+<ol>
+<li><strong>明确目标任务</strong><br>用一句话描述这个 Skill 要解决什么问题（例如：“自动汇总销售 Excel，并输出按地区的业绩排行榜”）。</li>
+<li><strong>设计输入 &#x2F; 输出</strong>  <ul>
+<li>输入：文件类型、字段要求、示例；  </li>
+<li>输出：结构化 JSON、Markdown 报告、Excel 模版等。</li>
+</ul>
+</li>
+<li><strong>拆解操作流程</strong><br>在 <code>SKILL.md</code> 中写清楚执行步骤，比如“读取 -&gt; 清洗 -&gt; 计算 -&gt; 生成报告 -&gt; 校验错误”。</li>
+<li><strong>实现脚本与工具调用</strong><br>在 <code>scripts/</code> 中用 Python &#x2F; Bash 等写好脚本，必要时借助 MCP 访问外部数据源。</li>
+<li><strong>准备参考资料（references）</strong><br>放入示例输入、输出模版、规则说明等，既给人看，也给 Agent 作为“隐性知识”。</li>
+<li><strong>测试与迭代</strong><br>用一两组真实数据跑一遍，看看 Agent 是否按预期调用 Skill、输出是否稳定可用。</li>
+</ol>
+<hr>
+<h2 id="第七节：Skill-with-the-Client（Skill-与调用方的协作）"><a href="#第七节：Skill-with-the-Client（Skill-与调用方的协作）" class="headerlink" title="第七节：Skill with the Client（Skill 与调用方的协作）"></a>第七节：Skill with the Client（Skill 与调用方的协作）</h2><p>这里的“Client（调用方）”可以是：</p>
+<ul>
+<li>直接使用 Agent 的终端用户；</li>
+<li>上层编排逻辑（Orchestrator，编排器）；</li>
+<li>另一个 Agent 或 Subagent。</li>
+</ul>
+<p>实践上要注意：</p>
+<ul>
+<li><strong>接口要清晰</strong>：  <ul>
+<li>输入参数名和含义尽量稳定，例如统一使用 <code>input_files</code>、<code>config</code>、<code>output_format</code> 等；</li>
+<li>在 <code>SKILL.md</code> 中写明调用示例。</li>
+</ul>
+</li>
+<li><strong>错误要可诊断</strong>：  <ul>
+<li>Skill 发生问题时，应尽量返回结构化的错误信息（如 JSON 错误报告），方便 Agent 再尝试自动修复或提示人类。</li>
+</ul>
+</li>
+<li><strong>版本要可控</strong>：  <ul>
+<li>对于重要 Skill，建议在 frontmatter 中加 <code>version</code> 字段，并在变更时记录更新内容。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="第八节：Skill-with-Claude-Agents（Skill-与-Claude-Agent-协同）"><a href="#第八节：Skill-with-Claude-Agents（Skill-与-Claude-Agent-协同）" class="headerlink" title="第八节：Skill with Claude Agents（Skill 与 Claude Agent 协同）"></a>第八节：Skill with Claude Agents（Skill 与 Claude Agent 协同）</h2><p>以 Claude Agent（Claude 智能体）为例，Skill 在其中的角色主要体现在：</p>
+<ul>
+<li><strong>作为能力扩展插件</strong>：<br>Agent 在对话中识别到某类任务（如“请总结一份 Excel 调研表”）时，会判断是否需要调用某个 Skill。</li>
+<li><strong>作为长记忆与规则载体</strong>：<br>像“如何分类用户反馈”“如何写业务复盘报告”这类长期稳定的规则，不适合每次都硬塞进 prompt，而是放在 <code>references/</code> 与 <code>SKILL.md</code> 中，需要时读入。</li>
+<li><strong>作为可调参数</strong>：<br>通过修改 Skill 里的配置或指导文档，可以在不改 Agent 代码的前提下，调整智能体行为（例如更严格的法务审核、不同的写作语气等）。</li>
+</ul>
+<hr>
+<h2 id="第九节：Agent-Subagents-Skills-的综合示例"><a href="#第九节：Agent-Subagents-Skills-的综合示例" class="headerlink" title="第九节：Agent + Subagents + Skills 的综合示例"></a>第九节：Agent + Subagents + Skills 的综合示例</h2><p>可以用一个“客户洞察分析系统”来理解三者如何协同：</p>
+<ul>
+<li><p><strong>Agent（智能体）</strong> 是整个架构的大脑：  </p>
+<ul>
+<li>接收高层任务（例如：“请基于访谈和问卷，输出一份客户洞察报告”）；  </li>
+<li>拆解子任务，安排给不同的 Subagent；  </li>
+<li>统一整合结果并输出给用户。</li>
+</ul>
+</li>
+<li><p><strong>Interview Analyzer（访谈分析器）</strong> 和 <strong>Survey Analyzer（问卷分析器）</strong> 是两个 Subagent（子智能体）：  </p>
+<ul>
+<li><code>Interview Analyzer</code> 负责处理非结构化的客户访谈记录，使用自然语言理解提取关键观点、情绪和深层需求；  </li>
+<li><code>Survey Analyzer</code> 负责结构化问卷数据的统计分析、模式识别与趋势归纳；  </li>
+<li>它们可以并行工作，各自调用 Filesystem 中的 Skills 和 LLM 能力，最后把结构化结果返回给 Agent 汇总。</li>
+</ul>
+</li>
+<li><p><strong>Filesystem + Skills 层</strong> 则是底层“能力基础设施”：  </p>
+<ul>
+<li>Filesystem 作为技能容器，组织多个可复用 Skill 模块；  </li>
+<li>某个指导文档（例如 “A guide for how to categorize feedback and how to summarize findings”）作为元指令（Meta‑prompt，元提示），规定了数据分类维度、总结框架和质量标准；  </li>
+<li>通过修改这些文档即可调整系统的行为，实现“知识即配置”，而无需动底层代码。</li>
+</ul>
+</li>
+</ul>
+<p>这一整套设计，使系统能够高效处理不同类型的数据源，并保持模块化、可扩展。</p>
+<hr>
+<h2 id="第十节：实践建议与最佳实践（Conclusion）"><a href="#第十节：实践建议与最佳实践（Conclusion）" class="headerlink" title="第十节：实践建议与最佳实践（Conclusion）"></a>第十节：实践建议与最佳实践（Conclusion）</h2><p>最后，把前面零散的建议收拢成几条落地实践：</p>
+<ul>
+<li><p><strong>1. 从 Agent 视角思考 Skill 设计</strong><br>问自己两个问题：  </p>
+<ul>
+<li>Agent 现在缺什么“武器”？  </li>
+<li>哪些任务未来会被反复执行，值得封装成 Skill？</li>
+</ul>
+</li>
+<li><p><strong>2. 明确输入输出，示例放进 <code>references/</code></strong>  </p>
+<ul>
+<li>输入 &#x2F; 输出不清晰，Skill 很难稳定复用；  </li>
+<li>示例文件、模版、规则文档都建议集中放到 <code>references/</code> 目录。</li>
+</ul>
+</li>
+<li><p><strong>3. 复杂逻辑拆成脚本 + SKILL.md 主流程</strong>  </p>
+<ul>
+<li><code>SKILL.md</code> 负责解释“做什么、按什么顺序做”；  </li>
+<li>具体实现放在 <code>scripts/</code> 中，便于单元测试和复用。</li>
+</ul>
+</li>
+<li><p><strong>4. 重视错误处理与中间结果</strong>  </p>
+<ul>
+<li>Skill 应尽量输出错误报告与中间结果，方便 Agent 自动重试或人工排查；  </li>
+<li>对 Excel 这类场景，公式计算可单独用脚本处理（如 <code>recalc.py</code>），避免在库中直接计算。</li>
+</ul>
+</li>
+</ul>
+<p>总之：<strong>Skill 是连接“业务知识”和“工具能力”的桥梁，把它设计好，就等于给你的大模型 Agent 配了一整套成熟的“业务作战手册”。</strong></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://dummyv07.github.io">Dummy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://dummyv07.github.io/2026/04/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BSKILL/">https://dummyv07.github.io/2026/04/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BSKILL/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://dummyv07.github.io" target="_blank">廾匸</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/LLM/">LLM</a></div><div class="post-share"><div class="social-share" data-image="/img/eyes.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/03/01/Grafana%E7%94%9F%E6%80%81/" title="Grafana生态"><img class="cover" src="/img/grafana.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Grafana生态</div></div><div class="info-2"><div class="info-item-1">可观测性可观测性(Observability) 指通过系统外部输出推断其内部状态的能力。维度(Dimension) 是用来描述和分类数据的标签属性，比如用户ID、应用ID、模型名称等，关注“是什么”指标(Metric) 是用来量化的数值数据，比如请求次数、响应时间、Token消耗量等，关注“有多少” 监控等数据分类 系统指标：包括cpu使用率、内存占用、磁盘I&#x2F;O、网络流量等基础设施层面的监控数据。应用指标：涵盖接口响应时间、QPS（每秒查询率）、错误率】jvm状态等应用层面的性能数据。业务指标：针对我们平台的特定业务逻辑，比如AI模型调用次数、token消耗量、用户活跃度等调用链：在一个分布式系统中，一个请求可能经过多个服务组件。百分位数：P99：99%的请求响应时间都在这个值以下。...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2024/12/10/LlamaFactory%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/" title="LlamaFactory参数详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-10</div><div class="info-item-2">LlamaFactory参数详解</div></div><div class="info-2"><div class="info-item-1">LlamaFactory参数详解Link LlamaFactory是一个简单易上手的大模型训练工具 微调的概念微调是指在一个已经预训练的模型基础上进行进一步的训练。预训练模型通常是在大规模数据集(如imageNet或大型文本语料库)上训练的，因此已经捕获了丰富的特征和知识。微调的目标是利用预训练模型的知识，在较小的数据集砂锅进行特定任务的优化。 主要特点1.预训练模型：基于已经训练好的模型进行 2.较少数据：通常只需要较小的数据集 3.较短时间：训练时间相对较短，因为模型已经有了良好的初始化 4.目标：适应特定任务或领域，优化模型性能 1.微调方法LORALoRA(低秩微调，Low-Rank Adaption)是一种通过低秩近似方法来减少模型参数数量和计算量的技术。它的主要目标是通过将原始的高纬参数矩阵分解成两个低秩矩阵的乘积(W ≈ A · B)，从而实现模型的参数压缩和计算加速。 其中：  W 是原始的高维参数矩阵。 A 和 B 是低秩矩阵，其秩（rank）远小于 W 的维度。 A的维度为 m x r 。 B的维度为 r x n 。 通过这种分解，我们可以将参数数量从 m...</div></div></div></a><a class="pagination-related" href="/2024/11/24/OpenAI/" title="OpenAI"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-24</div><div class="info-item-2">OpenAI</div></div><div class="info-2"><div class="info-item-1">OpenAILink OpenAI最核心的功能，就是它所提供的文本生成模型。模型经过训练可以理解自然语言、代码和图像。模型可以接受任意类型的输入，最终输出文本。 使用模型，你可以构建任意你所需要的AI应用程序，比如： 1.编写文案 2.编写编程代码 3.回答知识库问题 4.分析文本 5.日常助手 6.语言翻译 01第一个聊天程序ChatCompletion的输入是一个message list，返回是一个chatCompletion对象，示例代码如下： 123456789101112131415161718192021222324#openai默认的声明方式，注册openai后在对应的控制台获取api_keyfrom openai import OpenAIclient = OpenAI(api_key=&quot;sk-&quot;)# 通常我会把自己的API-KEY放在.env文件里，然后gitignore掉。# .env文件可以通过 dotenv库来读取，然后放进系统变量里，这样OpenAI就可以直接识别from dotenv import load_dotenv,...</div></div></div></a><a class="pagination-related" href="/2024/09/22/Tokenizer/" title="Tokenizer"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-22</div><div class="info-item-2">Tokenizer</div></div><div class="info-2"><div class="info-item-1">Tokenizer 作用：将文本序列转化为数字(token)序列，作为transformer的输入 分词粒度：word；character；subword  Word Tokenizer按照词进行分词，如：”I love you” -&gt; [“I”, “love”, “you”]优点：简单，容易理解，便于理解模型输出结果缺点：每个word分配一个id，所需的vocabulary根据语料大小而不同，会将意思一致的词分成两个不同的id Character Tokenizer按照字符进行分词，如：”I love you” -&gt; [“I”, “ “, “l”, “o”, “v”, “e”, “ “, “y”, “o”, “u”]优点：vocabulary相对小的多，适合中文缺点：对于英语来说，分词后的每个字符是毫无意义的，且输入的长度会变长 Subword Tokenizer按照词的子词进行分词，常用于英语，如‘today is...</div></div></div></a><a class="pagination-related" href="/2025/02/09/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BDeepSeek/" title="大模型学习之DeepSeek"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-09</div><div class="info-item-2">大模型学习之DeepSeek</div></div><div class="info-2"><div class="info-item-1">个人学习笔记，如有错误欢迎指正 参考链接🔗： B站视频 DeepSeek LLM: Scaling Open-Source Language Models with Longtermism DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model DeepSeekMoE: Towards Ultimate Expert Specialization in Mixture-of-Experts Language Models DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning 引言因为要看DeepSeek的优化的部分，绕不开的就是MoE 再然后就是COT  MoE 混合专家模型混合专家模型详解 MoE发展历史Jacobs et al 1991 每个专家都是独立的FFN，Gating是FFN，由Gating来决定输出那一个专家的结果   2017...</div></div></div></a><a class="pagination-related" href="/2024/10/04/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%A4%9A%E6%A8%A1%E6%80%81/" title="大模型学习之多模态"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-04</div><div class="info-item-2">大模型学习之多模态</div></div><div class="info-2"><div class="info-item-1">参考 多模态简述1. 多模态学习的概念 模态(Modality)：食物表达或感知的方式 多模态(multimodal)：研究异构(heterogeneous)和相互链接数据(interconnected data)的科学 多模态的行为和信号：   2.多模态学习六大挑战及经典工作 挑战一：Representation Learning 表式学习  学习不同模态之间交叉交互，包括融合，协调和分裂等子挑战。   挑战二：Aligment 对齐  连接，对齐表示，分割，将不同模态之间的信息进行关联对齐   挑战三：Reasoning 推理  结构 中间概念，外部范式，知识建模，不仅要求理解单个模态的信息，还要要求理解不同模态之间的信息如何进行交互，影响最终推理决策   挑战四：Generation 生成  摘要，翻译和生成，创造性的理解和生成信息一致的信息   挑战五：Transference 迁移  在模态之间转换知识，通过用一个模态的知识来提高另一个模态的能力   挑战六：Quantification 量化  更好的理解异构性，交叉模态交互，以及多模态学习的过程    </div></div></div></a><a class="pagination-related" href="/2024/12/05/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" title="大模型学习之大模型文件结构"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-05</div><div class="info-item-2">大模型学习之大模型文件结构</div></div><div class="info-2"><div class="info-item-1">下载途径不一样是否文件构成也不一样？ 以下内容以Xinference加载的Qwen2_5-InstructionAWQ-14B模型为例。  config.json configuration.json generation_config.json LIENSE merges.txt model.safetensors.index.json .safeatensors README.md tokenizer.json tokenizer_config.json vocab.json  1. config.json 配置文件 描述模型的架构、超参数和训练时的设置。包括模型的层数、隐藏单元数、激活函数等信息。 {“architectures”: [  “Qwen2ForCausalLM”],“attention_dropout”: 0.0,“bos_token_id”: 151643,“eos_token_id”: 151645,“hidden_act”: “silu”,“hidden_size”: 5120,“initializer_range”:...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/eyes.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Dummy</div><div class="author-info-description">山与山不见面 再见容易再见难</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/DummyV07" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:dummy.v07@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Wechat:---NoOneIsComing （注明来意）</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E8%8A%82%EF%BC%9AIntroduction%EF%BC%88%E4%BB%8B%E7%BB%8D%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">第一节：Introduction（介绍）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E8%8A%82%EF%BC%9AWhy-Use-Skills%EF%BC%88%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8-Skills%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">第二节：Why Use Skills（为什么要用 Skills）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E8%8A%82%EF%BC%9ASkills-%E7%9A%84%E7%BB%93%E6%9E%84%E4%B8%8E%E6%96%87%E4%BB%B6%E7%BB%84%E7%BB%87"><span class="toc-number">3.</span> <span class="toc-text">第三节：Skills 的结构与文件组织</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E8%8A%82%EF%BC%9ASkills-vs-Tools-vs-MCP-vs-Subagents%EF%BC%88%E6%A6%82%E5%BF%B5%E5%AF%B9%E6%AF%94%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">第四节：Skills vs Tools vs MCP vs Subagents（概念对比）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E8%8A%82%EF%BC%9AExploring-Pre-built-Skills%EF%BC%88%E6%8E%A2%E7%B4%A2%E9%A2%84%E7%BD%AE-Skills%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">第五节：Exploring Pre-built Skills（探索预置 Skills）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E8%8A%82%EF%BC%9ACreating-Custom-Skills%EF%BC%88%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84-Skill%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">第六节：Creating Custom Skills（如何创建自己的 Skill）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%83%E8%8A%82%EF%BC%9ASkill-with-the-Client%EF%BC%88Skill-%E4%B8%8E%E8%B0%83%E7%94%A8%E6%96%B9%E7%9A%84%E5%8D%8F%E4%BD%9C%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">第七节：Skill with the Client（Skill 与调用方的协作）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%85%AB%E8%8A%82%EF%BC%9ASkill-with-Claude-Agents%EF%BC%88Skill-%E4%B8%8E-Claude-Agent-%E5%8D%8F%E5%90%8C%EF%BC%89"><span class="toc-number">8.</span> <span class="toc-text">第八节：Skill with Claude Agents（Skill 与 Claude Agent 协同）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B9%9D%E8%8A%82%EF%BC%9AAgent-Subagents-Skills-%E7%9A%84%E7%BB%BC%E5%90%88%E7%A4%BA%E4%BE%8B"><span class="toc-number">9.</span> <span class="toc-text">第九节：Agent + Subagents + Skills 的综合示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E8%8A%82%EF%BC%9A%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%EF%BC%88Conclusion%EF%BC%89"><span class="toc-number">10.</span> <span class="toc-text">第十节：实践建议与最佳实践（Conclusion）</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BSKILL/" title="大模型学习之SKILL">大模型学习之SKILL</a><time datetime="2026-04-13T06:00:00.000Z" title="发表于 2026-04-13 14:00:00">2026-04-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/01/Grafana%E7%94%9F%E6%80%81/" title="Grafana生态"><img src="/img/grafana.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Grafana生态"/></a><div class="content"><a class="title" href="/2026/03/01/Grafana%E7%94%9F%E6%80%81/" title="Grafana生态">Grafana生态</a><time datetime="2026-03-01T06:00:00.000Z" title="发表于 2026-03-01 14:00:00">2026-03-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BMCP/" title="大模型学习之MCP"><img src="/img/mcp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大模型学习之MCP"/></a><div class="content"><a class="title" href="/2026/01/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BMCP/" title="大模型学习之MCP">大模型学习之MCP</a><time datetime="2026-01-13T04:00:00.000Z" title="发表于 2026-01-13 12:00:00">2026-01-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/04/%E5%85%A8%E6%A0%88%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/" title="全栈开发笔记"><img src="/img/qzkf.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="全栈开发笔记"/></a><div class="content"><a class="title" href="/2026/01/04/%E5%85%A8%E6%A0%88%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/" title="全栈开发笔记">全栈开发笔记</a><time datetime="2026-01-04T06:00:00.000Z" title="发表于 2026-01-04 14:00:00">2026-01-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/23/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96/" title="无标题">无标题</a><time datetime="2025-12-23T01:14:06.167Z" title="发表于 2025-12-23 09:14:06">2025-12-23</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By Dummy</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.2.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
