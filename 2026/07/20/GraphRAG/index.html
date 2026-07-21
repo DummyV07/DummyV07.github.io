@@ -1,0 +1,569 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>GraphRAG 选型笔记 | 廾匸</title><meta name="author" content="Dummy"><meta name="copyright" content="Dummy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Naive RAG 就是 Chunk → Embedding → Top-K → LLM。单点事实够用，多跳、全局主题、硬条件过滤就容易翻车。 GraphRAG 的做法是先把语料做成图（实体、关系、属性，也可以加社区&#x2F;层级），查询时语义找入口，图上再扩一层，最后才生成： 1234索引：文档 → 抽取 →（对齐）→ 图库           └→ Embedding &#x2F; 倒排 → 向量库或">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GraphRAG 选型笔记">
+<meta property="og:url" content="https://dummyv07.github.io/2026/07/20/GraphRAG/index.html">
+<meta property="og:site_name" content="廾匸">
+<meta property="og:description" content="Naive RAG 就是 Chunk → Embedding → Top-K → LLM。单点事实够用，多跳、全局主题、硬条件过滤就容易翻车。 GraphRAG 的做法是先把语料做成图（实体、关系、属性，也可以加社区&#x2F;层级），查询时语义找入口，图上再扩一层，最后才生成： 1234索引：文档 → 抽取 →（对齐）→ 图库           └→ Embedding &#x2F; 倒排 → 向量库或">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dummyv07.github.io/img/graphrag.png">
+<meta property="article:published_time" content="2026-07-20T03:30:00.000Z">
+<meta property="article:modified_time" content="2026-07-21T02:12:24.833Z">
+<meta property="article:author" content="Dummy">
+<meta property="article:tag" content="GraphRAG">
+<meta property="article:tag" content="RAG">
+<meta property="article:tag" content="知识图谱">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dummyv07.github.io/img/graphrag.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "GraphRAG 选型笔记",
+  "url": "https://dummyv07.github.io/2026/07/20/GraphRAG/",
+  "image": "https://dummyv07.github.io/img/graphrag.png",
+  "datePublished": "2026-07-20T03:30:00.000Z",
+  "dateModified": "2026-07-21T02:12:24.833Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Dummy",
+      "url": "https://dummyv07.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://dummyv07.github.io/2026/07/20/GraphRAG/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'GraphRAG 选型笔记',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/eyes.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/graphrag.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">廾匸</span></a><a class="nav-page-title" href="/"><span class="site-name">GraphRAG 选型笔记</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">GraphRAG 选型笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-20T03:30:00.000Z" title="发表于 2026-07-20 11:30:00">2026-07-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-21T02:12:24.833Z" title="更新于 2026-07-21 10:12:24">2026-07-21</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>Naive RAG 就是 Chunk → Embedding → Top-K → LLM。单点事实够用，多跳、全局主题、硬条件过滤就容易翻车。</p>
+<p>GraphRAG 的做法是先把语料做成图（实体、关系、属性，也可以加社区&#x2F;层级），查询时语义找入口，图上再扩一层，最后才生成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">索引：文档 → 抽取 →（对齐）→ 图库</span><br><span class="line">           └→ Embedding / 倒排 → 向量库或 ES</span><br><span class="line"></span><br><span class="line">查询：Query → 入口召回拿到 ID → 图扩散 / 社区 / 重排 → 上下文 → LLM</span><br></pre></td></tr></table></figure>
+
+<p>下面按落地要拍板的几件事记：图库、向量、抽取、Schema、检索、Benchmark。中间夹一点自己项目里用过的判断。</p>
+<hr>
+<h2 id="1-图库"><a href="#1-图库" class="headerlink" title="1. 图库"></a>1. 图库</h2><p>图库干的事很具体：存点边、按 ID 扩邻居、属性过滤，有时还要跑 PageRank、社区发现。</p>
+<table>
+<thead>
+<tr>
+<th>图库</th>
+<th>查询语言</th>
+<th>我怎么看</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Neo4j</strong></td>
+<td>Cypher</td>
+<td>生态最熟，GDS、示例多；新版本还能挂节点向量，小规模可以考虑「图里顺便做入口」</td>
+</tr>
+<tr>
+<td><strong>HugeGraph</strong></td>
+<td>Gremlin</td>
+<td>国内见得多，分布式、多存储后端，偏大规模 OLTP</td>
+</tr>
+<tr>
+<td><strong>NebulaGraph</strong></td>
+<td>nGQL</td>
+<td>超大图、路径查询强，也在补向量&#x2F;全文</td>
+</tr>
+<tr>
+<td><strong>JanusGraph</strong></td>
+<td>Gremlin</td>
+<td>挂 Cassandra&#x2F;HBase 那种，灵活，运维重</td>
+</tr>
+<tr>
+<td><strong>FalkorDB &#x2F; Memgraph</strong></td>
+<td>openCypher 一类</td>
+<td>偏低延迟；体量和生态不如 Neo4j</td>
+</tr>
+<tr>
+<td><strong>RDF（如 GraphDB）</strong></td>
+<td>SPARQL</td>
+<td>本体、推理向，和 LLM 随便抽三元组那套路不太同构</td>
+</tr>
+</tbody></table>
+<p>选型上我不太信「榜单第一」。更在意：</p>
+<ul>
+<li>团队会不会写多跳、会不会看执行计划（Cypher 通常比 Gremlin 好上手）</li>
+<li>边到千万～亿级有没有，有的话 HugeGraph &#x2F; Nebula &#x2F; Janus 才进短名单</li>
+<li>PageRank、社区发现是内置还是要外挂</li>
+<li>向量要不要拆出去（拆出去性能好，多一跳一致性和延迟）</li>
+</ul>
+<p><strong>HugeGraph 和 Neo4j 能不能平替？</strong><br>数据模型都是属性图，知识层 Schema、仓储接口可以按「可替换」来设计。查询语言、客户端、运维不是换依赖就能热插拔。项目里两套都碰过，所以业务里尽量别写死某一种方言。</p>
+<hr>
+<h2 id="2-向量-检索入口"><a href="#2-向量-检索入口" class="headerlink" title="2. 向量 &#x2F; 检索入口"></a>2. 向量 &#x2F; 检索入口</h2><p>向量这边的任务其实就一句：听懂口语 Query，吐出能和图 join 的 <strong>ID</strong>（Chunk &#x2F; Entity）+ score。</p>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>适合什么</th>
+<th>别忽略什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Milvus</strong></td>
+<td>大规模纯向量、ANN 种类全</td>
+<td>关键词弱，常要另接 ES</td>
+</tr>
+<tr>
+<td><strong>ES &#x2F; OpenSearch</strong></td>
+<td>BM25 + 向量一条链，过滤熟</td>
+<td>超大规模纯向量未必比专库稳</td>
+</tr>
+<tr>
+<td><strong>Qdrant &#x2F; Weaviate</strong></td>
+<td>过滤、payload、云原生</td>
+<td>看团队基础设施熟不熟</td>
+</tr>
+<tr>
+<td><strong>pgvector</strong></td>
+<td>和业务库一体、省事</td>
+<td>量起来要单独评估</td>
+</tr>
+<tr>
+<td><strong>Faiss</strong></td>
+<td>嵌进程、算法灵活</td>
+<td>服务化、持久化自己扛</td>
+</tr>
+<tr>
+<td><strong>图内向量</strong>（如 Neo4j）</td>
+<td>少一次跨库</td>
+<td>入口规模大了可能不够</td>
+</tr>
+</tbody></table>
+<p>我自己选型时 ES 和 Milvus 都能接受，契约先定死：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#123; id, score, payload? &#125;, ...]</span><br></pre></td></tr></table></figure>
+
+<p>后面图扩散只认 ID。引擎换了，Schema 和遍历逻辑不用跟着翻。</p>
+<p>HNSW 的 <code>M</code>、<code>ef</code> 该调还是要调，那是召回和延迟的常规杠杆；和「用哪家向量库」是两层问题。</p>
+<hr>
+<h2 id="3-抽取"><a href="#3-抽取" class="headerlink" title="3. 抽取"></a>3. 抽取</h2><p>抽取脏了，后面检索再漂亮也是断图。</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>优点</th>
+<th>坑</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Prompt + 通用 LLM</td>
+<td>启动快，关系类型灵活</td>
+<td>JSON 易崩，贵、慢，长文&#x2F;表格不稳</td>
+</tr>
+<tr>
+<td>UIE &#x2F; 结构化抽取</td>
+<td>格式稳，可部署，成本可控</td>
+<td>要适配 schema，开放关系不如大模型</td>
+</tr>
+<tr>
+<td>传统 NER → 关系</td>
+<td>可控、端侧友好</td>
+<td>迁移贵，隐式关系弱</td>
+</tr>
+<tr>
+<td>小模型微调（Qwen 等）</td>
+<td>垂直域准确率和格式能拉高</td>
+<td>要语料和训练链路</td>
+</tr>
+<tr>
+<td>版面解析再抽（MinerU 等）</td>
+<td>先治「输入源脏」</td>
+<td>多一截流水线</td>
+</tr>
+<tr>
+<td>框架内置 indexer（如微软 GraphRAG）</td>
+<td>和社区摘要流水线对齐</td>
+<td>贵，改 schema 麻烦</td>
+</tr>
+</tbody></table>
+<p>经验上冷启动先 Prompt，但一定要校验和重试；字段固定、要吞吐就上 UIE 或小模型。PDF 出问题，先分清是版面错还是 IE 错，别混在一块调。</p>
+<p>自己做过 <strong>UIE</strong> 和 <strong>Prompt</strong>：表格&#x2F;固定槽位偏 UIE，开放关系、快速试 schema 偏 Prompt。常见组合是解析打底 → UIE 保核心字段 → Prompt 补开放关系。</p>
+<hr>
+<h2 id="4-Schema：先认知识形态，再谈分层"><a href="#4-Schema：先认知识形态，再谈分层" class="headerlink" title="4. Schema：先认知识形态，再谈分层"></a>4. Schema：先认知识形态，再谈分层</h2><p>Schema 不是先画一张万能 ER。抽出来是什么形状，图上就要有对应的点边约定。</p>
+<h3 id="4-1-六种常见知识形态"><a href="#4-1-六种常见知识形态" class="headerlink" title="4.1 六种常见知识形态"></a>4.1 六种常见知识形态</h3><p>前面两种工程里最常见：</p>
+<table>
+<thead>
+<tr>
+<th>形态</th>
+<th>抽什么</th>
+<th>图上长什么样</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>概念拓扑（三元组）</td>
+<td>谁和谁、什么关系</td>
+<td><code>(h)-[r]-&gt;(t)</code></td>
+</tr>
+<tr>
+<td>实例属性填空</td>
+<td>表单&#x2F;表格字段</td>
+<td>实体 + 稠密属性（或 EAV）</td>
+</tr>
+</tbody></table>
+<p>后面几类也很常见，别硬塞进同一种扁平三元组：</p>
+<p><strong>事件脉络 &#x2F; 事理图谱</strong><br>抽 Event、Time、Trigger、Actor、Object，连成时间链或因果链。事件要当一等节点，边写顺承&#x2F;因果，不要只当实体属性。适合审计、交接、风控链条。</p>
+<p><strong>多模态连接图</strong><br>架构图、CAD、仪表盘：VLM 把箭头变成 <code>调用</code>&#x2F;<code>连接</code> 边，证据链回图片区域或页码，不只是文本 Chunk。问「引脚怎么接」时，靠的是这张连接图。</p>
+<p><strong>文档树 Doc-Tree</strong><br>抽的是章&#x2F;节&#x2F;段归属，不是业务实体。<code>章-包含→节-包含→Chunk</code>。命中一段后沿树上溯或捞邻段，专门对付长文断章取义。可以和实体图并存：同一个 Chunk 既挂树，又 mention 实体。</p>
+<p><strong>数据血缘 Lineage</strong><br>从代码、SQL、API、配置抽依赖：<code>API → Service → Table/Column</code>。字段改名、服务升级看影响面，靠这种图。</p>
+<p>对照一下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">纯文本关系   → 实体关系 Schema</span><br><span class="line">表单/表格    → 实体 + 属性</span><br><span class="line">叙事演进     → 事理 / 时间轴</span><br><span class="line">图/音视频    → 连接 / 空间关系</span><br><span class="line">长文档版面   → Doc-Tree</span><br><span class="line">代码 SQL 配置 → Lineage</span><br></pre></td></tr></table></figure>
+
+<p>都能进图谱，不等于共用一套边类型。多形态就分子图或边前缀，查询按题型路由。</p>
+<h3 id="4-2-怎么铺层"><a href="#4-2-怎么铺层" class="headerlink" title="4.2 怎么铺层"></a>4.2 怎么铺层</h3><table>
+<thead>
+<tr>
+<th>做法</th>
+<th>什么时候有用</th>
+<th>代价</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>扁平三元组</td>
+<td>快速验证抽取和多跳</td>
+<td>宏观弱，易超级节点</td>
+</tr>
+<tr>
+<td>Chunk + 实体双层</td>
+<td>LightRAG 那种局部+全局</td>
+<td>mention、对齐要维护</td>
+</tr>
+<tr>
+<td>Doc-Tree + 实体双轨</td>
+<td>长文档</td>
+<td>两套边，查询要会分流</td>
+</tr>
+<tr>
+<td>社区层次（微软 GraphRAG）</td>
+<td>全局主题</td>
+<td>索引贵，更新重</td>
+</tr>
+<tr>
+<td>强本体</td>
+<td>主数据、合规</td>
+<td>和 LLM 开放抽取要调和</td>
+</tr>
+<tr>
+<td>类 HNSW：上层少、下层密</td>
+<td>先粗后细的导航直觉</td>
+<td>上层到底是社区、类型还是章节，必须说清楚</td>
+</tr>
+<tr>
+<td>事理&#x2F;血缘子图</td>
+<td>溯源、变更影响</td>
+<td>别和纯实体 Schema 搅在一起</td>
+</tr>
+</tbody></table>
+<p>关系类型也是：全用 <code>RELATED</code> 好抽，扩散噪声大；mention &#x2F; 事实 &#x2F; 包含 &#x2F; 依赖分开，才能按边控深。组织边、事理边、血缘边语义不一样，扩散策略不要混用。</p>
+<p><strong>自己这边：</strong> Schema 还没定稿。倾向双层（Chunk + 实体）+ 属性过滤，导航上借用 HNSW「上层少、下层密」。设计讨论里提过核心控制、双层、三类关系、属性过滤——三类关系的最终边名等定稿再写，不在这里先列一张假表。六类形态哪些进业务，进了就单独开子 Schema。</p>
+<hr>
+<h2 id="5-检索：图建好之后怎么捞"><a href="#5-检索：图建好之后怎么捞" class="headerlink" title="5. 检索：图建好之后怎么捞"></a>5. 检索：图建好之后怎么捞</h2><p>检索可以按机制拆几派。微软社区流、LightRAG 是用得比较多的两条；路径剪枝、Agent 迭代、混合重排、文档树恢复也值得建档。</p>
+<h3 id="5-1-对照"><a href="#5-1-对照" class="headerlink" title="5.1 对照"></a>5.1 对照</h3><table>
+<thead>
+<tr>
+<th>流派</th>
+<th>代表</th>
+<th>擅长</th>
+<th>代价</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>社区 &#x2F; 摘要</td>
+<td>微软 GraphRAG Global 等</td>
+<td>跨文档主题、全局趋势</td>
+<td>索引贵、更新重</td>
+</tr>
+<tr>
+<td>双层双路</td>
+<td>LightRAG</td>
+<td>局部细节 + 一点全局，相对轻</td>
+<td>高低层索引要养</td>
+</tr>
+<tr>
+<td>路径敏感 &#x2F; 多跳</td>
+<td>PathRAG、PPR、最短路</td>
+<td>多约束推理、证据链完整</td>
+<td>路径要剪枝，边太粗路径就没语义</td>
+</tr>
+<tr>
+<td>Agent 迭代</td>
+<td>ToG、GraphFlow 等</td>
+<td>根因、审计，深度自适应</td>
+<td>慢、贵，要步数熔断</td>
+</tr>
+<tr>
+<td>混合召回 + 精排</td>
+<td>BM25 + 向量 + 图 + Reranker</td>
+<td>高并发、抗噪</td>
+<td>链路长，要调融合</td>
+</tr>
+<tr>
+<td>Doc-Tree 分支</td>
+<td>章→节→段上溯</td>
+<td>长手册、防断章</td>
+<td>依赖文档树质量</td>
+</tr>
+<tr>
+<td>纯向量 Top-K</td>
+<td>基线</td>
+<td>简单事实</td>
+<td>多跳和全局弱</td>
+</tr>
+</tbody></table>
+<p>社区流：Leiden 社区 + 社区摘要，宏观题捞摘要再聚合；还有 Local、DRIFT。<br>LightRAG：Local 走实体邻域，Global 走高层标签&#x2F;簇，两路融合。<br>路径派：多个种子实体命中后，在图上找连接路径（或 PathRAG 那种对节点对做 flow-based 路径剪枝），把整条路径说成人话再进 Prompt，比扔孤立节点好推。<br>Agent 派：查一步、看一眼、再决定扩哪条边；GraphFlow 一类还把「下一步动作」做成策略学习。注意论文里的 flow matching 和工业精排用的 Cross-Encoder 不是一层东西。<br>混合派：ES 抓字面、向量抓语义、图扩关联，候选合并（可用 RRF），再 Cross-Encoder &#x2F; PageRank 收口，只留 Top-K。单路抽错不至于整链死。<br>树状恢复：命中 Chunk 后沿 Doc-Tree 上溯章&#x2F;节，打包分支；和实体路径可以双轨。</p>
+<h3 id="5-2-一条常用闭环：混合入口-有界路径-重排"><a href="#5-2-一条常用闭环：混合入口-有界路径-重排" class="headerlink" title="5.2 一条常用闭环：混合入口 + 有界路径 + 重排"></a>5.2 一条常用闭环：混合入口 + 有界路径 + 重排</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AdvancedGraphRetriever</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vector_db, keyword_db, graph_db, reranker</span>):</span><br><span class="line">        self.vector_db = vector_db</span><br><span class="line">        self.keyword_db = keyword_db</span><br><span class="line">        self.graph_db = graph_db</span><br><span class="line">        self.reranker = reranker  <span class="comment"># 如 BGE-Reranker</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">retrieve</span>(<span class="params">self, query, top_k=<span class="number">5</span></span>):</span><br><span class="line">        seeds = merge_ids(</span><br><span class="line">            self.vector_db.search(query, top_k=<span class="number">10</span>),</span><br><span class="line">            self.keyword_db.search(query, top_k=<span class="number">10</span>),</span><br><span class="line">        )</span><br><span class="line">        raw_paths = self.graph_db.expand_paths(</span><br><span class="line">            seeds, max_hops=<span class="number">2</span>, edge_types=[<span class="string">&quot;fact_relation&quot;</span>], limit=<span class="number">50</span></span><br><span class="line">        )</span><br><span class="line">        contexts = [</span><br><span class="line">            serialize_path(p) + <span class="string">&quot; | 出处: &quot;</span> + related_chunks(p)</span><br><span class="line">            <span class="keyword">for</span> p <span class="keyword">in</span> raw_paths</span><br><span class="line">        ]</span><br><span class="line">        ranked = self.reranker.compute_scores(query, contexts)</span><br><span class="line">        <span class="keyword">return</span> [</span><br><span class="line">            x[<span class="string">&quot;text&quot;</span>]</span><br><span class="line">            <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">sorted</span>(ranked, key=<span class="keyword">lambda</span> i: i[<span class="string">&quot;score&quot;</span>], reverse=<span class="literal">True</span>)[:top_k]</span><br><span class="line">        ]</span><br></pre></td></tr></table></figure>
+
+<p><code>max_hops</code> 和 <code>LIMIT</code> 不是细节，是防超级节点把图库打爆的基本纪律。</p>
+<p>题型可以大致对一下：</p>
+<table>
+<thead>
+<tr>
+<th>题型</th>
+<th>优先试</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全局趋势</td>
+<td>社区摘要</td>
+</tr>
+<tr>
+<td>要快、要细节</td>
+<td>双层双路</td>
+</tr>
+<tr>
+<td>多实体约束</td>
+<td>路径 + 文本化</td>
+</tr>
+<tr>
+<td>根因 &#x2F; 审计</td>
+<td>Agent（加熔断）</td>
+</tr>
+<tr>
+<td>高并发要稳</td>
+<td>混合 + Cross-Encoder</td>
+</tr>
+<tr>
+<td>长手册</td>
+<td>Doc-Tree 分支</td>
+</tr>
+</tbody></table>
+<p>默认主路径用 Benchmark 选。社区、双层、路径+重排（可加 PageRank）、有树再加树状恢复，同一题集对比；Agent 单独用复杂题子集测，别和低延迟主路径抢位。</p>
+<hr>
+<h2 id="6-Benchmark"><a href="#6-Benchmark" class="headerlink" title="6. Benchmark"></a>6. Benchmark</h2><p>没有题集，上面那些表都只是意见。</p>
+<p>指标上至少分开看：检索有没有捞到金标实体&#x2F;三元组（Recall、Hit）、路径够不够、生成质量（EM&#x2F;F1&#x2F;Judge，要控生成模型变量）、全局题主题覆盖、延迟和 Token、改写 Query 的鲁棒性。</p>
+<p>题从哪来：公开集（HotpotQA、2Wiki、GraphRAG-Bench）可复现但对不齐领域；业务金标最贴近但贵；LLM 合成题便宜但容易虚高；线上日志有分布但要脱敏、冷启动没有。</p>
+<p>粒度也要拆：抽取 F1、对齐、向量召回、图扩散、重排 NDCG 做组件门禁；换检索策略做 A&#x2F;B；最后才端到端验收。换了抽取或 Schema，索引版本要重跑，避免检索背锅。</p>
+<p>我觉得够格的 Benchmark 至少有：固定题 + 金标证据 ID&#x2F;三元组；组件报表和端到端报表；多策略同题对比；主表带成本和延迟；公开集验证方法、领域集做上线门禁。</p>
+<p>自己更想先把这套库搭起来，再堆队列、SSE 那些工程件。</p>
+<hr>
+<h2 id="7-取舍和工程"><a href="#7-取舍和工程" class="headerlink" title="7. 取舍和工程"></a>7. 取舍和工程</h2><table>
+<thead>
+<tr>
+<th>轴</th>
+<th>追上限时</th>
+<th>追成本和速度时</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>图库</td>
+<td>GDS&#x2F;超大规模分布式</td>
+<td>团队最熟的那套 + 仓储抽象</td>
+</tr>
+<tr>
+<td>向量</td>
+<td>专库 ANN</td>
+<td>ES 混合或够用的同栈向量</td>
+</tr>
+<tr>
+<td>抽取</td>
+<td>大模型开放抽 + 社区摘要</td>
+<td>UIE&#x2F;小模型</td>
+</tr>
+<tr>
+<td>Schema</td>
+<td>按形态分域</td>
+<td>Chunk–实体双层 + 强属性，Doc-Tree 按需</td>
+</tr>
+<tr>
+<td>检索</td>
+<td>路径 &#x2F; 社区 &#x2F; Agent</td>
+<td>混合召回 + Rerank + LIMIT；双层双路也常够用</td>
+</tr>
+<tr>
+<td>Benchmark</td>
+<td>公开多跳 + Judge</td>
+<td>领域金标 + 组件门禁 + 成本</td>
+</tr>
+</tbody></table>
+<p>抽取 → Schema → 检索 → Benchmark 还没跑顺之前，不必先上消息队列全家桶。真要上线再补：async + SSE、写入异步、图查询超时和 LIMIT、图挂了降级纯向量、Trace 拆耗时。工程放大的是已经对的检索，救不了建错的图。</p>
+<hr>
+<p>目前项目侧比较明确的是：图库 HugeGraph &#x2F; Neo4j 按接口抽象；向量统一吐 node_id；抽取走过 UIE 和 Prompt；Schema 还在构想；检索多路线建档，用 Benchmark 定默认路径。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://dummyv07.github.io">Dummy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://dummyv07.github.io/2026/07/20/GraphRAG/">https://dummyv07.github.io/2026/07/20/GraphRAG/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://dummyv07.github.io" target="_blank">廾匸</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GraphRAG/">GraphRAG</a><a class="post-meta__tags" href="/tags/RAG/">RAG</a><a class="post-meta__tags" href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/">知识图谱</a></div><div class="post-share"><div class="social-share" data-image="/img/graphrag.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="阿里云服务器"><img class="cover" src="/img/ecs.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">阿里云服务器</div></div><div class="info-2"><div class="info-item-1">阿里云服务器从买一台电脑到把服务跑在云上，中间差的不只是「在哪台机器上跑」，还有资源形态、计费方式和运维方式。本文先梳理常见服务器类型与选型思路，再以租用的阿里云 ECS（Elastic Compute Service，弹性计算服务）为例，解读登录后 root 家目录里那些文件和文件夹各自是干什么的。 1. 服务器的类型广义上的「服务器」可以理解为：持续运行、对外提供某种能力的计算资源。按形态大致可分为以下几类。 1.1 物理服务器（Bare Metal Server，裸金属服务器） 一整台实体机器归你独占，CPU、内存、磁盘、网卡都是真实硬件。 优点：性能稳定、无虚拟化损耗、适合对 IO 或延迟极度敏感的场景。 缺点：采购成本高、上架周期长、扩容慢、机房运维成本高。 典型场景：大型数据库、高频交易、核心 ERP、需要专用硬件加速的业务。  1.2 虚拟服务器 &#x2F; 云服务器（VPS &#x2F; Cloud VM） 在物理机上通过虚拟化技术切分出多个「虚拟机」，每台有独立操作系统。 代表产品：阿里云 ECS、腾讯云 CVM、AWS EC2、Azure...</div></div></div></a><a class="pagination-related" href="/2026/07/21/HierarchicalNavigableSmallWorld/" title="Hierarchical Navigable Small World（分层可导航小世界）"><img class="cover" src="/img/hnsw.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Hierarchical Navigable Small World（分层可导航小世界）</div></div><div class="info-2"><div class="info-item-1">HNSW（Hierarchical Navigable Small World，分层可导航小世界）是目前向量库里最常见的 ANN（Approximate Nearest Neighbor，近似最近邻）索引之一。Milvus、Faiss、pgvector、Elasticsearch 的稠密向量检索，底层很多都绕不开它。 一句话：在高维向量图上做「先粗后细」的贪心导航，用近似换毫秒级延迟。 读完本文，你应该能：  说清 NSW 和「分层」各自解决什么问题 画出从上到下的检索路径 知道落地时 M、efConstruction、efSearch 怎么调   1. 问题从哪来？传统库用 B+ 树一类结构做精确查找；向量检索要找的是「语义最近」——比如在 1536 维空间里找离 Query 最近的 Top-K Chunk。 暴力做法是和全库算一遍距离，准确但 $O(N)$，数据一大就扛不住。ANN 接受一点召回损失，把查询压到接近 $O(\log N)$。HNSW 是其中工程表现最好的一类。  2. 小世界图（NSW）先把每个向量当成图上的一个点，和若干近邻连边，得到一张...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/eyes.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Dummy</div><div class="author-info-description">山与山不见面 再见容易再见难</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/DummyV07" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:dummy.v07@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Wechat:---NoOneIsComing （注明来意）</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9B%BE%E5%BA%93"><span class="toc-number">1.</span> <span class="toc-text">1. 图库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%90%91%E9%87%8F-%E6%A3%80%E7%B4%A2%E5%85%A5%E5%8F%A3"><span class="toc-number">2.</span> <span class="toc-text">2. 向量 &#x2F; 检索入口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%8A%BD%E5%8F%96"><span class="toc-number">3.</span> <span class="toc-text">3. 抽取</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Schema%EF%BC%9A%E5%85%88%E8%AE%A4%E7%9F%A5%E8%AF%86%E5%BD%A2%E6%80%81%EF%BC%8C%E5%86%8D%E8%B0%88%E5%88%86%E5%B1%82"><span class="toc-number">4.</span> <span class="toc-text">4. Schema：先认知识形态，再谈分层</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%85%AD%E7%A7%8D%E5%B8%B8%E8%A7%81%E7%9F%A5%E8%AF%86%E5%BD%A2%E6%80%81"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 六种常见知识形态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E6%80%8E%E4%B9%88%E9%93%BA%E5%B1%82"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 怎么铺层</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%A3%80%E7%B4%A2%EF%BC%9A%E5%9B%BE%E5%BB%BA%E5%A5%BD%E4%B9%8B%E5%90%8E%E6%80%8E%E4%B9%88%E6%8D%9E"><span class="toc-number">5.</span> <span class="toc-text">5. 检索：图建好之后怎么捞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E5%AF%B9%E7%85%A7"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 对照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E4%B8%80%E6%9D%A1%E5%B8%B8%E7%94%A8%E9%97%AD%E7%8E%AF%EF%BC%9A%E6%B7%B7%E5%90%88%E5%85%A5%E5%8F%A3-%E6%9C%89%E7%95%8C%E8%B7%AF%E5%BE%84-%E9%87%8D%E6%8E%92"><span class="toc-number">5.2.</span> <span class="toc-text">5.2 一条常用闭环：混合入口 + 有界路径 + 重排</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-Benchmark"><span class="toc-number">6.</span> <span class="toc-text">6. Benchmark</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E5%8F%96%E8%88%8D%E5%92%8C%E5%B7%A5%E7%A8%8B"><span class="toc-number">7.</span> <span class="toc-text">7. 取舍和工程</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/07/21/HierarchicalNavigableSmallWorld/" title="Hierarchical Navigable Small World（分层可导航小世界）"><img src="/img/hnsw.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hierarchical Navigable Small World（分层可导航小世界）"/></a><div class="content"><a class="title" href="/2026/07/21/HierarchicalNavigableSmallWorld/" title="Hierarchical Navigable Small World（分层可导航小世界）">Hierarchical Navigable Small World（分层可导航小世界）</a><time datetime="2026-07-21T03:30:00.000Z" title="发表于 2026-07-21 11:30:00">2026-07-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/07/20/GraphRAG/" title="GraphRAG 选型笔记"><img src="/img/graphrag.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GraphRAG 选型笔记"/></a><div class="content"><a class="title" href="/2026/07/20/GraphRAG/" title="GraphRAG 选型笔记">GraphRAG 选型笔记</a><time datetime="2026-07-20T03:30:00.000Z" title="发表于 2026-07-20 11:30:00">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="阿里云服务器"><img src="/img/ecs.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="阿里云服务器"/></a><div class="content"><a class="title" href="/2026/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="阿里云服务器">阿里云服务器</a><time datetime="2026-07-10T03:30:00.000Z" title="发表于 2026-07-10 11:30:00">2026-07-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/07/08/HawkesProcess/" title="Hawkes Process"><img src="/img/Hawkes.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hawkes Process"/></a><div class="content"><a class="title" href="/2026/07/08/HawkesProcess/" title="Hawkes Process">Hawkes Process</a><time datetime="2026-07-08T06:00:00.000Z" title="发表于 2026-07-08 14:00:00">2026-07-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/13/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E4%B9%8BSKILL/" title="大模型学习之SKILL">大模型学习之SKILL</a><time datetime="2026-04-13T06:00:00.000Z" title="发表于 2026-04-13 14:00:00">2026-04-13</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By Dummy</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.2.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
