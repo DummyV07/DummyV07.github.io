@@ -1,0 +1,213 @@
+Cover images come from Wikimedia Commons and keep their original licenses.
+
+deepspeed.jpg
+  file: File:ASUS NVIDIA GeForce 210 silent graphics card with HDMI.JPG
+  license: CC BY-SA 3.0
+  author: Joydeep
+  page: https://commons.wikimedia.org/wiki/File:ASUS_NVIDIA_GeForce_210_silent_graphics_card_with_HDMI.JPG
+
+stable-diffusion.jpg
+  file: File:Close-up of colorful, textured abstract painting with vivid hues.jpg
+  license: CC BY-SA 4.0
+  author: DP Singh Bhullar
+  page: https://commons.wikimedia.org/wiki/File:Close-up_of_colorful,_textured_abstract_painting_with_vivid_hues.jpg
+
+llm-skill.jpg
+  file: File:Hinckley Toolbox - geograph.org.uk - 7729365.jpg
+  license: CC BY-SA 2.0
+  author: A J Paxton
+  page: https://commons.wikimedia.org/wiki/File:Hinckley_Toolbox_-_geograph.org.uk_-_7729365.jpg
+
+quantization.jpg
+  file: File:240ИЛ1Б кристалл.jpg
+  license: CC BY 4.0
+  author: Клапауций (155LA3)
+  page: https://commons.wikimedia.org/wiki/File:240%D0%98%D0%9B1%D0%91_%D0%BA%D1%80%D0%B8%D1%81%D1%82%D0%B0%D0%BB%D0%BB.jpg
+
+deepseek.jpg
+  file: File:Blue Gene-Q, Super computer control room at EFPL, Lausanne (2015-05-22 02.41.34 by Mitch Altman).jpg
+  license: CC BY-SA 2.0
+  author: Mitch Altman from San Francisco, USA
+  page: https://commons.wikimedia.org/wiki/File:Blue_Gene-Q,_Super_computer_control_room_at_EFPL,_Lausanne_(2015-05-22_02.41.34_by_Mitch_Altman).jpg
+
+gpu-memory.jpg
+  file: File:2 SIMM RAM modules sm hy.jpg
+  license: CC BY-SA 3.0
+  author: AVRS
+  page: https://commons.wikimedia.org/wiki/File:2_SIMM_RAM_modules_sm_hy.jpg
+
+model-files.jpg
+  file: File:3.5 inch hard disk drive, side view.jpg
+  license: CC BY-SA 4.0
+  author: Gunnar Wolf
+  page: https://commons.wikimedia.org/wiki/File:3.5_inch_hard_disk_drive,_side_view.jpg
+
+openai.jpg
+  file: File:3d-printed-humanoid-robot-manav-mumbai-techfest-2015.jpg
+  license: CC BY-SA 4.0
+  author: Jasonprost
+  page: https://commons.wikimedia.org/wiki/File:3d-printed-humanoid-robot-manav-mumbai-techfest-2015.jpg
+
+gradio-chat.jpg
+  file: File:Chatbot Arena main UI.png
+  license: Public domain
+  author: LMSYS Org (UI), PrincessPandaWiki (prompter)
+  page: https://commons.wikimedia.org/wiki/File:Chatbot_Arena_main_UI.png
+
+database.jpg
+  file: File:HP EVA4400-1.jpg
+  license: CC BY-SA 3.0
+  author: Redline
+  page: https://commons.wikimedia.org/wiki/File:HP_EVA4400-1.jpg
+
+tokenizer.jpg
+  file: File:Hong Kong Type PV4.jpg
+  license: CC BY-SA 4.0
+  author: Jim Ashby
+  page: https://commons.wikimedia.org/wiki/File:Hong_Kong_Type_PV4.jpg
+
+c-language.jpg
+  file: File:Programming code.jpg
+  license: CC BY-SA 4.0
+  author: Martin Vorel
+  page: https://commons.wikimedia.org/wiki/File:Programming_code.jpg
+
+dataset.jpg
+  file: File:Bologna, Museo internazionale e biblioteca della musica (2).jpg
+  license: CC BY-SA 4.0
+  author: Palickap
+  page: https://commons.wikimedia.org/wiki/File:Bologna,_Museo_internazionale_e_biblioteca_della_musica_(2).jpg
+
+deploy.jpg
+  file: File:NASA’s Evolved SLS Block 1B Crew Rocket - Night Launch (B1B Crew Night Launch).jpg
+  license: Public domain
+  author: NASA Marshall Space Flight Center / Terry White/SLS
+  page: https://commons.wikimedia.org/wiki/File:NASA%E2%80%99s_Evolved_SLS_Block_1B_Crew_Rocket_-_Night_Launch_(B1B_Crew_Night_Launch).jpg
+
+gpt-api.jpg
+  file: File:Ethernet Connection.jpg
+  license: CC BY-SA 3.0
+  author: Someone's Moving Castle
+  page: https://commons.wikimedia.org/wiki/File:Ethernet_Connection.jpg
+
+prompt.jpg
+  file: File:2012.10.03.132232 Desk typewriter train station Ely Nevada.jpg
+  license: CC0
+  author: Hermann Luyken
+  page: https://commons.wikimedia.org/wiki/File:2012.10.03.132232_Desk_typewriter_train_station_Ely_Nevada.jpg
+
+llm-overview.jpg
+  file: File:Light installation "Dialog" on Strömparterren during Nobel Week Lights 2021 02.jpg
+  license: CC BY-SA 4.0
+  author: Woman on a mission
+  page: https://commons.wikimedia.org/wiki/File:Light_installation_%22Dialog%22_on_Str%C3%B6mparterren_during_Nobel_Week_Lights_2021_02.jpg
+
+opencv.jpg
+  file: File:0561 Polaroid 690 with closeup lens (9121982615).jpg
+  license: CC BY-SA 2.0
+  author: Zebrio from Tokyo, Japan
+  page: https://commons.wikimedia.org/wiki/File:0561_Polaroid_690_with_closeup_lens_(9121982615).jpg
+
+model-opt.jpg
+  file: File:BonsaiTridentMaple.jpg
+  license: Public domain
+  author: Peggy Greb, USDA
+  page: https://commons.wikimedia.org/wiki/File:BonsaiTridentMaple.jpg
+
+file-path.jpg
+  file: File:European style folders dossiers.jpg
+  license: CC0
+  author: unspecified
+  page: https://commons.wikimedia.org/wiki/File:European_style_folders_dossiers.jpg
+
+model-package.jpg
+  file: File:Cardboard boxes by Henry Söderlund.jpg
+  license: CC BY 2.0
+  author: Henry Söderlund
+  page: https://commons.wikimedia.org/wiki/File:Cardboard_boxes_by_Henry_S%C3%B6derlund.jpg
+
+detection.jpg
+  file: File:CCTV camera in Poland (1).jpg
+  license: CC BY-SA 4.0
+  author: MichalPL
+  page: https://commons.wikimedia.org/wiki/File:CCTV_camera_in_Poland_(1).jpg
+
+segmentation.jpg
+  file: File:Centaur mosaic - Google Art Project - CropFrame - Plus1ev.jpg
+  license: Public domain
+  author: Unknown Details on Google Art Project
+  page: https://commons.wikimedia.org/wiki/File:Centaur_mosaic_-_Google_Art_Project_-_CropFrame_-_Plus1ev.jpg
+
+hexo-blog.jpg
+  file: File:A hand is pressing keys on a laptop keyboard.jpg
+  license: CC BY 2.0
+  author: Shixart1985
+  page: https://commons.wikimedia.org/wiki/File:A_hand_is_pressing_keys_on_a_laptop_keyboard.jpg
+
+optimizer.jpg
+  file: File:Darcha Padum Road Below Shinku La Lahaul Oct22 A7C 03533.jpg
+  license: CC BY-SA 4.0
+  author: This Photo was taken by Timothy A. Gonsalves. Feel free to use my photos, but please mention me as the author. I would much appreciate if yo
+  page: https://commons.wikimedia.org/wiki/File:Darcha_Padum_Road_Below_Shinku_La_Lahaul_Oct22_A7C_03533.jpg
+
+
+Replacements:
+llamafactory.jpg
+  file: File:Lamas in the sunset San Pedro de Atacama Chile Luca Galuzzi 2006.jpg
+  license: CC BY-SA 2.5
+  author: Luca Galuzzi (Lucag)
+  page: https://commons.wikimedia.org/wiki/File:Lamas_in_the_sunset_San_Pedro_de_Atacama_Chile_Luca_Galuzzi_2006.jpg
+
+finetune.jpg
+  file: File:Optical microscope for the study of paint fragments.jpg
+  license: CC BY-SA 4.0
+  author: Froselong
+  page: https://commons.wikimedia.org/wiki/File:Optical_microscope_for_the_study_of_paint_fragments.jpg
+
+agent.jpg
+  file: resized frame from the series File:KUKA industrial robotic arm performing "The Beach" by Roy Nachum
+  license: CC BY-SA 4.0
+  author: Oleg Yunakov (photograph); artwork by Roy Nachum
+  page: https://commons.wikimedia.org/wiki/File:KUKA_industrial_robotic_arm_performing_%22The_Beach%22_by_Roy_Nachum_-_01.jpg
+
+langchain.jpg
+  file: File:Racing bicycle chain (detail).jpg
+  license: CC BY-SA 4.0
+  author: Cjp24
+  page: https://commons.wikimedia.org/wiki/File:Racing_bicycle_chain_(detail).jpg
+
+fastapi.jpg
+  file: File:First Web Server.jpg
+  license: CC BY-SA 3.0
+  author: User:Coolcaesar at en.wikipedia
+  page: https://commons.wikimedia.org/wiki/File:First_Web_Server.jpg
+
+multimodal.jpg
+  file: File:Bokeh of camera lens.jpg
+  license: CC BY-SA 4.0
+  author: ElooKoN
+  page: https://commons.wikimedia.org/wiki/File:Bokeh_of_camera_lens.jpg
+
+hello-world.jpg
+  file: File:Hello Gorgeous neon sign in a café, Brisbane, 2023.jpg
+  license: CC BY-SA 4.0
+  author: Kgbo
+  page: https://commons.wikimedia.org/wiki/File:Hello_Gorgeous_neon_sign_in_a_caf%C3%A9,_Brisbane,_2023.jpg
+
+notion-ledger.jpg
+  file: File:Pittsboro Merchant Business Ledger - DPLA - 4cbfce8f8f08c14f851ab74af046c082 (page 258).jpg
+  license: Public domain
+  author: 
+  page: https://commons.wikimedia.org/wiki/File:Pittsboro_Merchant_Business_Ledger_-_DPLA_-_4cbfce8f8f08c14f851ab74af046c082_(page_258).jpg
+
+transformer.png
+  file: File:Neural network - Midjourney and Grok.png
+  license: Public domain
+  author: Midjourney; prompt suggested by Grok
+  page: https://commons.wikimedia.org/wiki/File:Neural_network_-_Midjourney_and_Grok.png
+
+python-concurrency.jpg
+  file: File:HP-HP9000-PARISC-PA7000-CPU-Chip-Closeup-Project-Mustang.jpg
+  license: CC BY-SA 4.0
+  author: Thomas Schanz
+  page: https://commons.wikimedia.org/wiki/File:HP-HP9000-PARISC-PA7000-CPU-Chip-Closeup-Project-Mustang.jpg
