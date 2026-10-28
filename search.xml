@@ -6662,56 +6662,384 @@
   </entry>
   <entry>
     <title>数据库</title>
-    <url>/2024/09/29/%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[<h2 id="如何选择合适的数据库？"><a href="#如何选择合适的数据库？" class="headerlink" title="如何选择合适的数据库？"></a>如何选择合适的数据库？</h2><h3 id="1结构化数据-非结构数据"><a href="#1结构化数据-非结构数据" class="headerlink" title="1结构化数据&#x2F;非结构数据"></a>1结构化数据&#x2F;非结构数据</h3><h4 id="1-1-结构化数据-structured-data"><a href="#1-1-结构化数据-structured-data" class="headerlink" title="1.1 结构化数据(structured data)"></a>1.1 结构化数据(structured data)</h4><p>有固定格式或模式的数据，通常可以用表格的形式来表示，每一列对应一个字段，每一行代表一条记录。<br>特点：固定格式｜易于处理｜标准化</p>
+    <url>/2026/10/28/%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[<p>数据库按「里面存的是什么、查询时怎么找」来分，比按厂商名单来分更不容易过时。DBX（轻量数据库工作台）的新建连接就是按这个习惯分组的：关系型、分析型、文档键值与搜索、图与向量、时序，旁边再放消息队列和注册配置。同一类里会打开相近的工作区，换一类就换一套对象，而不是所有系统都挤进一个 SQL 输入框。</p>
+<p>本文按这套分类做综述。每一类先说明数据长什么样，再写经典产品各自站在哪。最近业务里用到的 PostgreSQL（关系型数据库）和 InfluxDB（时序数据库）作为这两类的案例，多记一层对象模型和查询语言。</p>
+<h2 id="1-七类放在一张表里"><a href="#1-七类放在一张表里" class="headerlink" title="1. 七类放在一张表里"></a>1. 七类放在一张表里</h2><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>一条数据是什么</th>
+<th>查询时在找什么</th>
+<th>经典产品</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>关系型与兼容协议</td>
+<td>有类型的一行</td>
+<td>事务、关联、按条件更新</td>
+<td>PostgreSQL、MySQL、SQLite、Oracle、SQL Server</td>
+</tr>
+<tr>
+<td>分析型与数据仓库</td>
+<td>用来扫描的大批量行或列</td>
+<td>聚合、多维分析、跨源查询</td>
+<td>ClickHouse、Doris、StarRocks、Snowflake、BigQuery、Trino</td>
+</tr>
+<tr>
+<td>文档、键值与搜索</td>
+<td>一篇文档、一个键，或一段可检索文本</td>
+<td>按键取值、按字段取文档、全文检索</td>
+<td>MongoDB、Redis、Elasticsearch、Cassandra、HBase</td>
+</tr>
+<tr>
+<td>图、向量与 AI 数据</td>
+<td>点和边，或一组高维向量</td>
+<td>沿关系游走，或找最相近的向量</td>
+<td>Neo4j、Milvus、Qdrant、Weaviate、ChromaDB</td>
+</tr>
+<tr>
+<td>时序系统</td>
+<td>时间戳加上维度和数值</td>
+<td>一段时间里的趋势、降采样</td>
+<td>InfluxDB、TDengine、IoTDB、QuestDB</td>
+</tr>
+<tr>
+<td>消息队列</td>
+<td>一条待传递的事件</td>
+<td>谁生产、谁消费、能不能回放</td>
+<td>Kafka、RabbitMQ、RocketMQ、Pulsar</td>
+</tr>
+<tr>
+<td>注册与配置中心</td>
+<td>一个会被监听的键</td>
+<td>配置当前值、服务有没有在线</td>
+<td>etcd、ZooKeeper、Nacos</td>
+</tr>
+</tbody></table>
+<p>前五类是数据库的主体。后两类在新建连接里和库排在一起，因为排障时经常要从表跳到消息，再跳到配置；它们保存的是事件流和协调数据。</p>
+<p>还有一条不单独构成数据模型：<strong>驱动扩展</strong>。JDBC（Java Database Connectivity，Java 数据库连接）、厂商私有驱动、MySQL &#x2F; PostgreSQL 协议兼容，解决的是「这个引擎怎么连上」。达梦、Snowflake、Hive 很多走这条路。能连上，只说明协议通了，系统表、权限和高级功能仍以该引擎自己的为准。</p>
+<h2 id="2-关系型与兼容协议"><a href="#2-关系型与兼容协议" class="headerlink" title="2. 关系型与兼容协议"></a>2. 关系型与兼容协议</h2><p>关系型数据库把数据放进表。每一列有类型，每一行是一条记录，表和表用键关联。查询语言是 SQL，写入用事务包起来：同一笔业务里的多次修改一起成功，或一起回到原样。这类系统承载在线交易（OLTP，联机事务处理），用户、订单、库存、权限都在这里。</p>
+<p>经典产品可以按出现的场景记：</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>常见位置</th>
+<th>记一点就够的特征</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Oracle</strong></td>
+<td>传统企业核心库</td>
+<td>商业支持完整，过程语言是 PL&#x2F;SQL，端口常见 1521</td>
+</tr>
+<tr>
+<td><strong>SQL Server</strong></td>
+<td>微软技术栈</td>
+<td>方言是 T-SQL，和 Windows、.NET 一起出现，端口常见 1433</td>
+</tr>
+<tr>
+<td><strong>MySQL</strong></td>
+<td>网站和互联网业务</td>
+<td>长期是 Web 应用的默认选择，存储引擎以 InnoDB 为主，端口 3306。MariaDB 是它的分支，TiDB、OceanBase 则用 MySQL 协议做分布式</td>
+</tr>
+<tr>
+<td><strong>SQLite</strong></td>
+<td>手机、桌面、嵌入式、单机工具</td>
+<td>整个库是一个文件，没有独立的数据库服务进程</td>
+</tr>
+<tr>
+<td><strong>达梦、openGauss、GaussDB</strong></td>
+<td>国产化和政企项目</td>
+<td>达梦靠近 Oracle 的使用习惯；openGauss、GaussDB 沿 PostgreSQL 演进而来。协议或语法兼容，不等于系统表和运维命令可以照搬</td>
+</tr>
+</tbody></table>
+<h3 id="案例：PostgreSQL"><a href="#案例：PostgreSQL" class="headerlink" title="案例：PostgreSQL"></a>案例：PostgreSQL</h3><p>PostgreSQL 把 SQL 标准、扩展和复杂类型放在同一套引擎里，默认端口 <strong>5432</strong>。业务库、地理数据（PostGIS）、向量（pgvector）、时序（TimescaleDB）都能以扩展的形式长在它上面，所以它经常是「先上一套关系库，再看要不要拆出去」的那套。</p>
+<p>库里面的对象可以这样对应：</p>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>database（数据库）</td>
+<td>一套独立的数据空间，连接时要写明名字</td>
+</tr>
+<tr>
+<td>schema（模式）</td>
+<td>库内的命名空间，默认是 <code>public</code></td>
+</tr>
+<tr>
+<td>table &#x2F; view</td>
+<td>表存数据，视图把常用查询固定下来</td>
+</tr>
+<tr>
+<td>role（角色）</td>
+<td>登录和授权的主体</td>
+</tr>
+</tbody></table>
+<p>真正写业务时有三件容易踩错：</p>
 <ul>
-<li>应用场景：<ul>
-<li>关系数据库：MySQL，PostgreSQL</li>
-<li>Excel，CSV，json&#x2F;xml</li>
+<li>时间列用 <code>timestamptz</code>，入库时按统一时刻保存。不带时区的 <code>timestamp</code> 会把「服务器在哪个时区」卷进数据里。</li>
+<li>会参与约束和对账的列用独立字段；形状经常变的附属信息用 <code>jsonb</code>。<code>jsonb</code> 是二进制 JSON，可以建 GIN 索引。</li>
+<li>一次业务动作放进一个事务。PostgreSQL 用 MVCC（多版本并发控制）让读和写少互相阻塞，没提交的长事务会拖住旧版本的清理。</li>
 </ul>
-</li>
-</ul>
-<h4 id="1-2-非结构化数据-unstructured-data"><a href="#1-2-非结构化数据-unstructured-data" class="headerlink" title="1.2 非结构化数据(unstructured data)"></a>1.2 非结构化数据(unstructured data)</h4><p>非结构化数据是没有固定格式的数据，通常包含大量的文本、图像、音频、视频等内容<br>特点：自由格式｜难以处理｜多样化</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id, status, created_at</span><br><span class="line"><span class="keyword">FROM</span> orders</span><br><span class="line"><span class="keyword">WHERE</span> created_at <span class="operator">&gt;=</span> now() <span class="operator">-</span> <span class="type">interval</span> <span class="string">&#x27;7 days&#x27;</span></span><br><span class="line">  <span class="keyword">AND</span> status <span class="operator">=</span> <span class="string">&#x27;paid&#x27;</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> created_at <span class="keyword">DESC</span></span><br><span class="line">LIMIT <span class="number">50</span>;</span><br></pre></td></tr></table></figure>
+
+<p>生产查询用单独的只读角色。索引按查询建：等值、范围和排序用 B-tree，<code>jsonb</code> 和全文用 GIN。</p>
+<h2 id="3-分析型与数据仓库"><a href="#3-分析型与数据仓库" class="headerlink" title="3. 分析型与数据仓库"></a>3. 分析型与数据仓库</h2><p>分析型系统为一件事优化：一次读进很多行，算出合计、分位数和趋势。数据往往从关系库、日志或消息队列同步过来，分析查询允许秒级甚至更久，换来的是扫描和聚合的吞吐。习惯上把这类负载叫 OLAP（联机分析处理）。</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>它经典在哪</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>ClickHouse</strong></td>
+<td>列式存储。同一列的值放在一起，对事件明细做过滤和聚合很快，适合日志、点击、账单明细</td>
+</tr>
+<tr>
+<td><strong>Doris、StarRocks</strong></td>
+<td>实时分析库，对外提供 MySQL 协议。已有的 SQL 客户端和 BI 工具容易接上来</td>
+</tr>
+<tr>
+<td><strong>Snowflake、BigQuery</strong></td>
+<td>云上的数据仓库。存储和计算分开，按使用的计算资源计费，适合把各业务的表汇总成分析层</td>
+</tr>
+<tr>
+<td><strong>Databricks</strong></td>
+<td>湖仓一体。数据以数据湖里的文件为底（常见是 Delta Lake），上面用 Spark SQL 做分析和机器学习</td>
+</tr>
+<tr>
+<td><strong>Trino</strong></td>
+<td>分布式查询引擎。自己通常不作为主存，而是用 SQL 同时查 Hive、Iceberg、PostgreSQL 等多个数据源</td>
+</tr>
+</tbody></table>
+<p>关系库里的一张订单表，和分析库里的一份订单明细，可以并存。前者负责下单时的正确性，后者负责「过去 30 天各省的支付金额」。分析库里的行可以晚到几秒或几分钟，这个延迟要在业务上接受。</p>
+<h2 id="4-文档、键值与搜索"><a href="#4-文档、键值与搜索" class="headerlink" title="4. 文档、键值与搜索"></a>4. 文档、键值与搜索</h2><p>这一类不把「一张事先定好的表」当作唯一模型。DBX 把它们放在同一组，是因为连接之后进入的是文档、键、索引或列族浏览器，而不是关系库那套表结构编辑器。里面其实是四种经典模型。</p>
+<h3 id="4-1-文档数据库"><a href="#4-1-文档数据库" class="headerlink" title="4.1 文档数据库"></a>4.1 文档数据库</h3><p>一条记录是一篇文档，通常是 JSON 或 BSON。不同文档的字段可以不一样。</p>
 <ul>
-<li>应用场景：<ul>
-<li>文本分析：如感情分析</li>
-<li>图像识别：人脸识别，物体检测</li>
-<li>语音识别：语音转文字，语音合成等</li>
-<li>社交媒体监控：分析社媒帖子、评论</li>
+<li><strong>MongoDB</strong> 是这类里最常见的产品，端口 27017。查询用自己的查询语言和聚合管道，适合内容、活动配置、字段经常加减的档案。</li>
+<li><strong>CouchDB</strong> 把文档暴露成 HTTP 接口，强调多主复制，适合需要离线同步的场景。</li>
 </ul>
-</li>
-</ul>
-<h3 id="关系型数据库：-基于SQL"><a href="#关系型数据库：-基于SQL" class="headerlink" title="关系型数据库：(基于SQL)"></a>关系型数据库：(基于SQL)</h3><p>关系型数据库由一组连接起来的表(比如CSV表)组成。表中的每一行代表一条记录。</p>
-<p>所有的关系型数据库都使用类似SQL的语言进行查询，这些语言很常用，并且自带join操作(即连接操作，用于把来自两个或多个表的行结合)，这种数据库支持对列进行索引，使得基于这些列能进行更快的查询。</p>
-<p>常见的关系型数据库：MySQL，PostgreSQL，SQLite，Oracle，SQL Server，DB2等。</p>
-<h3 id="NOSQL数据库"><a href="#NOSQL数据库" class="headerlink" title="NOSQL数据库"></a>NOSQL数据库</h3><ul>
-<li>文档存档数据库： 文档存储数据库的原子单位是一个文档(document)，每个文档都是一个json，不同文档可以有可以有不同schema，包含不同的字段。文档存储数据库允许对文档中的某些字段建立索引，从而能够基于这些字段进行更快的查询</li>
-</ul>
-<h2 id="Milvus"><a href="#Milvus" class="headerlink" title="Milvus"></a>Milvus</h2><p>Milvus是一个开源向量数据库，可以通过高维向量嵌入存储、索引和搜索数十亿级非结构化数据。它非常适合构建现代人工智能应用程序，例如检索增强生成 ( RAG )、语义搜索、多模态搜索和推荐系统。Milvus 可在从笔记本电脑到大型分布式系统的各种环境中高效运行。它可作为开源软件和云服务使用。</p>
-<p>RAG 利用以向量形式存储的大型非结构化数据数据库（一种有助于捕捉数据之间的上下文和关系的数学表示形式），帮助常规大型语言模型 (LLM)理解上下文并减少幻觉。</p>
-<p>向量数据库通过使用距离度量（距离越近意味着结果越相似）的相似性搜索来进行向量检索，例如欧几里得相似度、点积相似度或余弦相似度。</p>
-<p>为了加速检索过程，使用索引机制来组织向量数据。这些组织方法的示例包括 <strong>平面结构</strong>、<strong>倒排文件 (IVF)</strong> 、 <strong>分层可导航小世界 (HNSW)</strong> 和 <strong>局部敏感哈希 (LSH)</strong> 等。这些方法中的每一种都有助于在需要时提高检索相似向量的效率和有效性。</p>
-<h3 id=""><a href="#" class="headerlink" title=""></a></h3><p>Milvus 支持密集、稀疏和混合检索方法：</p>
+<p>订单金额、库存这种要对账的数据，仍适合放在关系库。文档库存「这一份内容长什么样」。</p>
+<h3 id="4-2-键值数据库"><a href="#4-2-键值数据库" class="headerlink" title="4.2 键值数据库"></a>4.2 键值数据库</h3><p>按一个键取对应的值，路径短，延迟低。</p>
+<p><strong>Redis</strong> 是经典实现，端口 6379。值可以是字符串、哈希、列表、集合、有序集合。它常年待在内存里，用来做缓存、会话、计数器和分布式锁；RDB 和 AOF 用来把内存数据落到磁盘。Redis 也可以挂模块做搜索或向量，那是在键值引擎上长出来的能力。</p>
+<h3 id="4-3-宽表与列族"><a href="#4-3-宽表与列族" class="headerlink" title="4.3 宽表与列族"></a>4.3 宽表与列族</h3><p>行键决定数据落在哪台机器上，列可以很宽，也可以按列族分组。</p>
 <ul>
-<li>密集检索：利用语义上下文来理解查询背后的含义。</li>
-<li>稀疏检索：强调关键字匹配，根据特定的术语查找结果，相当于全文搜索。</li>
-<li>混合检索：结合密集和稀疏方法，捕获完整的上下文和特定关键字以获得全面的搜索结果。</li>
+<li><strong>Cassandra</strong> 没有单独的主节点，写入路径短，适合全球分布、写入量很大的数据。查询要带上分区键，否则就变成扫全集群。</li>
+<li><strong>HBase</strong> 跑在 Hadoop 生态上，按行键和列族组织，适合超大的稀疏表，例如历史归档和画像的宽表。</li>
 </ul>
-<p><img src="/images/database/01.png" alt="Milvus"></p>
-<h3 id="绩效指标"><a href="#绩效指标" class="headerlink" title="绩效指标"></a>绩效指标</h3><p>让我们看一下可以帮助您衡量矢量数据库性能的关键指标。</p>
-<ul>
-<li><p>加载延迟衡量将数据加载到矢量数据库的内存中并建立索引所需的时间。索引是一种数据结构，用于根据相似性或距离有效地组织和检索矢量数据。内存索引的类型包括平面索引、IVF_FLAT、IVF_PQ、HNSW、可扩展最近邻 (ScaNN)和DiskANN。</p>
-</li>
-<li><p>召回率是指搜索算法检索到的Top K个结果中真正匹配或相关项目的比例。召回率值越高，表示相关项目的检索效果越好。</p>
-</li>
-<li><p>每秒查询数（QPS）是矢量数据库处理传入查询的速率。QPS值越高，表示查询处理能力越好，系统吞吐量也越高。</p>
-</li>
+<h3 id="4-4-搜索引擎"><a href="#4-4-搜索引擎" class="headerlink" title="4.4 搜索引擎"></a>4.4 搜索引擎</h3><p><strong>Elasticsearch</strong> 为全文检索和日志检索而做，端口常见 9200。文本被拆成词项，建成倒排索引，再配合过滤和聚合。OpenSearch 是同源的另一条产品线。<strong>Meilisearch</strong> 更轻，常用于站内搜索。</p>
+<p>搜索索引一般是派生数据。文章正文、订单状态留在主库，搜索引擎保存一份为了「搜到」而建的索引，主库更新后再同步过去。</p>
+<h2 id="5-图、向量与-AI-数据"><a href="#5-图、向量与-AI-数据" class="headerlink" title="5. 图、向量与 AI 数据"></a>5. 图、向量与 AI 数据</h2><p>关系库用 join 表达联系。当联系本身就是查询对象，或者要找的是「和这段内容最像的记录」时，会换成图或向量。</p>
+<h3 id="5-1-图数据库"><a href="#5-1-图数据库" class="headerlink" title="5.1 图数据库"></a>5.1 图数据库</h3><p>图由节点和边组成，边可以带类型和属性。查询是在图上走若干步。</p>
+<p><strong>Neo4j</strong> 是属性图的经典产品，查询语言是 Cypher。人物关系、欺诈团伙、依赖链路，用「从某个节点出发，沿某类边走 N 步」来写，比多层 join 更直接。图库存的是关系网络；节点上的主档资料往往还在关系库里有一份。</p>
+<h3 id="5-2-向量数据库"><a href="#5-2-向量数据库" class="headerlink" title="5.2 向量数据库"></a>5.2 向量数据库</h3><p>向量库存的是嵌入（embedding）：把文本、图片或音频变成一组高维浮点数。查询是相似度搜索，距离越近越相近，常用余弦、点积或欧氏距离。为了在亿级向量里仍能返回，引擎使用近似最近邻索引。</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>常见用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Milvus</strong></td>
+<td>面向大规模向量的开源库，支持稠密向量、稀疏向量和混合检索，常用于检索增强生成（RAG）和推荐</td>
+</tr>
+<tr>
+<td><strong>Qdrant</strong></td>
+<td>向量和标量过滤放在一起，适合「先按租户或标签圈定，再在圈里找相似」</td>
+</tr>
+<tr>
+<td><strong>Weaviate</strong></td>
+<td>向量库带模块生态，方便把向量化和检索接在一条链路里</td>
+</tr>
+<tr>
+<td><strong>ChromaDB</strong></td>
+<td>轻量，常嵌在本地或原型级的 AI 应用里</td>
+</tr>
+<tr>
+<td><strong>pgvector</strong></td>
+<td>PostgreSQL 扩展。向量规模还没大到要独立集群时，可以和业务表放在同一个库</td>
+</tr>
+</tbody></table>
+<p>Milvus 一类系统里，稠密检索看语义，稀疏检索看关键词，混合检索把两边的结果合在一起。衡量效果时看召回率（返回的前 K 条里有多少真正相关）和每秒查询数（QPS）。索引和参数要跟着数据和延迟要求走，这里不展开具体算法。</p>
+<h2 id="6-时序系统"><a href="#6-时序系统" class="headerlink" title="6. 时序系统"></a>6. 时序系统</h2><p>时序数据库存按时间排列的点：一个时间戳、若干用来过滤的维度、若干数值。监控指标、设备采样、接口耗时都属于这一类。写入是追加，更新很少，查询几乎都带时间范围，原始数据过一段时间就会被降采样或删掉。</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>常见用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>InfluxDB</strong></td>
+<td>通用时序库，监控和业务指标都能放，写入用行协议</td>
+</tr>
+<tr>
+<td><strong>TDengine</strong></td>
+<td>面向物联网，按设备超级表建模，SQL 味道更重</td>
+</tr>
+<tr>
+<td><strong>IoTDB</strong></td>
+<td>Apache 项目，面向工业设备的测点，强调高写入和按设备组织</td>
+</tr>
+<tr>
+<td><strong>QuestDB</strong></td>
+<td>用 SQL 查询时序，也能接收 Influx 的行协议，适合希望少学一种查询语言的场景</td>
+</tr>
+<tr>
+<td><strong>TimescaleDB</strong></td>
+<td>PostgreSQL 上的时序扩展。数据量还没迫使你再维护一套引擎时，可以留在关系库里</td>
+</tr>
+<tr>
+<td><strong>Prometheus</strong></td>
+<td>监控系统自己的时序库，拉取指标，查询语言是 PromQL。它和 Grafana 那条链路绑得更紧，见《Grafana生态》</td>
+</tr>
+</tbody></table>
+<h3 id="案例：InfluxDB"><a href="#案例：InfluxDB" class="headerlink" title="案例：InfluxDB"></a>案例：InfluxDB</h3><p>InfluxDB 的默认端口是 <strong>8086</strong>。一条点用 Line Protocol（行协议）写成四段：度量名、标签、字段、时间戳。</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">api_request,app=checkout,path=/pay latency_ms=42,status_code=200 1730000000000000000</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>measurement（度量）</td>
+<td>这组点的名字，接近「表」，这里是 <code>api_request</code></td>
+</tr>
+<tr>
+<td>tag（标签）</td>
+<td>用来过滤和分组的维度，会建索引，这里是 <code>app</code>、<code>path</code></td>
+</tr>
+<tr>
+<td>field（字段）</td>
+<td>实际数值，默认不按它建索引，这里是 <code>latency_ms</code>、<code>status_code</code></td>
+</tr>
+<tr>
+<td>timestamp（时间戳）</td>
+<td>点发生的时刻，行协议里通常是纳秒</td>
+</tr>
+</tbody></table>
+<p>标签只放取值有限的维度，例如应用、接口、机房。用户 id、订单号、trace id 放进标签会让索引膨胀。这些高基数的标识留在 PostgreSQL，时序这边保留能聚合的数字。</p>
+<p>版本决定连接方式和查询语言，三者不能混用：</p>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>怎么组织数据</th>
+<th>认证</th>
+<th>查询</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1.x</td>
+<td>database + retention policy（保留策略）</td>
+<td>用户名和密码</td>
+<td>InfluxQL，接近 SQL</td>
+</tr>
+<tr>
+<td>2.x</td>
+<td>organization + bucket（桶）</td>
+<td>API token</td>
+<td>主路径是 Flux，部分接口仍接受 InfluxQL</td>
+</tr>
+<tr>
+<td>3.x</td>
+<td>以表为中心，写入仍可用行协议</td>
+<td>token</td>
+<td>SQL 和 InfluxQL</td>
+</tr>
+</tbody></table>
+<p>1.x 上取最近一小时的平均耗时：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> mean(latency_ms)</span><br><span class="line"><span class="keyword">FROM</span> api_request</span><br><span class="line"><span class="keyword">WHERE</span> <span class="type">time</span> <span class="operator">&gt;</span> now() <span class="operator">-</span> <span class="number">1</span>h <span class="keyword">AND</span> app <span class="operator">=</span> <span class="string">&#x27;checkout&#x27;</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="type">time</span>(<span class="number">1</span>m)</span><br></pre></td></tr></table></figure>
+
+<p>2.x 上同一件事用 Flux：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from(bucket: &quot;metrics&quot;)</span><br><span class="line">  |&gt; range(start: -1h)</span><br><span class="line">  |&gt; filter(fn: (r) =&gt; r._measurement == &quot;api_request&quot; and r.app == &quot;checkout&quot;)</span><br><span class="line">  |&gt; aggregateWindow(every: 1m, fn: mean)</span><br></pre></td></tr></table></figure>
+
+<p>原始点按保留时间过期，分钟级、小时级的聚合另存一份，给看板和告警读。订单是否支付回到 PostgreSQL，接口过去一小时的延迟留在 InfluxDB。</p>
+<h2 id="7-消息队列"><a href="#7-消息队列" class="headerlink" title="7. 消息队列"></a>7. 消息队列</h2><p>消息队列保存的是已经发生、等待被消费的事件。它保证传递、堆积和回放，不负责事务型的主数据。</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>模型</th>
+<th>经典场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Kafka</strong></td>
+<td>按主题追加的提交日志，消费者自己记住读到哪</td>
+<td>日志采集、事件流、把业务库的变更同步到分析库</td>
+</tr>
+<tr>
+<td><strong>RabbitMQ</strong></td>
+<td>交换机按路由键把消息送进队列</td>
+<td>任务分发、延迟要求不高的业务消息</td>
+</tr>
+<tr>
+<td><strong>RocketMQ</strong></td>
+<td>主题、队列和消费组，国内业务里常见事务消息</td>
+<td>订单、支付链路里的异步解耦</td>
+</tr>
+<tr>
+<td><strong>Pulsar</strong></td>
+<td>计算和存储分开，主题可以再分成租户和命名空间</td>
+<td>多租户的消息平台</td>
+</tr>
+</tbody></table>
+<p>在 DBX 里，这类连接打开的是主题、订阅或消费者、消息和权限，而不是表。看一条业务为什么「库里有了、下游还没动」，就要同时看关系库和这里的消费进度。</p>
+<h2 id="8-注册与配置中心"><a href="#8-注册与配置中心" class="headerlink" title="8. 注册与配置中心"></a>8. 注册与配置中心</h2><p>这一类保存会被别人监听的小数据：配置项、谁是主、服务实例还在不在。数据量通常不大，一致性和变更通知比扫描更重要。</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>经典场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>etcd</strong></td>
+<td>带租约和监听的键值存储，Kubernetes 用它保存集群期望状态</td>
+</tr>
+<tr>
+<td><strong>ZooKeeper</strong></td>
+<td>用 ZNode 做协调，Hadoop、Kafka 的老架构里用它选主和存元数据</td>
+</tr>
+<tr>
+<td><strong>Nacos</strong></td>
+<td>配置管理和服务注册发现，常见于国内的微服务</td>
+</tr>
+<tr>
+<td><strong>Consul</strong></td>
+<td>服务发现加上 KV，配置和健康检查放在一起</td>
+</tr>
+</tbody></table>
+<p>配置中心的值会热更新到进程里。它替代不了数据库里的业务记录：开关和连接地址放这里，订单放 PostgreSQL。</p>
+<h2 id="9-选一类，再用同一个工作台看"><a href="#9-选一类，再用同一个工作台看" class="headerlink" title="9. 选一类，再用同一个工作台看"></a>9. 选一类，再用同一个工作台看</h2><p>选型时先对上表里的「一条数据是什么」：</p>
+<ol>
+<li>要更新、要对账、要和别的表一起读，用关系型。业务主库优先 PostgreSQL 或 MySQL 这一档。</li>
+<li>要对数百万行以上做汇总，把明细同步到 ClickHouse、Doris 或云数仓。</li>
+<li>字段经常变、按键读取、或要全文搜索，分别看文档、Redis 和 Elasticsearch。</li>
+<li>关系网络用图；语义相似用向量。规模不大时，向量可以先用 pgvector。</li>
+<li>按时间追加、会过期的指标用时序库。监控链路里 Prometheus 已经够用时，不必再叠一套 InfluxDB。</li>
+<li>异步解耦用消息队列，动态配置用 etcd 或 Nacos。</li>
+</ol>
+<p><a href="https://dbxio.com/">DBX</a> 的新建连接按上面的类别列引擎，源码在 <a href="https://github.com/t8y2/dbx">t8y2&#x2F;dbx</a>。关系型和分析型进入 SQL 编辑器、结果网格和表结构；文档、键值、搜索、向量、时序、消息队列、配置中心进入各自的专项工作台。桌面端适合人每天查看，Docker &#x2F; Web 适合放到服务器上用浏览器打开，命令行和 MCP（Model Context Protocol，模型上下文协议）适合脚本和编码助手复用已经配好的连接。</p>
+<p>PostgreSQL 在命令行里可以直接查。InfluxDB 在当前 CLI 里需要桌面端桥接，以本机 <code>dbx capabilities</code> 为准。2.x 要填 organization 和 token，1.x 用用户名、密码和 database。3.x 是否可连，看所安装的 DBX 版本。</p>
+<p>生产连接打开只读或生产保护。数据库账号的权限是最后边界，客户端拦不住一个本来就拥有写权限、又绕过客户端的会话。小库可以用 DBX 的导出做迁移，生产备份用数据库自己的工具。</p>
+<h2 id="10-小结"><a href="#10-小结" class="headerlink" title="10. 小结"></a>10. 小结</h2><ul>
+<li>数据库大类按数据模型和查询方式分：关系型、分析型、文档键值与搜索、图与向量、时序。消息队列和注册配置是新建连接里相邻的两类数据系统。</li>
+<li>每一类都有停留多年的经典产品。MySQL 和 PostgreSQL 承担在线业务，ClickHouse 和云数仓承担汇总，MongoDB、Redis、Elasticsearch 分别承担文档、缓存和检索，Neo4j 和 Milvus 承担关系和相似度，InfluxDB 与 Prometheus 承担时间序列。</li>
+<li>一套业务通常同时用到其中几类。主数据在 PostgreSQL，趋势在 InfluxDB，搜索、缓存、消息和配置各用各的产品，再用 DBX 这种按类别打开工作区的客户端把它们看全。</li>
 </ul>
-<p>通过软件预取加速 Redis 向量搜索<br>Redis 是一种流行的传统内存键值数据存储，最近开始支持向量搜索。为了超越典型的键值存储，它提供了扩展模块；RediSearch模块可直接在 Redis 中存储和搜索向量。</p>
-<p>对于向量相似性搜索，Redis 支持两种算法，即 brute force 和 HNSW。HNSW 算法专门用于在高维空间中高效定位近似最近邻。它使用名为candidates_set的优先级队列来管理所有用于距离计算的向量候选。</p>
-<p>每个向量候选除了向量数据外，还包含大量元数据。因此，从内存加载候选时，可能会导致数据缓存未命中，从而导致处理延迟。我们的优化引入了软件预取功能，以便在处理当前候选时主动加载下一个候选。此增强功能使单实例 Redis 设置中的向量相似性搜索吞吐量提高了 2% 到 3%。该补丁正在上游进行中。</p>
-<p>使用 BGE-M3 模型进行嵌入<br>BGE-M3 模型可以将文本嵌入为密集和稀疏向量。</p>
-<p><img src="/images/database/02.png" alt="绩效指标"></p>
 ]]></content>
       <categories>
         <category>工程实践</category>

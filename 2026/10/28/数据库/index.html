@@ -1,0 +1,1018 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>数据库 | 廾匸</title><meta name="author" content="Dummy"><meta name="copyright" content="Dummy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f4f7f8"><meta name="description" content="综述现有数据库大类，并记下每一类的经典产品。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库">
+<meta property="og:url" content="https://dummyv07.github.io/2026/10/28/%E6%95%B0%E6%8D%AE%E5%BA%93/index.html">
+<meta property="og:site_name" content="廾匸">
+<meta property="og:description" content="综述现有数据库大类，并记下每一类的经典产品。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dummyv07.github.io/img/covers/database.jpg">
+<meta property="article:published_time" content="2026-10-28T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-28T03:06:08.105Z">
+<meta property="article:author" content="Dummy">
+<meta property="article:tag" content="数据库">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dummyv07.github.io/img/covers/database.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "数据库",
+  "url": "https://dummyv07.github.io/2026/10/28/%E6%95%B0%E6%8D%AE%E5%BA%93/",
+  "image": "https://dummyv07.github.io/img/covers/database.jpg",
+  "datePublished": "2026-10-28T02:00:00.000Z",
+  "dateModified": "2026-10-28T03:06:08.105Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Dummy",
+      "url": "https://github.com/DummyV07"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://dummyv07.github.io/2026/10/28/%E6%95%B0%E6%8D%AE%E5%BA%93/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d1116')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#f4f7f8')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: Dummy","link":"链接: ","source":"来源: 廾匸","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '数据库',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/eyes.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">77</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/covers/database.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">廾匸</span></a><a class="nav-page-title" href="/"><span class="site-name">数据库</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">数据库</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-28T02:00:00.000Z" title="发表于 2026-10-28 10:00:00">2026-10-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-28T03:06:08.105Z" title="更新于 2026-10-28 11:06:08">2026-10-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">4.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;距离上次更新已经&quot;,&quot;messageNext&quot;:&quot;天，文章内容可能已经过时。&quot;,&quot;postUpdate&quot;:&quot;2026-10-28 11:06:08&quot;}" hidden></div><p>数据库按「里面存的是什么、查询时怎么找」来分，比按厂商名单来分更不容易过时。DBX（轻量数据库工作台）的新建连接就是按这个习惯分组的：关系型、分析型、文档键值与搜索、图与向量、时序，旁边再放消息队列和注册配置。同一类里会打开相近的工作区，换一类就换一套对象，而不是所有系统都挤进一个 SQL 输入框。</p>
+<p>本文按这套分类做综述。每一类先说明数据长什么样，再写经典产品各自站在哪。最近业务里用到的 PostgreSQL（关系型数据库）和 InfluxDB（时序数据库）作为这两类的案例，多记一层对象模型和查询语言。</p>
+<h2 id="1-七类放在一张表里"><a href="#1-七类放在一张表里" class="headerlink" title="1. 七类放在一张表里"></a>1. 七类放在一张表里</h2><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>一条数据是什么</th>
+<th>查询时在找什么</th>
+<th>经典产品</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>关系型与兼容协议</td>
+<td>有类型的一行</td>
+<td>事务、关联、按条件更新</td>
+<td>PostgreSQL、MySQL、SQLite、Oracle、SQL Server</td>
+</tr>
+<tr>
+<td>分析型与数据仓库</td>
+<td>用来扫描的大批量行或列</td>
+<td>聚合、多维分析、跨源查询</td>
+<td>ClickHouse、Doris、StarRocks、Snowflake、BigQuery、Trino</td>
+</tr>
+<tr>
+<td>文档、键值与搜索</td>
+<td>一篇文档、一个键，或一段可检索文本</td>
+<td>按键取值、按字段取文档、全文检索</td>
+<td>MongoDB、Redis、Elasticsearch、Cassandra、HBase</td>
+</tr>
+<tr>
+<td>图、向量与 AI 数据</td>
+<td>点和边，或一组高维向量</td>
+<td>沿关系游走，或找最相近的向量</td>
+<td>Neo4j、Milvus、Qdrant、Weaviate、ChromaDB</td>
+</tr>
+<tr>
+<td>时序系统</td>
+<td>时间戳加上维度和数值</td>
+<td>一段时间里的趋势、降采样</td>
+<td>InfluxDB、TDengine、IoTDB、QuestDB</td>
+</tr>
+<tr>
+<td>消息队列</td>
+<td>一条待传递的事件</td>
+<td>谁生产、谁消费、能不能回放</td>
+<td>Kafka、RabbitMQ、RocketMQ、Pulsar</td>
+</tr>
+<tr>
+<td>注册与配置中心</td>
+<td>一个会被监听的键</td>
+<td>配置当前值、服务有没有在线</td>
+<td>etcd、ZooKeeper、Nacos</td>
+</tr>
+</tbody></table>
+<p>前五类是数据库的主体。后两类在新建连接里和库排在一起，因为排障时经常要从表跳到消息，再跳到配置；它们保存的是事件流和协调数据。</p>
+<p>还有一条不单独构成数据模型：<strong>驱动扩展</strong>。JDBC（Java Database Connectivity，Java 数据库连接）、厂商私有驱动、MySQL &#x2F; PostgreSQL 协议兼容，解决的是「这个引擎怎么连上」。达梦、Snowflake、Hive 很多走这条路。能连上，只说明协议通了，系统表、权限和高级功能仍以该引擎自己的为准。</p>
+<h2 id="2-关系型与兼容协议"><a href="#2-关系型与兼容协议" class="headerlink" title="2. 关系型与兼容协议"></a>2. 关系型与兼容协议</h2><p>关系型数据库把数据放进表。每一列有类型，每一行是一条记录，表和表用键关联。查询语言是 SQL，写入用事务包起来：同一笔业务里的多次修改一起成功，或一起回到原样。这类系统承载在线交易（OLTP，联机事务处理），用户、订单、库存、权限都在这里。</p>
+<p>经典产品可以按出现的场景记：</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>常见位置</th>
+<th>记一点就够的特征</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Oracle</strong></td>
+<td>传统企业核心库</td>
+<td>商业支持完整，过程语言是 PL&#x2F;SQL，端口常见 1521</td>
+</tr>
+<tr>
+<td><strong>SQL Server</strong></td>
+<td>微软技术栈</td>
+<td>方言是 T-SQL，和 Windows、.NET 一起出现，端口常见 1433</td>
+</tr>
+<tr>
+<td><strong>MySQL</strong></td>
+<td>网站和互联网业务</td>
+<td>长期是 Web 应用的默认选择，存储引擎以 InnoDB 为主，端口 3306。MariaDB 是它的分支，TiDB、OceanBase 则用 MySQL 协议做分布式</td>
+</tr>
+<tr>
+<td><strong>SQLite</strong></td>
+<td>手机、桌面、嵌入式、单机工具</td>
+<td>整个库是一个文件，没有独立的数据库服务进程</td>
+</tr>
+<tr>
+<td><strong>达梦、openGauss、GaussDB</strong></td>
+<td>国产化和政企项目</td>
+<td>达梦靠近 Oracle 的使用习惯；openGauss、GaussDB 沿 PostgreSQL 演进而来。协议或语法兼容，不等于系统表和运维命令可以照搬</td>
+</tr>
+</tbody></table>
+<h3 id="案例：PostgreSQL"><a href="#案例：PostgreSQL" class="headerlink" title="案例：PostgreSQL"></a>案例：PostgreSQL</h3><p>PostgreSQL 把 SQL 标准、扩展和复杂类型放在同一套引擎里，默认端口 <strong>5432</strong>。业务库、地理数据（PostGIS）、向量（pgvector）、时序（TimescaleDB）都能以扩展的形式长在它上面，所以它经常是「先上一套关系库，再看要不要拆出去」的那套。</p>
+<p>库里面的对象可以这样对应：</p>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>database（数据库）</td>
+<td>一套独立的数据空间，连接时要写明名字</td>
+</tr>
+<tr>
+<td>schema（模式）</td>
+<td>库内的命名空间，默认是 <code>public</code></td>
+</tr>
+<tr>
+<td>table &#x2F; view</td>
+<td>表存数据，视图把常用查询固定下来</td>
+</tr>
+<tr>
+<td>role（角色）</td>
+<td>登录和授权的主体</td>
+</tr>
+</tbody></table>
+<p>真正写业务时有三件容易踩错：</p>
+<ul>
+<li>时间列用 <code>timestamptz</code>，入库时按统一时刻保存。不带时区的 <code>timestamp</code> 会把「服务器在哪个时区」卷进数据里。</li>
+<li>会参与约束和对账的列用独立字段；形状经常变的附属信息用 <code>jsonb</code>。<code>jsonb</code> 是二进制 JSON，可以建 GIN 索引。</li>
+<li>一次业务动作放进一个事务。PostgreSQL 用 MVCC（多版本并发控制）让读和写少互相阻塞，没提交的长事务会拖住旧版本的清理。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id, status, created_at</span><br><span class="line"><span class="keyword">FROM</span> orders</span><br><span class="line"><span class="keyword">WHERE</span> created_at <span class="operator">&gt;=</span> now() <span class="operator">-</span> <span class="type">interval</span> <span class="string">&#x27;7 days&#x27;</span></span><br><span class="line">  <span class="keyword">AND</span> status <span class="operator">=</span> <span class="string">&#x27;paid&#x27;</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> created_at <span class="keyword">DESC</span></span><br><span class="line">LIMIT <span class="number">50</span>;</span><br></pre></td></tr></table></figure>
+
+<p>生产查询用单独的只读角色。索引按查询建：等值、范围和排序用 B-tree，<code>jsonb</code> 和全文用 GIN。</p>
+<h2 id="3-分析型与数据仓库"><a href="#3-分析型与数据仓库" class="headerlink" title="3. 分析型与数据仓库"></a>3. 分析型与数据仓库</h2><p>分析型系统为一件事优化：一次读进很多行，算出合计、分位数和趋势。数据往往从关系库、日志或消息队列同步过来，分析查询允许秒级甚至更久，换来的是扫描和聚合的吞吐。习惯上把这类负载叫 OLAP（联机分析处理）。</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>它经典在哪</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>ClickHouse</strong></td>
+<td>列式存储。同一列的值放在一起，对事件明细做过滤和聚合很快，适合日志、点击、账单明细</td>
+</tr>
+<tr>
+<td><strong>Doris、StarRocks</strong></td>
+<td>实时分析库，对外提供 MySQL 协议。已有的 SQL 客户端和 BI 工具容易接上来</td>
+</tr>
+<tr>
+<td><strong>Snowflake、BigQuery</strong></td>
+<td>云上的数据仓库。存储和计算分开，按使用的计算资源计费，适合把各业务的表汇总成分析层</td>
+</tr>
+<tr>
+<td><strong>Databricks</strong></td>
+<td>湖仓一体。数据以数据湖里的文件为底（常见是 Delta Lake），上面用 Spark SQL 做分析和机器学习</td>
+</tr>
+<tr>
+<td><strong>Trino</strong></td>
+<td>分布式查询引擎。自己通常不作为主存，而是用 SQL 同时查 Hive、Iceberg、PostgreSQL 等多个数据源</td>
+</tr>
+</tbody></table>
+<p>关系库里的一张订单表，和分析库里的一份订单明细，可以并存。前者负责下单时的正确性，后者负责「过去 30 天各省的支付金额」。分析库里的行可以晚到几秒或几分钟，这个延迟要在业务上接受。</p>
+<h2 id="4-文档、键值与搜索"><a href="#4-文档、键值与搜索" class="headerlink" title="4. 文档、键值与搜索"></a>4. 文档、键值与搜索</h2><p>这一类不把「一张事先定好的表」当作唯一模型。DBX 把它们放在同一组，是因为连接之后进入的是文档、键、索引或列族浏览器，而不是关系库那套表结构编辑器。里面其实是四种经典模型。</p>
+<h3 id="4-1-文档数据库"><a href="#4-1-文档数据库" class="headerlink" title="4.1 文档数据库"></a>4.1 文档数据库</h3><p>一条记录是一篇文档，通常是 JSON 或 BSON。不同文档的字段可以不一样。</p>
+<ul>
+<li><strong>MongoDB</strong> 是这类里最常见的产品，端口 27017。查询用自己的查询语言和聚合管道，适合内容、活动配置、字段经常加减的档案。</li>
+<li><strong>CouchDB</strong> 把文档暴露成 HTTP 接口，强调多主复制，适合需要离线同步的场景。</li>
+</ul>
+<p>订单金额、库存这种要对账的数据，仍适合放在关系库。文档库存「这一份内容长什么样」。</p>
+<h3 id="4-2-键值数据库"><a href="#4-2-键值数据库" class="headerlink" title="4.2 键值数据库"></a>4.2 键值数据库</h3><p>按一个键取对应的值，路径短，延迟低。</p>
+<p><strong>Redis</strong> 是经典实现，端口 6379。值可以是字符串、哈希、列表、集合、有序集合。它常年待在内存里，用来做缓存、会话、计数器和分布式锁；RDB 和 AOF 用来把内存数据落到磁盘。Redis 也可以挂模块做搜索或向量，那是在键值引擎上长出来的能力。</p>
+<h3 id="4-3-宽表与列族"><a href="#4-3-宽表与列族" class="headerlink" title="4.3 宽表与列族"></a>4.3 宽表与列族</h3><p>行键决定数据落在哪台机器上，列可以很宽，也可以按列族分组。</p>
+<ul>
+<li><strong>Cassandra</strong> 没有单独的主节点，写入路径短，适合全球分布、写入量很大的数据。查询要带上分区键，否则就变成扫全集群。</li>
+<li><strong>HBase</strong> 跑在 Hadoop 生态上，按行键和列族组织，适合超大的稀疏表，例如历史归档和画像的宽表。</li>
+</ul>
+<h3 id="4-4-搜索引擎"><a href="#4-4-搜索引擎" class="headerlink" title="4.4 搜索引擎"></a>4.4 搜索引擎</h3><p><strong>Elasticsearch</strong> 为全文检索和日志检索而做，端口常见 9200。文本被拆成词项，建成倒排索引，再配合过滤和聚合。OpenSearch 是同源的另一条产品线。<strong>Meilisearch</strong> 更轻，常用于站内搜索。</p>
+<p>搜索索引一般是派生数据。文章正文、订单状态留在主库，搜索引擎保存一份为了「搜到」而建的索引，主库更新后再同步过去。</p>
+<h2 id="5-图、向量与-AI-数据"><a href="#5-图、向量与-AI-数据" class="headerlink" title="5. 图、向量与 AI 数据"></a>5. 图、向量与 AI 数据</h2><p>关系库用 join 表达联系。当联系本身就是查询对象，或者要找的是「和这段内容最像的记录」时，会换成图或向量。</p>
+<h3 id="5-1-图数据库"><a href="#5-1-图数据库" class="headerlink" title="5.1 图数据库"></a>5.1 图数据库</h3><p>图由节点和边组成，边可以带类型和属性。查询是在图上走若干步。</p>
+<p><strong>Neo4j</strong> 是属性图的经典产品，查询语言是 Cypher。人物关系、欺诈团伙、依赖链路，用「从某个节点出发，沿某类边走 N 步」来写，比多层 join 更直接。图库存的是关系网络；节点上的主档资料往往还在关系库里有一份。</p>
+<h3 id="5-2-向量数据库"><a href="#5-2-向量数据库" class="headerlink" title="5.2 向量数据库"></a>5.2 向量数据库</h3><p>向量库存的是嵌入（embedding）：把文本、图片或音频变成一组高维浮点数。查询是相似度搜索，距离越近越相近，常用余弦、点积或欧氏距离。为了在亿级向量里仍能返回，引擎使用近似最近邻索引。</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>常见用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Milvus</strong></td>
+<td>面向大规模向量的开源库，支持稠密向量、稀疏向量和混合检索，常用于检索增强生成（RAG）和推荐</td>
+</tr>
+<tr>
+<td><strong>Qdrant</strong></td>
+<td>向量和标量过滤放在一起，适合「先按租户或标签圈定，再在圈里找相似」</td>
+</tr>
+<tr>
+<td><strong>Weaviate</strong></td>
+<td>向量库带模块生态，方便把向量化和检索接在一条链路里</td>
+</tr>
+<tr>
+<td><strong>ChromaDB</strong></td>
+<td>轻量，常嵌在本地或原型级的 AI 应用里</td>
+</tr>
+<tr>
+<td><strong>pgvector</strong></td>
+<td>PostgreSQL 扩展。向量规模还没大到要独立集群时，可以和业务表放在同一个库</td>
+</tr>
+</tbody></table>
+<p>Milvus 一类系统里，稠密检索看语义，稀疏检索看关键词，混合检索把两边的结果合在一起。衡量效果时看召回率（返回的前 K 条里有多少真正相关）和每秒查询数（QPS）。索引和参数要跟着数据和延迟要求走，这里不展开具体算法。</p>
+<h2 id="6-时序系统"><a href="#6-时序系统" class="headerlink" title="6. 时序系统"></a>6. 时序系统</h2><p>时序数据库存按时间排列的点：一个时间戳、若干用来过滤的维度、若干数值。监控指标、设备采样、接口耗时都属于这一类。写入是追加，更新很少，查询几乎都带时间范围，原始数据过一段时间就会被降采样或删掉。</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>常见用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>InfluxDB</strong></td>
+<td>通用时序库，监控和业务指标都能放，写入用行协议</td>
+</tr>
+<tr>
+<td><strong>TDengine</strong></td>
+<td>面向物联网，按设备超级表建模，SQL 味道更重</td>
+</tr>
+<tr>
+<td><strong>IoTDB</strong></td>
+<td>Apache 项目，面向工业设备的测点，强调高写入和按设备组织</td>
+</tr>
+<tr>
+<td><strong>QuestDB</strong></td>
+<td>用 SQL 查询时序，也能接收 Influx 的行协议，适合希望少学一种查询语言的场景</td>
+</tr>
+<tr>
+<td><strong>TimescaleDB</strong></td>
+<td>PostgreSQL 上的时序扩展。数据量还没迫使你再维护一套引擎时，可以留在关系库里</td>
+</tr>
+<tr>
+<td><strong>Prometheus</strong></td>
+<td>监控系统自己的时序库，拉取指标，查询语言是 PromQL。它和 Grafana 那条链路绑得更紧，见《Grafana生态》</td>
+</tr>
+</tbody></table>
+<h3 id="案例：InfluxDB"><a href="#案例：InfluxDB" class="headerlink" title="案例：InfluxDB"></a>案例：InfluxDB</h3><p>InfluxDB 的默认端口是 <strong>8086</strong>。一条点用 Line Protocol（行协议）写成四段：度量名、标签、字段、时间戳。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">api_request,app=checkout,path=/pay latency_ms=42,status_code=200 1730000000000000000</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>measurement（度量）</td>
+<td>这组点的名字，接近「表」，这里是 <code>api_request</code></td>
+</tr>
+<tr>
+<td>tag（标签）</td>
+<td>用来过滤和分组的维度，会建索引，这里是 <code>app</code>、<code>path</code></td>
+</tr>
+<tr>
+<td>field（字段）</td>
+<td>实际数值，默认不按它建索引，这里是 <code>latency_ms</code>、<code>status_code</code></td>
+</tr>
+<tr>
+<td>timestamp（时间戳）</td>
+<td>点发生的时刻，行协议里通常是纳秒</td>
+</tr>
+</tbody></table>
+<p>标签只放取值有限的维度，例如应用、接口、机房。用户 id、订单号、trace id 放进标签会让索引膨胀。这些高基数的标识留在 PostgreSQL，时序这边保留能聚合的数字。</p>
+<p>版本决定连接方式和查询语言，三者不能混用：</p>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>怎么组织数据</th>
+<th>认证</th>
+<th>查询</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1.x</td>
+<td>database + retention policy（保留策略）</td>
+<td>用户名和密码</td>
+<td>InfluxQL，接近 SQL</td>
+</tr>
+<tr>
+<td>2.x</td>
+<td>organization + bucket（桶）</td>
+<td>API token</td>
+<td>主路径是 Flux，部分接口仍接受 InfluxQL</td>
+</tr>
+<tr>
+<td>3.x</td>
+<td>以表为中心，写入仍可用行协议</td>
+<td>token</td>
+<td>SQL 和 InfluxQL</td>
+</tr>
+</tbody></table>
+<p>1.x 上取最近一小时的平均耗时：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> mean(latency_ms)</span><br><span class="line"><span class="keyword">FROM</span> api_request</span><br><span class="line"><span class="keyword">WHERE</span> <span class="type">time</span> <span class="operator">&gt;</span> now() <span class="operator">-</span> <span class="number">1</span>h <span class="keyword">AND</span> app <span class="operator">=</span> <span class="string">&#x27;checkout&#x27;</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="type">time</span>(<span class="number">1</span>m)</span><br></pre></td></tr></table></figure>
+
+<p>2.x 上同一件事用 Flux：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from(bucket: &quot;metrics&quot;)</span><br><span class="line">  |&gt; range(start: -1h)</span><br><span class="line">  |&gt; filter(fn: (r) =&gt; r._measurement == &quot;api_request&quot; and r.app == &quot;checkout&quot;)</span><br><span class="line">  |&gt; aggregateWindow(every: 1m, fn: mean)</span><br></pre></td></tr></table></figure>
+
+<p>原始点按保留时间过期，分钟级、小时级的聚合另存一份，给看板和告警读。订单是否支付回到 PostgreSQL，接口过去一小时的延迟留在 InfluxDB。</p>
+<h2 id="7-消息队列"><a href="#7-消息队列" class="headerlink" title="7. 消息队列"></a>7. 消息队列</h2><p>消息队列保存的是已经发生、等待被消费的事件。它保证传递、堆积和回放，不负责事务型的主数据。</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>模型</th>
+<th>经典场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Kafka</strong></td>
+<td>按主题追加的提交日志，消费者自己记住读到哪</td>
+<td>日志采集、事件流、把业务库的变更同步到分析库</td>
+</tr>
+<tr>
+<td><strong>RabbitMQ</strong></td>
+<td>交换机按路由键把消息送进队列</td>
+<td>任务分发、延迟要求不高的业务消息</td>
+</tr>
+<tr>
+<td><strong>RocketMQ</strong></td>
+<td>主题、队列和消费组，国内业务里常见事务消息</td>
+<td>订单、支付链路里的异步解耦</td>
+</tr>
+<tr>
+<td><strong>Pulsar</strong></td>
+<td>计算和存储分开，主题可以再分成租户和命名空间</td>
+<td>多租户的消息平台</td>
+</tr>
+</tbody></table>
+<p>在 DBX 里，这类连接打开的是主题、订阅或消费者、消息和权限，而不是表。看一条业务为什么「库里有了、下游还没动」，就要同时看关系库和这里的消费进度。</p>
+<h2 id="8-注册与配置中心"><a href="#8-注册与配置中心" class="headerlink" title="8. 注册与配置中心"></a>8. 注册与配置中心</h2><p>这一类保存会被别人监听的小数据：配置项、谁是主、服务实例还在不在。数据量通常不大，一致性和变更通知比扫描更重要。</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>经典场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>etcd</strong></td>
+<td>带租约和监听的键值存储，Kubernetes 用它保存集群期望状态</td>
+</tr>
+<tr>
+<td><strong>ZooKeeper</strong></td>
+<td>用 ZNode 做协调，Hadoop、Kafka 的老架构里用它选主和存元数据</td>
+</tr>
+<tr>
+<td><strong>Nacos</strong></td>
+<td>配置管理和服务注册发现，常见于国内的微服务</td>
+</tr>
+<tr>
+<td><strong>Consul</strong></td>
+<td>服务发现加上 KV，配置和健康检查放在一起</td>
+</tr>
+</tbody></table>
+<p>配置中心的值会热更新到进程里。它替代不了数据库里的业务记录：开关和连接地址放这里，订单放 PostgreSQL。</p>
+<h2 id="9-选一类，再用同一个工作台看"><a href="#9-选一类，再用同一个工作台看" class="headerlink" title="9. 选一类，再用同一个工作台看"></a>9. 选一类，再用同一个工作台看</h2><p>选型时先对上表里的「一条数据是什么」：</p>
+<ol>
+<li>要更新、要对账、要和别的表一起读，用关系型。业务主库优先 PostgreSQL 或 MySQL 这一档。</li>
+<li>要对数百万行以上做汇总，把明细同步到 ClickHouse、Doris 或云数仓。</li>
+<li>字段经常变、按键读取、或要全文搜索，分别看文档、Redis 和 Elasticsearch。</li>
+<li>关系网络用图；语义相似用向量。规模不大时，向量可以先用 pgvector。</li>
+<li>按时间追加、会过期的指标用时序库。监控链路里 Prometheus 已经够用时，不必再叠一套 InfluxDB。</li>
+<li>异步解耦用消息队列，动态配置用 etcd 或 Nacos。</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://dbxio.com/">DBX</a> 的新建连接按上面的类别列引擎，源码在 <a target="_blank" rel="noopener" href="https://github.com/t8y2/dbx">t8y2&#x2F;dbx</a>。关系型和分析型进入 SQL 编辑器、结果网格和表结构；文档、键值、搜索、向量、时序、消息队列、配置中心进入各自的专项工作台。桌面端适合人每天查看，Docker &#x2F; Web 适合放到服务器上用浏览器打开，命令行和 MCP（Model Context Protocol，模型上下文协议）适合脚本和编码助手复用已经配好的连接。</p>
+<p>PostgreSQL 在命令行里可以直接查。InfluxDB 在当前 CLI 里需要桌面端桥接，以本机 <code>dbx capabilities</code> 为准。2.x 要填 organization 和 token，1.x 用用户名、密码和 database。3.x 是否可连，看所安装的 DBX 版本。</p>
+<p>生产连接打开只读或生产保护。数据库账号的权限是最后边界，客户端拦不住一个本来就拥有写权限、又绕过客户端的会话。小库可以用 DBX 的导出做迁移，生产备份用数据库自己的工具。</p>
+<h2 id="10-小结"><a href="#10-小结" class="headerlink" title="10. 小结"></a>10. 小结</h2><ul>
+<li>数据库大类按数据模型和查询方式分：关系型、分析型、文档键值与搜索、图与向量、时序。消息队列和注册配置是新建连接里相邻的两类数据系统。</li>
+<li>每一类都有停留多年的经典产品。MySQL 和 PostgreSQL 承担在线业务，ClickHouse 和云数仓承担汇总，MongoDB、Redis、Elasticsearch 分别承担文档、缓存和检索，Neo4j 和 Milvus 承担关系和相似度，InfluxDB 与 Prometheus 承担时间序列。</li>
+<li>一套业务通常同时用到其中几类。主数据在 PostgreSQL，趋势在 InfluxDB，搜索、缓存、消息和配置各用各的产品，再用 DBX 这种按类别打开工作区的客户端把它们看全。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a target="_blank" rel="noopener" href="https://github.com/DummyV07">Dummy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://dummyv07.github.io/2026/10/28/%E6%95%B0%E6%8D%AE%E5%BA%93/">https://dummyv07.github.io/2026/10/28/%E6%95%B0%E6%8D%AE%E5%BA%93/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://dummyv07.github.io" target="_blank">廾匸</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></div><div class="post-share"><div class="social-share" data-image="/img/covers/database.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/07/21/HierarchicalNavigableSmallWorld/" title="Hierarchical Navigable Small World（分层可导航小世界）"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/covers/hnsw.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Hierarchical Navigable Small World（分层可导航小世界）</div></div><div class="info-2"><div class="info-item-1">分层可导航小世界怎么在向量图上先粗后细地检索，以及 M、ef 这几个参数怎么调。</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="card-info-cover"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/eyes.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="card-info-body"><div class="author-info-name">Dummy</div><div class="author-info-description">山与山不见面，再见容易再见难</div><div class="site-data"><a href="/archives/"><div class="length-num">53</div><div class="headline">文章</div></a><a href="/tags/"><div class="length-num">77</div><div class="headline">标签</div></a><a href="/categories/"><div class="length-num">6</div><div class="headline">分类</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/DummyV07"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/DummyV07" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:dummy.v07@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Wechat:---NoOneIsComing （注明来意）</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%B8%83%E7%B1%BB%E6%94%BE%E5%9C%A8%E4%B8%80%E5%BC%A0%E8%A1%A8%E9%87%8C"><span class="toc-number">1.</span> <span class="toc-text">1. 七类放在一张表里</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%85%B3%E7%B3%BB%E5%9E%8B%E4%B8%8E%E5%85%BC%E5%AE%B9%E5%8D%8F%E8%AE%AE"><span class="toc-number">2.</span> <span class="toc-text">2. 关系型与兼容协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%EF%BC%9APostgreSQL"><span class="toc-number">2.1.</span> <span class="toc-text">案例：PostgreSQL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%88%86%E6%9E%90%E5%9E%8B%E4%B8%8E%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93"><span class="toc-number">3.</span> <span class="toc-text">3. 分析型与数据仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%96%87%E6%A1%A3%E3%80%81%E9%94%AE%E5%80%BC%E4%B8%8E%E6%90%9C%E7%B4%A2"><span class="toc-number">4.</span> <span class="toc-text">4. 文档、键值与搜索</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E6%96%87%E6%A1%A3%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 文档数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E9%94%AE%E5%80%BC%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 键值数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E5%AE%BD%E8%A1%A8%E4%B8%8E%E5%88%97%E6%97%8F"><span class="toc-number">4.3.</span> <span class="toc-text">4.3 宽表与列族</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E"><span class="toc-number">4.4.</span> <span class="toc-text">4.4 搜索引擎</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%9B%BE%E3%80%81%E5%90%91%E9%87%8F%E4%B8%8E-AI-%E6%95%B0%E6%8D%AE"><span class="toc-number">5.</span> <span class="toc-text">5. 图、向量与 AI 数据</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E5%9B%BE%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 图数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">5.2.</span> <span class="toc-text">5.2 向量数据库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E6%97%B6%E5%BA%8F%E7%B3%BB%E7%BB%9F"><span class="toc-number">6.</span> <span class="toc-text">6. 时序系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%EF%BC%9AInfluxDB"><span class="toc-number">6.1.</span> <span class="toc-text">案例：InfluxDB</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="toc-number">7.</span> <span class="toc-text">7. 消息队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E6%B3%A8%E5%86%8C%E4%B8%8E%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83"><span class="toc-number">8.</span> <span class="toc-text">8. 注册与配置中心</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E9%80%89%E4%B8%80%E7%B1%BB%EF%BC%8C%E5%86%8D%E7%94%A8%E5%90%8C%E4%B8%80%E4%B8%AA%E5%B7%A5%E4%BD%9C%E5%8F%B0%E7%9C%8B"><span class="toc-number">9.</span> <span class="toc-text">9. 选一类，再用同一个工作台看</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E5%B0%8F%E7%BB%93"><span class="toc-number">10.</span> <span class="toc-text">10. 小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/10/28/%E6%95%B0%E6%8D%AE%E5%BA%93/" title="数据库"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/covers/database.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据库"/></a><div class="content"><a class="title" href="/2026/10/28/%E6%95%B0%E6%8D%AE%E5%BA%93/" title="数据库">数据库</a><time datetime="2026-10-28T02:00:00.000Z" title="发表于 2026-10-28 10:00:00">2026-10-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/07/21/HierarchicalNavigableSmallWorld/" title="Hierarchical Navigable Small World（分层可导航小世界）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/covers/hnsw.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hierarchical Navigable Small World（分层可导航小世界）"/></a><div class="content"><a class="title" href="/2026/07/21/HierarchicalNavigableSmallWorld/" title="Hierarchical Navigable Small World（分层可导航小世界）">Hierarchical Navigable Small World（分层可导航小世界）</a><time datetime="2026-07-21T03:30:00.000Z" title="发表于 2026-07-21 11:30:00">2026-07-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/07/20/GraphRAG/" title="GraphRAG 选型笔记"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/covers/graphrag.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GraphRAG 选型笔记"/></a><div class="content"><a class="title" href="/2026/07/20/GraphRAG/" title="GraphRAG 选型笔记">GraphRAG 选型笔记</a><time datetime="2026-07-20T03:30:00.000Z" title="发表于 2026-07-20 11:30:00">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="阿里云服务器"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/covers/aliyun-ecs.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="阿里云服务器"/></a><div class="content"><a class="title" href="/2026/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="阿里云服务器">阿里云服务器</a><time datetime="2026-07-10T03:30:00.000Z" title="发表于 2026-07-10 11:30:00">2026-07-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/07/08/HawkesProcess/" title="Hawkes Process"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/covers/hawkes.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hawkes Process"/></a><div class="content"><a class="title" href="/2026/07/08/HawkesProcess/" title="Hawkes Process">Hawkes Process</a><time datetime="2026-07-08T06:00:00.000Z" title="发表于 2026-07-08 14:00:00">2026-07-08</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2026 By Dummy</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.2.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.7.0</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.innerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+
+    setTimeout(() => URL.revokeObjectURL(url), 5000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    // Clean up previous event listeners and pending frames
+    if (wrap.__mermaidAbortController) {
+      wrap.__mermaidAbortController.abort()
+      if (wrap.__mermaidRafId) cancelAnimationFrame(wrap.__mermaidRafId)
+    }
+    const ac = new AbortController()
+    wrap.__mermaidAbortController = ac
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+    // Disable default gestures to prevent scroll chaining and pinch-zoom penetration in Chrome
+    svg.style.touchAction = 'none'
+
+    // Cache BoundingClientRect, throttled on scroll to reduce reflow
+    let cachedRect = svg.getBoundingClientRect()
+    let rectDirty = false
+    const markRectDirty = () => { rectDirty = true }
+    window.addEventListener('resize', markRectDirty, { signal: ac.signal })
+    window.addEventListener('scroll', markRectDirty, { signal: ac.signal, capture: true })
+    const getRect = () => {
+      if (rectDirty) {
+        cachedRect = svg.getBoundingClientRect()
+        rectDirty = false
+      }
+      return cachedRect
+    }
+
+    // Precompute clamp bounds from initial viewBox
+    const minW = initVb[2] * 0.1
+    const maxW = initVb[2] * 10
+    const minH = initVb[3] * 0.1
+    const maxH = initVb[3] * 10
+    const clampVb = vb => {
+      const out = vb.slice()
+      out[2] = clamp(out[2], minW, maxW)
+      out[3] = clamp(out[3], minH, maxH)
+      return out
+    }
+
+    // Throttle DOM updates using requestAnimationFrame
+    let pendingVb = null
+    let rafId = null
+    const applyVb = () => {
+      if (pendingVb) {
+        wrap.__mermaidCurViewBox = pendingVb
+        setSvgViewBox(svg, pendingVb)
+        pendingVb = null
+      }
+      rafId = null
+      wrap.__mermaidRafId = null
+    }
+    const setCurVb = vb => {
+      pendingVb = clampVb(vb)
+      if (!rafId) {
+        rafId = requestAnimationFrame(applyVb)
+        wrap.__mermaidRafId = rafId
+      }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      lastPointerX: 0,
+      lastPointerY: 0
+    }
+
+    const onPointerDown = e => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      const curVb = wrap.__mermaidCurViewBox
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      if (state.pointers.size === 1) {
+        state.startVb = curVb.slice()
+        state.lastPointerX = e.clientX
+        state.lastPointerY = e.clientY
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = curVb.slice()
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      const curVb = wrap.__mermaidCurViewBox
+      const rect = getRect()
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = state.pointers.values().next().value
+        const dxClient = p.x - state.lastPointerX
+        const dyClient = p.y - state.lastPointerY
+        state.lastPointerX = p.x
+        state.lastPointerY = p.y
+        const dx = dxClient * (curVb[2] / rect.width)
+        const dy = dyClient * (curVb[3] / rect.height)
+        setCurVb([curVb[0] - dx, curVb[1] - dy, curVb[2], curVb[3]])
+        return
+      }
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const px = curVb[0] + (cx - rect.left) * (curVb[2] / rect.width)
+        const py = curVb[1] + (cy - rect.top) * (curVb[3] / rect.height)
+        setCurVb(zoomAtPoint(state.startVb, factor, px, py))
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      // Release PointerCapture to avoid event capture anomalies
+      if (svg.hasPointerCapture && svg.hasPointerCapture(e.pointerId)) {
+        svg.releasePointerCapture(e.pointerId)
+      }
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+      } else if (state.pointers.size === 1) {
+        const p = state.pointers.values().next().value
+        state.lastPointerX = p.x
+        state.lastPointerY = p.y
+      }
+    }
+
+    const onWheel = e => {
+      // Prevent event bubbling from triggering external scroll
+      e.preventDefault()
+      e.stopPropagation()
+      // Normalize deltaY across deltaMode (Chrome uses pixels, Safari uses lines)
+      let delta = e.deltaY
+      if (e.deltaMode === 1) delta *= 16
+      else if (e.deltaMode === 2) delta *= 400
+
+      // Continuous zoom factor: smoother than fixed 1.1/0.9 steps
+      const zoomFactor = Math.pow(1.001, delta)
+
+      const curVb = wrap.__mermaidCurViewBox
+      const rect = getRect()
+      const px = curVb[0] + (e.clientX - rect.left) * (curVb[2] / rect.width)
+      const py = curVb[1] + (e.clientY - rect.top) * (curVb[3] / rect.height)
+      setCurVb(zoomAtPoint(curVb, zoomFactor, px, py))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (init) setCurVb(init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown, { signal: ac.signal })
+    svg.addEventListener('pointermove', onPointerMove, { signal: ac.signal })
+    svg.addEventListener('pointerup', onPointerUpOrCancel, { signal: ac.signal })
+    svg.addEventListener('pointercancel', onPointerUpOrCancel, { signal: ac.signal })
+    svg.addEventListener('wheel', onWheel, { passive: false, signal: ac.signal })
+    svg.addEventListener('dblclick', onDblClick, { signal: ac.signal })
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      // Clean up event listeners before removing old SVG
+      if (item.__mermaidAbortController) {
+        item.__mermaidAbortController.abort()
+      }
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      let config = {}
+      try {
+        config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      } catch (e) {
+        console.warn('[mermaid] failed to parse dataset.config:', e)
+      }
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (true) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (true) attachMermaidViewerButton(item)
+      }
+
+      const handleError = err => {
+        console.error(`[mermaid] render failed for block #${index}:`, err)
+        const errorEl = document.createElement('div')
+        errorEl.className = 'mermaid-error'
+        errorEl.textContent = `Mermaid render error: ${err.message || err}`
+        mermaidSrc.insertAdjacentElement('afterend', errorEl)
+      }
+
+      try {
+        const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+        // mermaid v9 and v10 compatibility
+        if (typeof renderFn === 'string') {
+          renderMermaid(renderFn)
+        } else {
+          renderFn.then(({ svg }) => renderMermaid(svg)).catch(handleError)
+        }
+      } catch (err) {
+        handleError(err)
+      }
+    })
+  }
+
+  const codeToMermaid = $article => {
+    const codeMermaidEle = $article.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    const $article = document.getElementById('article-container')
+    if (!$article) return
+
+    if (true) codeToMermaid($article)
+    const $mermaid = $article.querySelectorAll('.mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = {"data-category":"Announcements","data-lang":"zh-CN"}
+
+  const getGiscusTheme = theme => theme === 'dark' ? 'dark' : 'light'
+
+  const createScriptElement = config => {
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => {
+      ele.setAttribute(key, value)
+    })
+    return ele
+  }
+
+  const loadGiscus = (el = document, key) => {
+    const mappingConfig = isShuoshuo
+      ? { 'data-mapping': 'specific', 'data-term': key }
+      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
+
+    const giscusConfig = {
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'DummyV07/DummyV07.github.io',
+      'data-repo-id': 'R_kgDOMAuStg',
+      'data-category-id': 'DIC_kwDOMAuSts4DJYWd',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      ...mappingConfig
+    }
+
+    const scriptElement = createScriptElement(giscusConfig)
+
+    el.querySelector('#giscus-wrap').appendChild(scriptElement)
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGiscus = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const changeGiscusTheme = theme => {
+    const iframe = document.querySelector('#giscus-wrap iframe')
+    if (iframe) {
+      const message = {
+        giscus: {
+          setConfig: {
+            theme: getGiscusTheme(theme)
+          }
+        }
+      }
+      iframe.contentWindow.postMessage(message, 'https://giscus.app')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if (isShuoshuo) {
+    'Giscus' === 'Giscus'
+      ? window.shuoshuoComment = { loadComment: loadGiscus }
+      : window.loadOtherComment = loadGiscus
+    return
+  }
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="46,139,192" opacity="0.45" zIndex="-1" count="40" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
